@@ -12,6 +12,7 @@ namespace lhs\craftpageexporter\models;
 
 
 use craft\base\Model;
+use craft\helpers\UrlHelper;
 use lhs\craftpageexporter\models\transformers\BaseTransformer;
 
 /**
@@ -35,4 +36,16 @@ class Settings extends Model
 
     /** @var BaseTransformer */
     public $transformers;
+
+    public function init()
+    {
+        parent::init();
+        $this->baseUrl = UrlHelper::baseRequestUrl();
+        $this->inlineStyles = true;
+        $this->inlineScripts = true;
+        $this->transformers = [
+            ['type' => 'flatten'],
+//        ['type' => 'prefix', 'prefix' => sprintf('https://cdn.test.com/%s', date('Y-m'))],
+        ];
+    }
 }

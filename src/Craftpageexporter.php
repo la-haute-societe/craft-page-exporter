@@ -26,6 +26,7 @@ use lhs\craftpageexporter\assetbundles\CraftpageexporterAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\FlattenTransformer;
+use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 use lhs\craftpageexporter\services\CraftpageexporterService;
 use yii\base\Event;
 
@@ -137,16 +138,15 @@ class Craftpageexporter extends Plugin
     public function getExportConfig()
     {
         $settings = $this->getSettings();
-
-        // $config = array_merge([
-        //     'baseUrl'       => UrlHelper::baseRequestUrl(),
-        //     'inlineStyles'  => true,
-        //     'inlineScripts' => true,
-        //     'transformers'  => [
-        //         // new FlattenTransformer(),
-        //         // new PrefixExportUrlTransformer(['prefix' => 'https://cdn.test.com/' . date('Y-m')]),
-        //     ],
-        // ]);
+        foreach ($settings->transformers as &$transformer) {
+            switch ($transformer['type']) {
+                case 'flatten':
+                    $transformer = new FlattenTransformer();
+                    break;
+                case 'prefix':
+                    $transformer = new PrefixExportUrlTransformer(['prefix' => $transformer['prefix']]);
+            }
+        }
 
         return $settings;
     }
