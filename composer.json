@@ -1,0 +1,54 @@
+{
+  "name":         "la-haute-societe/craft-page-exporter",
+  "description":  "Craft page exporter",
+  "type":         "craft-plugin",
+  "version":      "1.0.0",
+  "keywords":     [
+    "craft",
+    "cms",
+    "craftcms",
+    "craft-plugin",
+    "craft-page-exporter"
+  ],
+  "support":      {
+    "docs":   "???",
+    "issues": "???"
+  },
+  "license":      "MIT",
+  "authors":      [
+    {
+      "name":     "La Haute Société",
+      "homepage": "https://www.lahautesociete.com"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "composer",
+      "url":  "http://packages.lahautesociete.int"
+    },
+    {
+      "type": "composer",
+      "url":  "https://asset-packagist.org"
+    }
+  ],
+  "require":      {
+    "craftcms/cms":        "^3.0.0-RC1",
+    "symfony/dom-crawler": "^3.3.0"
+  },
+  "autoload":     {
+    "psr-4": {
+      "lhs\\craftpageexporter\\": "src/"
+    }
+  },
+  "extra":        {
+    "name":          "craft-page-exporter",
+    "handle":        "craft-page-exporter",
+    "hasCpSettings": true,
+    "hasCpSection":  false,
+    "changelogUrl":  "???",
+    "components":    {
+      "craftpageexporterService": "lhs\\craftpageexporter\\services\\CraftpageexporterService"
+    },
+    "class":         "lhs\\craftpageexporter\\Craftpageexporter"
+  }
+}

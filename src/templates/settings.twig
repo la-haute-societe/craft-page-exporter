@@ -1,0 +1,26 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * craft-page-exporter plugin for Craft CMS 3.x
+ *
+ * craft-page-exporter Settings.twig
+ *
+ * @author    La Haute Société
+ * @copyright Copyright (c) 2019 La Haute Société
+ * @link      https://www.lahautesociete.com
+ * @package   Craftpageexporter
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("lhs\\craftpageexporter\\assetbundles\\craftpageexporter\\CraftpageexporterAsset") %}
+
+{{ forms.textField({
+    label: 'Some Field',
+    instructions: 'Enter some setting here.',
+    id: 'someAttribute',
+    name: 'someAttribute',
+    value: settings['someAttribute']})
+}}

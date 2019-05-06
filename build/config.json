@@ -1,0 +1,24 @@
+{
+  "entry": {
+    "cp": "./js/cp.js"
+  },
+  "sourceDir": "..\/resources\/",
+  "outputDir": "..\/src\/resources",
+  "assets": {
+    "styles": "css",
+    "scripts": "js",
+    "copy": []
+  },
+  "filenames": {
+    "development": {
+      "js": "[name].js",
+      "css": "[name].css",
+      "cssChunk": "[id].css"
+    },
+    "production": {
+      "js": "[name].js",
+      "css": "[name].css",
+      "cssChunk": "[id].css"
+    }
+  }
+}
