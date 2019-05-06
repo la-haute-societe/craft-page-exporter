@@ -3,6 +3,7 @@
   "description":  "Craft page exporter",
   "type":         "craft-plugin",
   "version":      "1.0.0",
+  "minimum-stability": "stable",
   "keywords":     [
     "craft",
     "cms",
