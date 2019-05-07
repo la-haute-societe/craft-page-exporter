@@ -1,5 +1,10 @@
 {
-  "cp": {
-    "js": "js/cp.js"
+  "CraftpageexporterExportModal": {
+    "css": "css/CraftpageexporterExportModal.css",
+    "js": "js/CraftpageexporterExportModal.js"
+  },
+  "CraftpageexporterEntryEdit": {
+    "js": "js/CraftpageexporterEntryEdit.js",
+    "css": "css/CraftpageexporterEntryEdit.css"
   }
 }

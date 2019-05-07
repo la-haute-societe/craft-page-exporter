@@ -10,7 +10,6 @@
 
 namespace lhs\craftpageexporter\models;
 
-
 use craft\base\Model;
 use craft\helpers\UrlHelper;
 use lhs\craftpageexporter\models\transformers\BaseTransformer;

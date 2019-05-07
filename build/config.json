@@ -1,6 +1,7 @@
 {
   "entry": {
-    "cp": "./js/cp.js"
+    "CraftpageexporterExportModal": "./js/CraftpageexporterExportModal.js",
+    "CraftpageexporterEntryEdit": "./js/CraftpageexporterEntryEdit.js"
   },
   "sourceDir": "..\/resources\/",
   "outputDir": "..\/src\/resources",

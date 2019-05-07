@@ -15,14 +15,9 @@ use craft\base\Element;
 use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
 use craft\elements\Entry;
-use craft\events\PluginEvent;
 use craft\events\RegisterElementActionsEvent;
-use craft\events\RegisterUrlRulesEvent;
-use craft\helpers\UrlHelper;
-use craft\services\Plugins;
 use craft\web\twig\variables\CraftVariable;
-use craft\web\UrlManager;
-use lhs\craftpageexporter\assetbundles\CraftpageexporterAssetBundle;
+use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\FlattenTransformer;
@@ -73,7 +68,7 @@ class Craftpageexporter extends Plugin
         }
 
         Craft::$app->view->hook('cp.entries.edit', function(&$context) {
-            $this->view->registerAssetBundle(CraftpageexporterAssetBundle::class);
+            $this->view->registerAssetBundle(CraftpageexporterEntryEditAssetBundle::class);
         });
 
         // Handler: CraftVariable::EVENT_INIT
@@ -87,40 +82,12 @@ class Craftpageexporter extends Plugin
             }
         );
 
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                Craft::warning('REGISTER URL EXPORTER');
-                $event->rules['page-exporter/export/entry-<entriesId:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/export';
-            }
-        );
-
-        Event::on(
-            UrlManager::class,
-            UrlManager::EVENT_REGISTER_CP_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
-                // $event->rules['page-exporter/export/entry-<entryId:\d>/site-<siteId:\d>'] = 'craft-page-exporter/default/export';
-                // $event->rules['page-exporter/test'] = 'craft-page-exporter/default/test';
-            }
-        );
-
-        Event::on(
-            Plugins::class,
-            Plugins::EVENT_AFTER_INSTALL_PLUGIN,
-            function (PluginEvent $event) {
-                if ($event->plugin === $this) {
-                }
-            }
-        );
-
         // Register element action to assets for clearing transforms
         Event::on(Entry::class, Element::EVENT_REGISTER_ACTIONS,
             function(RegisterElementActionsEvent $event) {
                 $event->actions[] = CraftpageexporterElementAction::class;
             }
         );
-
 
         Craft::info(
             Craft::t(
@@ -135,9 +102,13 @@ class Craftpageexporter extends Plugin
     /**
      * @return bool|\craft\base\Model|null
      */
-    public function getExportConfig()
+    public function getExportConfig($options = [])
     {
         $settings = $this->getSettings();
+        foreach ($options as $key => $value) {
+            $settings->$key = $value;
+        }
+
         foreach ($settings->transformers as &$transformer) {
             switch ($transformer['type']) {
                 case 'flatten':
@@ -147,7 +118,6 @@ class Craftpageexporter extends Plugin
                     $transformer = new PrefixExportUrlTransformer(['prefix' => $transformer['prefix']]);
             }
         }
-
         return $settings;
     }
 
