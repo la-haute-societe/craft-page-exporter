@@ -38,16 +38,10 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['export', 'test'];
+    protected $allowAnonymous = ['export', 'getExportModalContent'];
 
     // Public Methods
     // =========================================================================
-
-    public function actionTest()
-    {
-        var_dump('test');
-        die();
-    }
 
     /**
      * @throws NotFoundHttpException
@@ -64,20 +58,7 @@ class DefaultController extends Controller
         $this->requireAdmin();
         $post = Craft::$app->request->getBodyParams();
 
-        $options = [
-            'inlineStyles' => $post['inlineStyles'],
-            'inlineScripts' => $post['inlineScripts'],
-            'transformers' => []
-        ];
-
-        if ($post['flattenTransformer'] === true) {
-            $options['transformers'][] = ['type' => 'flatten'];
-        }
-
-        if (!empty($post['prefixTransformer'])) {
-            $options['transformers'][] = ['type' => 'flatten'];
-        }
-
+        $options = $this->getOptionsFromModalForm($post);
         $ids = explode(',', $post['entryIds']);
 
         // Create export
@@ -106,6 +87,14 @@ class DefaultController extends Controller
         die('ok');
     }
 
+    /**
+     * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \craft\errors\SiteNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\ForbiddenHttpException
+     */
     public function actionGetExportModalContent(): Response
     {
         $this->requireAdmin();
@@ -116,17 +105,15 @@ class DefaultController extends Controller
         $requestId = Craft::$app->getRequest()->getRequiredParam('requestId');
         $siteId = Craft::$app->sites->getCurrentSite()->id;
 
-        $entries = Element::findAll($entryIds);
-        if (count($entries) !== count($entryIds)) {
-            throw new \Exception('Could not find all elements requested');
-        }
-
+        // Get modal content
         $view = \Craft::$app->getView();
         $modalHtml = $view->renderTemplate('craft-page-exporter/export-modal', [
             'entryIds' => $entryIds,
             'siteId' => $siteId,
             'options' => Craftpageexporter::$plugin->getSettings()
         ]);
+
+        // Set response to return
         $responseData = [
             'success' => true,
             'modalHtml' => $modalHtml,
@@ -187,5 +174,27 @@ class DefaultController extends Controller
         }
 
         return $entry;
+    }
+
+    /**
+     * @param array $post
+     * @return array
+     */
+    private function getOptionsFromModalForm($post) {
+        $options = [
+            'inlineStyles' => $post['inlineStyles'],
+            'inlineScripts' => $post['inlineScripts'],
+            'transformers' => []
+        ];
+
+        if ($post['flattenTransformer'] === true) {
+            $options['transformers'][] = ['type' => 'flatten'];
+        }
+
+        if (!empty($post['prefixTransformer'])) {
+            $options['transformers'][] = ['type' => 'flatten'];
+        }
+
+        return $options;
     }
 }

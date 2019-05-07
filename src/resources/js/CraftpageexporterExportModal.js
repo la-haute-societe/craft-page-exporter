@@ -118,20 +118,22 @@ __webpack_require__.r(__webpack_exports__);
 /** global: $ */
 
 /**
- * Select Fields Modal
+ * Craftpageexporter Export Modal
  */
 Craft.CraftpageexporterExportModal = Garnish.Modal.extend({
   $spinner: null,
   requestId: 0,
 
   /**
-   * Initialize the preview file modal.
-   * @returns {*|void}
+   * Initialize the modal
+   * entryIds is a comma separated list of the entry ids to export
+   *
+   * @string entryIds
    */
   init: function init(entryIds) {
+    Craft.CraftpageexporterExportModal.openInstance = this;
     var settings = {};
     settings.onHide = this._onHide.bind(this);
-    Craft.CraftpageexporterExportModal.openInstance = this;
     this.$container = $('<div id="select-fields-modal" class="modal loading"/>').appendTo(Garnish.$bod);
     this.base(this.$container, $.extend({
       resizable: false

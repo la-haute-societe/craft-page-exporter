@@ -54,14 +54,12 @@ class CraftpageexporterElementAction extends ElementAction
         },
         activate: function(\$selectedItems)
         {
-            // Get parameters
-            var settings = {};
             var entryIds = $(\$selectedItems).map(function(){
                 return $(this).data('id');
             }).get();
-            console.log(entryIds);
             entryIds = entryIds.join(",");
-            var modal = new Craft.CraftpageexporterExportModal(entryIds, settings);
+            
+            var modal = new Craft.CraftpageexporterExportModal(entryIds);
         }
     });
 })();
