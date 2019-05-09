@@ -12,13 +12,12 @@ namespace lhs\craftpageexporter\controllers;
 
 use Craft;
 use craft\elements\Entry;
-use craft\helpers\UrlHelper;
+use craft\records\Element;
 use craft\web\Controller;
+use craft\web\Response;
 use craft\web\View;
 use lhs\craftpageexporter\Craftpageexporter;
 use lhs\craftpageexporter\models\Export;
-use lhs\craftpageexporter\models\transformers\FlattenTransformer;
-use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 use lhs\craftpageexporter\models\ZipExporter;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
@@ -39,40 +38,39 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['export', 'test'];
+    protected $allowAnonymous = ['export', 'getExportModalContent'];
 
     // Public Methods
     // =========================================================================
 
-    public function actionTest()
-    {
-        var_dump('test');
-        die();
-    }
-
     /**
-     * @param $entriesId
-     * @param $siteId
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
      * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
      * @throws \yii\base\InvalidConfigException
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionExport($entriesId, $siteId)
+    public function actionExport()
     {
-        $ids = explode(',', $entriesId);
+        $this->requirePostRequest();
+        $this->requireAdmin();
+        $post = Craft::$app->request->getBodyParams();
+
+        $options = $this->getOptionsFromModalForm($post);
+        $ids = explode(',', $post['entryIds']);
 
         // Create export
-        $export = new Export(Craftpageexporter::$plugin->getExportConfig());
+        $export = new Export(Craftpageexporter::$plugin->getExportConfig($options));
 
         foreach ($ids as $id) {
             // Get entry to export
-            $entry = $this->getEntryModel($id, $siteId);
+            $entry = $this->getEntryModel($id, $post['siteId']);
             $entryContent = $this->getEntryContent($entry);
 
             // Assign a name to the page
-            $pageName = $entry->slug . '-' . Craft::$app->get('locale');
+            $pageName = sprintf('%s-%s', $entry->slug, Craft::$app->get('locale'));
 
             // Add page
             $pageUrl = $entry->url;
@@ -87,6 +85,41 @@ class DefaultController extends Controller
         $exporter->export();
 
         die('ok');
+    }
+
+    /**
+     * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \craft\errors\SiteNotFoundException
+     * @throws \yii\base\Exception
+     * @throws \yii\web\BadRequestHttpException
+     * @throws \yii\web\ForbiddenHttpException
+     */
+    public function actionGetExportModalContent(): Response
+    {
+        $this->requireAdmin();
+        $this->requirePostRequest();
+        $this->requireAcceptsJson();
+
+        $entryIds = Craft::$app->getRequest()->getRequiredParam('entryIds');
+        $requestId = Craft::$app->getRequest()->getRequiredParam('requestId');
+        $siteId = Craft::$app->sites->getCurrentSite()->id;
+
+        // Get modal content
+        $view = \Craft::$app->getView();
+        $modalHtml = $view->renderTemplate('craft-page-exporter/export-modal', [
+            'entryIds' => $entryIds,
+            'siteId' => $siteId,
+            'options' => Craftpageexporter::$plugin->getSettings()
+        ]);
+
+        // Set response to return
+        $responseData = [
+            'success' => true,
+            'modalHtml' => $modalHtml,
+            'requestId' => $requestId,
+        ];
+        return $this->asJson($responseData);
     }
 
     /**
@@ -141,5 +174,27 @@ class DefaultController extends Controller
         }
 
         return $entry;
+    }
+
+    /**
+     * @param array $post
+     * @return array
+     */
+    private function getOptionsFromModalForm($post) {
+        $options = [
+            'inlineStyles' => $post['inlineStyles'],
+            'inlineScripts' => $post['inlineScripts'],
+            'transformers' => []
+        ];
+
+        if ($post['flattenTransformer'] === true) {
+            $options['transformers'][] = ['type' => 'flatten'];
+        }
+
+        if (!empty($post['prefixTransformer'])) {
+            $options['transformers'][] = ['type' => 'flatten'];
+        }
+
+        return $options;
     }
 }

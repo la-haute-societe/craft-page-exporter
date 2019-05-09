@@ -31,7 +31,7 @@ return [
     'inlineStyles'  => true,
     'inlineScripts' => true,
     'transformers'  => [
-        // new FlattenTransformer(),
-        // new PrefixExportUrlTransformer(['prefix' => 'https://cdn.test.com/' . date('Y-m')]),
+        ['type' => 'flatten'],
+//        ['type' => 'prefix', 'prefix' => sprintf('https://cdn.test.com/%s', date('Y-m'))],
     ],
 ];

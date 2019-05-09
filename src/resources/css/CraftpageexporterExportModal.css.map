@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./scss/main.scss"],"names":[],"mappings":"AAAA;AACA;AACA;AACA;AACA,mBAAmB","file":"css/CraftpageexporterExportModal.css","sourcesContent":[".craftpageexporter-modal {\n  margin: 40px;\n  position: relative;\n  height: calc(100% - (40px*2));\n  overflow: scroll; }\n"],"sourceRoot":""}

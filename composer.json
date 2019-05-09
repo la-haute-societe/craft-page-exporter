@@ -44,7 +44,7 @@
   "extra":        {
     "name":          "craft-page-exporter",
     "handle":        "craft-page-exporter",
-    "hasCpSettings": true,
+    "hasCpSettings": false,
     "hasCpSection":  false,
     "changelogUrl":  "???",
     "components":    {

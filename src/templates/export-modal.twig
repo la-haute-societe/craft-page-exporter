@@ -1,0 +1,60 @@
+{% import '_includes/forms' as forms %}
+
+{# Get transformers options #}
+{% set isFlattenTransformerEnabled = false %}
+{% set prefixTransformerString = '' %}
+
+{% for transformer in options.transformers %}
+    {% switch transformer.type %}
+        {% case "flatten" %}
+            {% set isFlattenTransformerEnabled = true %}
+        {% case "prefix" %}
+            {% set prefixTransformerString = transformer.prefix %}
+    {% endswitch %}
+{% endfor %}
+
+
+<div class="craftpageexporter-modal">
+    <form method="post" action="{{ siteUrl }}actions/craft-page-exporter/default/export" accept-charset="UTF-8">
+        {{ csrfInput() }}
+
+        <h1>Craft page exporter</h1>
+
+        <input type="hidden" name="entryIds" value="{{ entryIds }}">
+        <input type="hidden" name="siteId" value="{{ siteId }}">
+
+        {{ forms.lightswitchField({
+            label: 'Inline styles',
+            instructions: "Use inline styles in HTML."|t,
+            id: 'inlineStyles',
+            name: 'inlineStyles',
+            on: options.inlineStyles
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Inline scripts',
+            instructions: "Use inline scripts in HTML."|t,
+            id: 'inlineScripts',
+            name: 'inlineScripts',
+            on: options.inlineScripts
+        }) }}
+
+        {{ forms.lightswitchField({
+            label: 'Flatten',
+            id: 'flattenTransformer',
+            name: 'flattenTransformer',
+            on: isFlattenTransformerEnabled
+        }) }}
+
+        {{ forms.textField({
+            label: 'Prefix URL',
+            instructions: "Specify string for prefixing URL."|t,
+            id: 'prefixTransformer',
+            name: 'prefixTransformer',
+            value: prefixTransformerString
+        }) }}
+
+        <input type="submit" value="Send">
+    </form>
+</div>
+

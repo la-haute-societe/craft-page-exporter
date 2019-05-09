@@ -1,0 +1,8 @@
+$margin: 40px;
+
+.craftpageexporter-modal {
+  margin: #{$margin};
+  position: relative;
+  height: calc(100% - (#{$margin}*2));
+  overflow: scroll;
+}

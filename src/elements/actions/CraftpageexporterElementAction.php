@@ -13,8 +13,7 @@ namespace lhs\craftpageexporter\elements\actions;
 use Craft;
 use craft\base\ElementAction;
 use craft\helpers\Json;
-use lhs\craftpageexporter\Craftpageexporter;
-use venveo\bulkedit\assetbundles\bulkeditelementaction\BulkEditElementActionAsset;
+use lhs\craftpageexporter\assetbundles\CraftpageexporterExportModalAssetBundle;
 
 class CraftpageexporterElementAction extends ElementAction
 {
@@ -42,7 +41,6 @@ class CraftpageexporterElementAction extends ElementAction
     public function getTriggerHtml()
     {
         $type = Json::encode(static::class);
-        $currentSiteId = Craft::$app->sites->getCurrentSite()->id;
 
         $js = <<<EOD
 (function()
@@ -56,17 +54,12 @@ class CraftpageexporterElementAction extends ElementAction
         },
         activate: function(\$selectedItems)
         {
-            // Get parameters
-            var settings = {};
-            var elementIds = $(\$selectedItems).map(function(){
+            var entryIds = $(\$selectedItems).map(function(){
                 return $(this).data('id');
             }).get();
+            entryIds = entryIds.join(",");
             
-            // Get action URL
-            var url = Craft.getUrl('page-exporter/export/entry-'+elementIds.join()+'/site-{$currentSiteId}');
-            var fixedUrl = url.replace('admin/', '');
-            
-            Craft.redirectTo(fixedUrl);
+            var modal = new Craft.CraftpageexporterExportModal(entryIds);
         }
     });
 })();
@@ -74,5 +67,6 @@ EOD;
 
         $view = Craft::$app->getView();
         $view->registerJs($js);
+        $view->registerAssetBundle(CraftpageexporterExportModalAssetBundle::class);
     }
 }
