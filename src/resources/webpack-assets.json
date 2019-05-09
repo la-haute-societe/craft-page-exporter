@@ -4,7 +4,7 @@
     "js": "js/CraftpageexporterExportModal.js"
   },
   "CraftpageexporterEntryEdit": {
-    "js": "js/CraftpageexporterEntryEdit.js",
-    "css": "css/CraftpageexporterEntryEdit.css"
+    "css": "css/CraftpageexporterEntryEdit.css",
+    "js": "js/CraftpageexporterEntryEdit.js"
   }
 }

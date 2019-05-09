@@ -4,5 +4,5 @@ $margin: 40px;
   margin: #{$margin};
   position: relative;
   height: calc(100% - (#{$margin}*2));
-  overflow: scroll;
+  overflow-y: auto;
 }
