@@ -43,3 +43,13 @@ yarn watch  # Build assets in development mode & watch them for changes
 yarn dev    # Build assets in development mode
 yarn build  # Build assets in production mode
 ```
+
+## TODO
+
+- Automatiser build assets (yarn) dans le CI
+- Corriger scroll popin
+- Ajouter un bouton "Export" + "Custom export"
+- Doc surcharger les sélécteurs
+- Doc surcharger la fonction de récup du contenu (render vs "file_get_contents")
+- Publier sur le store
+
