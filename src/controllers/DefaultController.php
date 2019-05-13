@@ -57,12 +57,10 @@ class DefaultController extends Controller
         $this->requirePostRequest();
         $this->requireAdmin();
         $post = Craft::$app->request->getBodyParams();
-
-        $options = $this->getOptionsFromModalForm($post);
         $ids = explode(',', $post['entryIds']);
 
         // Create export
-        $export = new Export(Craftpageexporter::$plugin->getExportConfig($options));
+        $export = new Export(Craftpageexporter::$plugin->getExportConfig($post));
 
         foreach ($ids as $id) {
             // Get entry to export
@@ -110,7 +108,7 @@ class DefaultController extends Controller
         $modalHtml = $view->renderTemplate('craft-page-exporter/export-modal', [
             'entryIds' => $entryIds,
             'siteId' => $siteId,
-            'options' => Craftpageexporter::$plugin->getSettings()
+            'settings' => Craftpageexporter::$plugin->getSettings()
         ]);
 
         // Set response to return
@@ -174,27 +172,5 @@ class DefaultController extends Controller
         }
 
         return $entry;
-    }
-
-    /**
-     * @param array $post
-     * @return array
-     */
-    private function getOptionsFromModalForm($post) {
-        $options = [
-            'inlineStyles' => $post['inlineStyles'],
-            'inlineScripts' => $post['inlineScripts'],
-            'transformers' => []
-        ];
-
-        if ($post['flattenTransformer'] === true) {
-            $options['transformers'][] = ['type' => 'flatten'];
-        }
-
-        if (!empty($post['prefixTransformer'])) {
-            $options['transformers'][] = ['type' => 'flatten'];
-        }
-
-        return $options;
     }
 }

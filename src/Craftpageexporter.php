@@ -20,8 +20,6 @@ use craft\web\twig\variables\CraftVariable;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
-use lhs\craftpageexporter\models\transformers\FlattenTransformer;
-use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 use lhs\craftpageexporter\services\CraftpageexporterService;
 use Twig\Parser;
 use yii\base\Event;
@@ -108,12 +106,12 @@ class Craftpageexporter extends Plugin
     /**
      * @return bool|\craft\base\Model|null
      */
-    public function getExportConfig($options = [])
+    public function getExportConfig($overrides = [])
     {
+        /** @var Settings $settings */
         $settings = $this->getSettings();
-        foreach ($options as $key => $value) {
-            $settings->$key = $value;
-        }
+
+        $this->overridesSettings($settings, $overrides);
 
         foreach ($settings->transformers as $key => $options) {
             if (!$options['enabled']) {
@@ -121,8 +119,8 @@ class Craftpageexporter extends Plugin
                 continue;
             }
 
-            $className = $options['class'];
-            unset($options['class']);
+            $className = sprintf('lhs\craftpageexporter\models\transformers\%s', $key);
+            unset($options['enabled']);
             $settings->transformers[$key] = new $className($options);
         }
 
@@ -158,6 +156,16 @@ class Craftpageexporter extends Plugin
         ]);
     }
 
+
+
+    // Private Methods
+    // =========================================================================
+
+    /**
+     * @param array $array
+     * @param string $prefix
+     * @return array
+     */
     private function array_keys_multi(array $array, $prefix = "") {
         $keys = [];
 
@@ -169,5 +177,15 @@ class Craftpageexporter extends Plugin
         }
 
         return $keys;
+    }
+
+    /**
+     * @param Settings $settings
+     * @param array $overrides
+     */
+    private function overridesSettings(&$settings, $overrides) {
+        foreach ($settings as $key => $value) {
+            $settings->$key = $overrides[$key];
+        }
     }
 }

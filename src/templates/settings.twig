@@ -54,37 +54,37 @@
 
 
 {{ forms.lightswitchField({
-    label: "Enable flatten transformer ?"|t,
-    id: 'transformers.flatten.enabled',
-    name: "transformers[flatten][enabled]",
-    on: settings.transformers.flatten.enabled,
+    label: "Enable FlattenTransformer ?"|t,
+    id: 'transformers.FlattenTransformer.enabled',
+    name: "transformers[FlattenTransformer][enabled]",
+    on: settings.transformers.FlattenTransformer.enabled,
     required: true,
-    warning: 'transformers.flatten.enabled' in overrides ? macros.configWarning('transformers.flatten.enabled'),
-    disabled: 'transformers.flatten.enabled' in overrides,
-    readonly: 'transformers.flatten.enabled' in overrides,
-    errors: settings.getErrors('transformers.flatten.enabled')
+    warning: 'transformers.FlattenTransformer.enabled' in overrides ? macros.configWarning('transformers.FlattenTransformer.enabled'),
+    disabled: 'transformers.FlattenTransformer.enabled' in overrides,
+    readonly: 'transformers.FlattenTransformer.enabled' in overrides,
+    errors: settings.getErrors('transformers.FlattenTransformer.enabled')
 }) }}
 
 {{ forms.lightswitchField({
-    label: "Enable prefix transformer ?"|t,
-    id: 'transformers.prefix.enabled',
-    name: "transformers[prefix][enabled]",
-    on: settings.transformers.prefix.enabled,
+    label: "Enable PrefixExportUrlTransformer ?"|t,
+    id: 'transformers.PrefixExportUrlTransformer.enabled',
+    name: "transformers[PrefixExportUrlTransformer][enabled]",
+    on: settings.transformers.PrefixExportUrlTransformer.enabled,
     required: true,
-    warning: 'transformers.prefix.enabled' in overrides ? macros.configWarning('transformers.prefix.enabled'),
-    disabled: 'transformers.prefix.enabled' in overrides,
-    readonly: 'transformers.prefix.enabled' in overrides,
-    errors: settings.getErrors('transformers.prefix.enabled')
+    warning: 'transformers.PrefixExportUrlTransformer.enabled' in overrides ? macros.configWarning('transformers.PrefixExportUrlTransformer.enabled'),
+    disabled: 'transformers.PrefixExportUrlTransformer.enabled' in overrides,
+    readonly: 'transformers.PrefixExportUrlTransformer.enabled' in overrides,
+    errors: settings.getErrors('transformers.PrefixExportUrlTransformer.enabled')
 }) }}
 
 {{ forms.textField({
-    label: "Prefix for prefix transformer"|t,
-    id: 'transformers.prefix.prefix',
-    name: "transformers[prefix][prefix]",
-    value: settings.transformers.prefix.prefix,
+    label: "Prefix for PrefixExportUrlTransformer"|t,
+    id: 'transformers.PrefixExportUrlTransformer.prefix',
+    name: "transformers[PrefixExportUrlTransformer][prefix]",
+    value: settings.transformers.PrefixExportUrlTransformer.prefix,
     required: true,
-    warning: 'transformers.prefix.prefix' in overrides ? macros.configWarning('transformers.prefix.prefix'),
-    disabled: 'transformers.prefix.prefix' in overrides,
-    readonly: 'transformers.prefix.prefix' in overrides,
-    errors: settings.getErrors('transformers.prefix.prefix')
+    warning: 'transformers.PrefixExportUrlTransformer.prefix' in overrides ? macros.configWarning('transformers.PrefixExportUrlTransformer.prefix'),
+    disabled: 'transformers.PrefixExportUrlTransformer.prefix' in overrides,
+    readonly: 'transformers.PrefixExportUrlTransformer.prefix' in overrides,
+    errors: settings.getErrors('transformers.PrefixExportUrlTransformer.prefix')
 }) }}

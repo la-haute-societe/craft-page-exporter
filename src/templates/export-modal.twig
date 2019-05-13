@@ -1,19 +1,5 @@
 {% import '_includes/forms' as forms %}
 
-{# Get transformers options #}
-{% set isFlattenTransformerEnabled = false %}
-{% set prefixTransformerString = '' %}
-
-{% for transformer in options.transformers %}
-    {% switch transformer.type %}
-        {% case "flatten" %}
-            {% set isFlattenTransformerEnabled = true %}
-        {% case "prefix" %}
-            {% set prefixTransformerString = transformer.prefix %}
-    {% endswitch %}
-{% endfor %}
-
-
 <div class="craftpageexporter-modal">
     <form method="post" action="{{ siteUrl }}actions/craft-page-exporter/default/export" accept-charset="UTF-8">
         {{ csrfInput() }}
@@ -23,35 +9,53 @@
         <input type="hidden" name="entryIds" value="{{ entryIds }}">
         <input type="hidden" name="siteId" value="{{ siteId }}">
 
+        {{ forms.textField({
+            label: "Base URL"|t,
+            id: 'baseUrl',
+            name: 'baseUrl',
+            value: settings.baseUrl,
+            required: true
+        }) }}
+
         {{ forms.lightswitchField({
-            label: 'Inline styles',
-            instructions: "Use inline styles in HTML."|t,
+            label: "Inline styles"|t,
             id: 'inlineStyles',
             name: 'inlineStyles',
-            on: options.inlineStyles
+            on: settings.inlineStyles,
+            required: true
         }) }}
 
         {{ forms.lightswitchField({
-            label: 'Inline scripts',
-            instructions: "Use inline scripts in HTML."|t,
+            label: "Inline scripts"|t,
             id: 'inlineScripts',
             name: 'inlineScripts',
-            on: options.inlineScripts
+            on: settings.inlineScripts,
+            required: true
+        }) }}
+
+
+        {{ forms.lightswitchField({
+            label: "Enable FlattenTransformer ?"|t,
+            id: 'transformers.FlattenTransformer.enabled',
+            name: "transformers[FlattenTransformer][enabled]",
+            on: settings.transformers.FlattenTransformer.enabled,
+            required: true
         }) }}
 
         {{ forms.lightswitchField({
-            label: 'Flatten',
-            id: 'flattenTransformer',
-            name: 'flattenTransformer',
-            on: isFlattenTransformerEnabled
+            label: "Enable PrefixExportUrlTransformer ?"|t,
+            id: 'transformers.PrefixExportUrlTransformer.enabled',
+            name: "transformers[PrefixExportUrlTransformer][enabled]",
+            on: settings.transformers.PrefixExportUrlTransformer.enabled,
+            required: true
         }) }}
 
         {{ forms.textField({
-            label: 'Prefix URL',
-            instructions: "Specify string for prefixing URL."|t,
-            id: 'prefixTransformer',
-            name: 'prefixTransformer',
-            value: prefixTransformerString
+            label: "Prefix for PrefixExportUrlTransformer"|t,
+            id: 'transformers.PrefixExportUrlTransformer.prefix',
+            name: "transformers[PrefixExportUrlTransformer][prefix]",
+            value: settings.transformers.PrefixExportUrlTransformer.prefix,
+            required: true
         }) }}
 
         <input type="submit" value="Send">
