@@ -84,7 +84,7 @@ class DefaultController extends Controller
         $exporter = new ZipExporter(['export' => $export]);
         $exporter->export();
 
-        die('ok');
+        Craft::$app->end();
     }
 
     /**

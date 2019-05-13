@@ -1,1 +1,8 @@
-.craftpageexporter-modal{margin:40px;position:relative;height:calc(100% - 80px);overflow-y:auto}
+.craftpageexporter-modal {
+  margin: 40px;
+  position: relative;
+  height: calc(100% - (40px*2));
+  overflow-y: auto; }
+
+
+/*# sourceMappingURL=CraftpageexporterExportModal.css.map*/

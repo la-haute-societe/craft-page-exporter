@@ -23,6 +23,7 @@ use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\FlattenTransformer;
 use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 use lhs\craftpageexporter\services\CraftpageexporterService;
+use Twig\Parser;
 use yii\base\Event;
 
 /**
@@ -52,6 +53,11 @@ class Craftpageexporter extends Plugin
      */
     public $schemaVersion = '1.0.0';
 
+    /**
+     * @var bool
+     */
+    public $hasCpSettings = true;
+
     // Public Methods
     // =========================================================================
 
@@ -67,7 +73,7 @@ class Craftpageexporter extends Plugin
             $this->controllerNamespace = 'lhs\craftpageexporter\console\controllers';
         }
 
-        Craft::$app->view->hook('cp.entries.edit', function(&$context) {
+        Craft::$app->view->hook('cp.entries.edit', function (&$context) {
             $this->view->registerAssetBundle(CraftpageexporterEntryEditAssetBundle::class);
         });
 
@@ -84,7 +90,7 @@ class Craftpageexporter extends Plugin
 
         // Register element action to assets for clearing transforms
         Event::on(Entry::class, Element::EVENT_REGISTER_ACTIONS,
-            function(RegisterElementActionsEvent $event) {
+            function (RegisterElementActionsEvent $event) {
                 $event->actions[] = CraftpageexporterElementAction::class;
             }
         );
@@ -109,15 +115,17 @@ class Craftpageexporter extends Plugin
             $settings->$key = $value;
         }
 
-        foreach ($settings->transformers as &$transformer) {
-            switch ($transformer['type']) {
-                case 'flatten':
-                    $transformer = new FlattenTransformer();
-                    break;
-                case 'prefix':
-                    $transformer = new PrefixExportUrlTransformer(['prefix' => $transformer['prefix']]);
+        foreach ($settings->transformers as $key => $options) {
+            if (!$options['enabled']) {
+                unset($settings->transformers[$key]);
+                continue;
             }
+
+            $className = $options['class'];
+            unset($options['class']);
+            $settings->transformers[$key] = new $className($options);
         }
+
         return $settings;
     }
 
@@ -137,11 +145,29 @@ class Craftpageexporter extends Plugin
      */
     protected function settingsHtml(): string
     {
-        return Craft::$app->view->renderTemplate(
-            'craft-page-exporter/settings',
-            [
-                'settings' => $this->getSettings(),
-            ]
-        );
+        // Get and pre-validate the settings
+        $settings = $this->getSettings();
+        $settings->validate();
+
+        // Get the settings that are being defined by the config file
+        $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
+
+        return Craft::$app->view->renderTemplate('craft-page-exporter/settings', [
+            'settings' => $this->getSettings(),
+            'overrides' => $this->array_keys_multi($overrides),
+        ]);
+    }
+
+    private function array_keys_multi(array $array, $prefix = "") {
+        $keys = [];
+
+        foreach ($array as $key => $value) {
+            $keys[] = $prefix.$key;
+            if (is_array($value)) {
+                $keys = array_merge($keys, $this->array_keys_multi($value, sprintf('%s%s.', $prefix, $key)));
+            }
+        }
+
+        return $keys;
     }
 }

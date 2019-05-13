@@ -14,3 +14,77 @@
 #}
 
 {% import "_includes/forms" as forms %}
+{% import "craft-page-exporter/macros" as macros %}
+
+{{ forms.textField({
+    label: "Base URL"|t,
+    id: 'baseUrl',
+    name: 'baseUrl',
+    value: settings.baseUrl,
+    required: true,
+    warning: 'baseUrl' in overrides ? macros.configWarning('baseUrl'),
+    disabled: 'baseUrl' in overrides,
+    readonly: 'baseUrl' in overrides,
+    errors: settings.getErrors('baseUrl')
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Inline styles"|t,
+    id: 'inlineStyles',
+    name: 'inlineStyles',
+    on: settings.inlineStyles,
+    required: true,
+    warning: 'inlineStyles' in overrides ? macros.configWarning('inlineStyles'),
+    disabled: 'inlineStyles' in overrides,
+    readonly: 'inlineStyles' in overrides,
+    errors: settings.getErrors('inlineStyles')
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Inline scripts"|t,
+    id: 'inlineScripts',
+    name: 'inlineScripts',
+    on: settings.inlineScripts,
+    required: true,
+    warning: 'inlineScripts' in overrides ? macros.configWarning('inlineScripts'),
+    disabled: 'inlineScripts' in overrides,
+    readonly: 'inlineScripts' in overrides,
+    errors: settings.getErrors('inlineScripts')
+}) }}
+
+
+{{ forms.lightswitchField({
+    label: "Enable flatten transformer ?"|t,
+    id: 'transformers.flatten.enabled',
+    name: "transformers[flatten][enabled]",
+    on: settings.transformers.flatten.enabled,
+    required: true,
+    warning: 'transformers.flatten.enabled' in overrides ? macros.configWarning('transformers.flatten.enabled'),
+    disabled: 'transformers.flatten.enabled' in overrides,
+    readonly: 'transformers.flatten.enabled' in overrides,
+    errors: settings.getErrors('transformers.flatten.enabled')
+}) }}
+
+{{ forms.lightswitchField({
+    label: "Enable prefix transformer ?"|t,
+    id: 'transformers.prefix.enabled',
+    name: "transformers[prefix][enabled]",
+    on: settings.transformers.prefix.enabled,
+    required: true,
+    warning: 'transformers.prefix.enabled' in overrides ? macros.configWarning('transformers.prefix.enabled'),
+    disabled: 'transformers.prefix.enabled' in overrides,
+    readonly: 'transformers.prefix.enabled' in overrides,
+    errors: settings.getErrors('transformers.prefix.enabled')
+}) }}
+
+{{ forms.textField({
+    label: "Prefix for prefix transformer"|t,
+    id: 'transformers.prefix.prefix',
+    name: "transformers[prefix][prefix]",
+    value: settings.transformers.prefix.prefix,
+    required: true,
+    warning: 'transformers.prefix.prefix' in overrides ? macros.configWarning('transformers.prefix.prefix'),
+    disabled: 'transformers.prefix.prefix' in overrides,
+    readonly: 'transformers.prefix.prefix' in overrides,
+    errors: settings.getErrors('transformers.prefix.prefix')
+}) }}
