@@ -114,13 +114,24 @@ class Craftpageexporter extends Plugin
         $this->overridesSettings($settings, $overrides);
 
         foreach ($settings->transformers as $key => $options) {
+
+            // Check if transformer is enabled
             if (!$options['enabled']) {
                 unset($settings->transformers[$key]);
                 continue;
             }
 
             $className = sprintf('lhs\craftpageexporter\models\transformers\%s', $key);
+
+            // Remove 'enabled' from transformer options
             unset($options['enabled']);
+
+            // Interpret twig
+            foreach ($options as &$option) {
+                $option = Craft::$app->getView()->renderString($option);
+            }
+
+            // Use options as transformer properties
             $settings->transformers[$key] = new $className($options);
         }
 
