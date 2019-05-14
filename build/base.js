@@ -72,12 +72,6 @@ module.exports = (config) => {
             new MiniCssExtractPlugin({
                 filename: `${config.assets.styles}/${config.filenames[process.env.NODE_ENV].css}`,
                 chunkFilename: `${config.assets.styles}/${config.filenames[process.env.NODE_ENV].cssChunk}`,
-            }),
-
-            new ExtraneousFileCleanupPlugin({
-                extensions: ['.js'],
-                minBytes: 5120,
-                manifestJsonName: 'webpack-assets.json',
             })
         ],
 
