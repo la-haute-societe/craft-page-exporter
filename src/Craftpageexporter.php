@@ -16,7 +16,9 @@ use craft\base\Plugin;
 use craft\console\Application as ConsoleApplication;
 use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
+use craft\events\RegisterUrlRulesEvent;
 use craft\web\twig\variables\CraftVariable;
+use craft\web\UrlManager;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
@@ -84,6 +86,15 @@ class Craftpageexporter extends Plugin
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
                 $variable->set('pageExporter', PageExporterVariable::class);
+            }
+        );
+
+        Event::on(
+            UrlManager::class,
+            UrlManager::EVENT_REGISTER_SITE_URL_RULES,
+            function (RegisterUrlRulesEvent $event) {
+                Craft::warning('REGISTER URL EXPORTER');
+                $event->rules['page-exporter/export/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/export';
             }
         );
 
@@ -198,7 +209,8 @@ class Craftpageexporter extends Plugin
      */
     private function overridesSettings(&$settings, $overrides) {
         foreach ($settings as $key => $value) {
-            $settings->$key = $overrides[$key];
+            if (!empty($overrides[$key]))
+                $settings->$key = $overrides[$key];
         }
     }
 }

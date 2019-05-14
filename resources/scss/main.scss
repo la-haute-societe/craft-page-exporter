@@ -1,4 +1,11 @@
+/**
+ * Libs
+ */
 @import "libs/bootstrap-grid";
 
-@import "components/exportModal";
+/**
+ * Components
+ */
+@import "components/export-button";
+@import "components/export-modal";
 @import "components/form";

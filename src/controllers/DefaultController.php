@@ -44,27 +44,34 @@ class DefaultController extends Controller
     // =========================================================================
 
     /**
+     * @param string $entryIds
+     * @param integer $siteId
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
      * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
      * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\BadRequestHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionExport()
+    public function actionExport($entryIds = null, $siteId = null)
     {
-        $this->requirePostRequest();
         $this->requireAdmin();
+
         $post = Craft::$app->request->getBodyParams();
-        $ids = explode(',', $post['entryIds']);
+        if (!empty($post)) {
+            $entryIds = $post['entryIds'];
+            $siteId = $post['siteId'];
+        }
+
+
+        $ids = explode(',', $entryIds);
 
         // Create export
         $export = new Export(Craftpageexporter::$plugin->getExportConfig($post));
 
         foreach ($ids as $id) {
             // Get entry to export
-            $entry = $this->getEntryModel($id, $post['siteId']);
+            $entry = $this->getEntryModel($id, $siteId);
             $entryContent = $this->getEntryContent($entry);
 
             // Assign a name to the page
