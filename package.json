@@ -28,6 +28,10 @@
     "style-loader": "^0.23.1",
     "uglifyjs-webpack-plugin": "^2.0.1",
     "webpack": "^4.27.1",
-    "webpack-cli": "^3.1.2"
+    "webpack-cli": "^3.1.2",
+    "webpack-extraneous-file-cleanup-plugin": "^2.0.0"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1"
   }
 }

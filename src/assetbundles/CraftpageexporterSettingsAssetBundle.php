@@ -19,7 +19,7 @@ use craft\web\assets\cp\CpAsset;
  * @package   Craftpageexporter
  * @since     1.0.0
  */
-class CraftpageexporterExportModalAssetBundle extends AssetBundle
+class CraftpageexporterSettingsAssetBundle extends AssetBundle
 {
     // Public Methods
     // =========================================================================
@@ -42,7 +42,7 @@ class CraftpageexporterExportModalAssetBundle extends AssetBundle
         // define the relative path to CSS/JS files that should be registered with the page
         // when this asset bundle is registered
         $this->js = [
-            $assetsFilenames['CraftpageexporterExportModal']['js']
+
         ];
 
         $this->css = [

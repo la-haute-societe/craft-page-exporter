@@ -95,11 +95,8 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scss/main.scss */ "./scss/main.scss");
-/* harmony import */ var _scss_main_scss__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_scss_main_scss__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _components_GarnishExportModal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/GarnishExportModal */ "./js/components/GarnishExportModal.js");
-/* harmony import */ var _components_GarnishExportModal__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_components_GarnishExportModal__WEBPACK_IMPORTED_MODULE_1__);
-
+/* harmony import */ var _components_GarnishExportModal__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/GarnishExportModal */ "./js/components/GarnishExportModal.js");
+/* harmony import */ var _components_GarnishExportModal__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_GarnishExportModal__WEBPACK_IMPORTED_MODULE_0__);
 
 
 /***/ }),
@@ -193,17 +190,6 @@ Craft.CraftpageexporterExportModal = Garnish.Modal.extend({
 }, {
   defaultSettings: {}
 });
-
-/***/ }),
-
-/***/ "./scss/main.scss":
-/*!************************!*\
-  !*** ./scss/main.scss ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-// extracted by mini-css-extract-plugin
 
 /***/ })
 

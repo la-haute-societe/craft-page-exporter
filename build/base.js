@@ -9,6 +9,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const AssetsPlugin = require('assets-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const ExtraneousFileCleanupPlugin = require('webpack-extraneous-file-cleanup-plugin');
+
 
 
 // Get list of files paths to copy
@@ -71,6 +73,12 @@ module.exports = (config) => {
                 filename: `${config.assets.styles}/${config.filenames[process.env.NODE_ENV].css}`,
                 chunkFilename: `${config.assets.styles}/${config.filenames[process.env.NODE_ENV].cssChunk}`,
             }),
+
+            new ExtraneousFileCleanupPlugin({
+                extensions: ['.js'],
+                minBytes: 5120,
+                manifestJsonName: 'webpack-assets.json',
+            })
         ],
 
         module: {

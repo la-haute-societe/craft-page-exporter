@@ -46,7 +46,7 @@ class CraftpageexporterEntryEditAssetBundle extends AssetBundle
         ];
 
         $this->css = [
-            $assetsFilenames['CraftpageexporterEntryEdit']['css'],
+            $assetsFilenames['craftpageexporter']['css'],
         ];
 
         parent::init();

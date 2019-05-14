@@ -16,75 +16,110 @@
 {% import "_includes/forms" as forms %}
 {% import "craft-page-exporter/macros" as macros %}
 
-{{ forms.textField({
-    label: "Base URL"|t,
-    id: 'baseUrl',
-    name: 'baseUrl',
-    value: settings.baseUrl,
-    required: true,
-    warning: 'baseUrl' in overrides ? macros.configWarning('baseUrl'),
-    disabled: 'baseUrl' in overrides,
-    readonly: 'baseUrl' in overrides,
-    errors: settings.getErrors('baseUrl')
-}) }}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h2>Common</h2>
+        </div>
+        <div class="col-5">
+            {{ forms.textField({
+                label: "Base URL"|t,
+                id: 'baseUrl',
+                name: 'baseUrl',
+                value: settings.baseUrl,
+                required: true,
+                warning: 'baseUrl' in overrides ? macros.configWarning('baseUrl'),
+                disabled: 'baseUrl' in overrides,
+                readonly: 'baseUrl' in overrides,
+                errors: settings.getErrors('baseUrl')
+            }) }}
+        </div>
+        <div class="col-3 offset-1">
+            {{ forms.lightswitchField({
+                label: "Inline styles"|t,
+                id: 'inlineStyles',
+                name: 'inlineStyles',
+                on: settings.inlineStyles,
+                required: true,
+                warning: 'inlineStyles' in overrides ? macros.configWarning('inlineStyles'),
+                disabled: 'inlineStyles' in overrides,
+                readonly: 'inlineStyles' in overrides,
+                errors: settings.getErrors('inlineStyles')
+            }) }}
+        </div>
+        <div class="col-3">
+            {{ forms.lightswitchField({
+                label: "Inline scripts"|t,
+                id: 'inlineScripts',
+                name: 'inlineScripts',
+                on: settings.inlineScripts,
+                required: true,
+                warning: 'inlineScripts' in overrides ? macros.configWarning('inlineScripts'),
+                disabled: 'inlineScripts' in overrides,
+                readonly: 'inlineScripts' in overrides,
+                errors: settings.getErrors('inlineScripts')
+            }) }}
+        </div>
+    </div>
 
-{{ forms.lightswitchField({
-    label: "Inline styles"|t,
-    id: 'inlineStyles',
-    name: 'inlineStyles',
-    on: settings.inlineStyles,
-    required: true,
-    warning: 'inlineStyles' in overrides ? macros.configWarning('inlineStyles'),
-    disabled: 'inlineStyles' in overrides,
-    readonly: 'inlineStyles' in overrides,
-    errors: settings.getErrors('inlineStyles')
-}) }}
+    <div class="row">
+        <div class="col-12">
+            <h2>Transformers</h2>
+        </div>
 
-{{ forms.lightswitchField({
-    label: "Inline scripts"|t,
-    id: 'inlineScripts',
-    name: 'inlineScripts',
-    on: settings.inlineScripts,
-    required: true,
-    warning: 'inlineScripts' in overrides ? macros.configWarning('inlineScripts'),
-    disabled: 'inlineScripts' in overrides,
-    readonly: 'inlineScripts' in overrides,
-    errors: settings.getErrors('inlineScripts')
-}) }}
+        <div class="col-12">
+            <h3>FlattenTransformer</h3>
+        </div>
+        <div class="col-6">
+            {{ forms.lightswitchField({
+                label: "Enable FlattenTransformer ?"|t,
+                id: 'transformers.FlattenTransformer.enabled',
+                name: "transformers[FlattenTransformer][enabled]",
+                on: settings.transformers.FlattenTransformer.enabled,
+                required: true,
+                warning: 'transformers.FlattenTransformer.enabled' in overrides ? macros.configWarning('transformers.FlattenTransformer.enabled'),
+                disabled: 'transformers.FlattenTransformer.enabled' in overrides,
+                readonly: 'transformers.FlattenTransformer.enabled' in overrides,
+                errors: settings.getErrors('transformers.FlattenTransformer.enabled')
+            }) }}
+        </div>
+
+        <div class="col-12">
+            <h3>PrefixExportUrlTransformer</h3>
+        </div>
+        <div class="col-6">
+            {{ forms.lightswitchField({
+                label: "Enable PrefixExportUrlTransformer ?"|t,
+                id: 'transformers.PrefixExportUrlTransformer.enabled',
+                name: "transformers[PrefixExportUrlTransformer][enabled]",
+                on: settings.transformers.PrefixExportUrlTransformer.enabled,
+                required: true,
+                warning: 'transformers.PrefixExportUrlTransformer.enabled' in overrides ? macros.configWarning('transformers.PrefixExportUrlTransformer.enabled'),
+                disabled: 'transformers.PrefixExportUrlTransformer.enabled' in overrides,
+                readonly: 'transformers.PrefixExportUrlTransformer.enabled' in overrides,
+                errors: settings.getErrors('transformers.PrefixExportUrlTransformer.enabled')
+            }) }}
+        </div>
+        <div class="col-6">
+            {{ forms.textField({
+                label: "Prefix for PrefixExportUrlTransformer"|t,
+                id: 'transformers.PrefixExportUrlTransformer.prefix',
+                name: "transformers[PrefixExportUrlTransformer][prefix]",
+                value: settings.transformers.PrefixExportUrlTransformer.prefix,
+                required: true,
+                warning: 'transformers.PrefixExportUrlTransformer.prefix' in overrides ? macros.configWarning('transformers.PrefixExportUrlTransformer.prefix'),
+                disabled: 'transformers.PrefixExportUrlTransformer.prefix' in overrides,
+                readonly: 'transformers.PrefixExportUrlTransformer.prefix' in overrides,
+                errors: settings.getErrors('transformers.PrefixExportUrlTransformer.prefix')
+            }) }}
+        </div>
+    </div>
+</div>
 
 
-{{ forms.lightswitchField({
-    label: "Enable FlattenTransformer ?"|t,
-    id: 'transformers.FlattenTransformer.enabled',
-    name: "transformers[FlattenTransformer][enabled]",
-    on: settings.transformers.FlattenTransformer.enabled,
-    required: true,
-    warning: 'transformers.FlattenTransformer.enabled' in overrides ? macros.configWarning('transformers.FlattenTransformer.enabled'),
-    disabled: 'transformers.FlattenTransformer.enabled' in overrides,
-    readonly: 'transformers.FlattenTransformer.enabled' in overrides,
-    errors: settings.getErrors('transformers.FlattenTransformer.enabled')
-}) }}
 
-{{ forms.lightswitchField({
-    label: "Enable PrefixExportUrlTransformer ?"|t,
-    id: 'transformers.PrefixExportUrlTransformer.enabled',
-    name: "transformers[PrefixExportUrlTransformer][enabled]",
-    on: settings.transformers.PrefixExportUrlTransformer.enabled,
-    required: true,
-    warning: 'transformers.PrefixExportUrlTransformer.enabled' in overrides ? macros.configWarning('transformers.PrefixExportUrlTransformer.enabled'),
-    disabled: 'transformers.PrefixExportUrlTransformer.enabled' in overrides,
-    readonly: 'transformers.PrefixExportUrlTransformer.enabled' in overrides,
-    errors: settings.getErrors('transformers.PrefixExportUrlTransformer.enabled')
-}) }}
 
-{{ forms.textField({
-    label: "Prefix for PrefixExportUrlTransformer"|t,
-    id: 'transformers.PrefixExportUrlTransformer.prefix',
-    name: "transformers[PrefixExportUrlTransformer][prefix]",
-    value: settings.transformers.PrefixExportUrlTransformer.prefix,
-    required: true,
-    warning: 'transformers.PrefixExportUrlTransformer.prefix' in overrides ? macros.configWarning('transformers.PrefixExportUrlTransformer.prefix'),
-    disabled: 'transformers.PrefixExportUrlTransformer.prefix' in overrides,
-    readonly: 'transformers.PrefixExportUrlTransformer.prefix' in overrides,
-    errors: settings.getErrors('transformers.PrefixExportUrlTransformer.prefix')
-}) }}
+
+
+
+

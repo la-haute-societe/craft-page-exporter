@@ -1,5 +1,3 @@
-{% import '_includes/forms' as forms %}
-
 <div class="craftpageexporter-modal">
     <form method="post" action="{{ siteUrl }}actions/craft-page-exporter/default/export" accept-charset="UTF-8">
         {{ csrfInput() }}
@@ -9,56 +7,10 @@
         <input type="hidden" name="entryIds" value="{{ entryIds }}">
         <input type="hidden" name="siteId" value="{{ siteId }}">
 
-        {{ forms.textField({
-            label: "Base URL"|t,
-            id: 'baseUrl',
-            name: 'baseUrl',
-            value: settings.baseUrl,
-            required: true
-        }) }}
+        {% set overrides = [] %}
+        {% include 'craft-page-exporter/settings.twig' %}
 
-        {{ forms.lightswitchField({
-            label: "Inline styles"|t,
-            id: 'inlineStyles',
-            name: 'inlineStyles',
-            on: settings.inlineStyles,
-            required: true
-        }) }}
-
-        {{ forms.lightswitchField({
-            label: "Inline scripts"|t,
-            id: 'inlineScripts',
-            name: 'inlineScripts',
-            on: settings.inlineScripts,
-            required: true
-        }) }}
-
-
-        {{ forms.lightswitchField({
-            label: "Enable FlattenTransformer ?"|t,
-            id: 'transformers.FlattenTransformer.enabled',
-            name: "transformers[FlattenTransformer][enabled]",
-            on: settings.transformers.FlattenTransformer.enabled,
-            required: true
-        }) }}
-
-        {{ forms.lightswitchField({
-            label: "Enable PrefixExportUrlTransformer ?"|t,
-            id: 'transformers.PrefixExportUrlTransformer.enabled',
-            name: "transformers[PrefixExportUrlTransformer][enabled]",
-            on: settings.transformers.PrefixExportUrlTransformer.enabled,
-            required: true
-        }) }}
-
-        {{ forms.textField({
-            label: "Prefix for PrefixExportUrlTransformer"|t,
-            id: 'transformers.PrefixExportUrlTransformer.prefix',
-            name: "transformers[PrefixExportUrlTransformer][prefix]",
-            value: settings.transformers.PrefixExportUrlTransformer.prefix,
-            required: true
-        }) }}
-
-        <input type="submit" value="Send">
+        <input type="submit" class="btn submit" value="Export">
     </form>
 </div>
 

@@ -18,6 +18,7 @@ use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\web\twig\variables\CraftVariable;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
+use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\services\CraftpageexporterService;
@@ -161,6 +162,7 @@ class Craftpageexporter extends Plugin
         // Get the settings that are being defined by the config file
         $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
 
+        Craft::$app->view->registerAssetBundle(CraftpageexporterSettingsAssetBundle::class);
         return Craft::$app->view->renderTemplate('craft-page-exporter/settings', [
             'settings' => $this->getSettings(),
             'overrides' => $this->array_keys_multi($overrides),

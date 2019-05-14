@@ -1,5 +1,6 @@
 {
   "entry": {
+    "craftpageexporter": "./js/craftpageexporter.js",
     "CraftpageexporterExportModal": "./js/CraftpageexporterExportModal.js",
     "CraftpageexporterEntryEdit": "./js/CraftpageexporterEntryEdit.js"
   },
