@@ -43,15 +43,13 @@ class Settings extends Model
         $this->inlineStyles = true;
         $this->inlineScripts = true;
         $this->transformers = [
-            'flatten' => [
-                'class' => 'lhs\craftpageexporter\models\transformers\FlattenTransformer',
+            'FlattenTransformer' => [
                 'enabled' => true
             ],
-            'prefix' => [
-                'class' => 'lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer',
-                'enabled' => false,
-                'prefix' => sprintf('https://cdn.test.com/%s', date('Y-m'))
-            ]
+//            'PrefixExportUrlTransformer' => [
+//                'enabled' => false,
+//                'prefix' => sprintf('https://cdn.test.com/%s', date('Y-m'))
+//            ]
         ];
     }
 }

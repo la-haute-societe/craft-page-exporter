@@ -44,6 +44,25 @@ yarn dev    # Build assets in development mode
 yarn build  # Build assets in production mode
 ```
 
+### Transformers
+
+You can use the transformers that you defined in `src/models/transformers` folder.
+
+In `Settings.php`, add a new entry as follow :
+```php
+'transformers' => [
+    [...]
+    'TransformerClassName' => [
+        'enabled' => true,
+        'option1' => 'value1',
+        'option2' => 'value2'
+    ]
+]
+```
+You will also need to add them in `export-modal` and `settings` templates.
+
+The options that you defined will be added as properties of your class object. 
+
 ## TODO
 
 - Automatiser build assets (yarn) dans le CI
