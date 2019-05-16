@@ -25,31 +25,24 @@ class Settings extends Model
     // =========================================================================
 
     /** @var string */
-    public $baseUrl;
+    public $baseUrl = null;
 
     /** @var bool */
-    public $inlineStyles;
+    public $inlineStyles = true;
 
     /** @var bool */
-    public $inlineScripts;
+    public $inlineScripts = true;
 
-    /** @var BaseTransformer */
-    public $transformers;
+    /** @var bool */
+    public $flatten = true;
+
+    /** @var null|string */
+    public $prefixExportUrl = null;
+
 
     public function init()
     {
         parent::init();
         $this->baseUrl = UrlHelper::baseRequestUrl();
-        $this->inlineStyles = true;
-        $this->inlineScripts = true;
-        $this->transformers = [
-            'FlattenTransformer' => [
-                'enabled' => true
-            ],
-//            'PrefixExportUrlTransformer' => [
-//                'enabled' => false,
-//                'prefix' => sprintf('https://cdn.test.com/%s', date('Y-m'))
-//            ]
-        ];
     }
 }

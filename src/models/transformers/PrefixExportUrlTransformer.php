@@ -3,6 +3,7 @@
 namespace lhs\craftpageexporter\models\transformers;
 
 
+use Craft;
 use lhs\craftpageexporter\helpers\PhpUri;
 use lhs\craftpageexporter\models\Asset;
 use lhs\craftpageexporter\models\ImageAsset;
@@ -25,14 +26,15 @@ class PrefixExportUrlTransformer extends BaseTransformer
 
     /**
      * @param Asset $asset
-     * @throws \ReflectionException
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     public function transform($asset)
     {
         if (!$this->needToTransform($asset)) {
             return;
         }
-
+        $prefix = Craft::$app->getView()->renderString($this->prefix);
 
         // Set the new url to the asset
         $asset->exportUrl = PhpUri::parse($this->prefix)->join($asset->exportUrl);

@@ -44,7 +44,7 @@ class DefaultController extends Controller
     // =========================================================================
 
     /**
-     * @param string $entryIds
+     * @param string  $entryIds
      * @param integer $siteId
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
@@ -61,6 +61,9 @@ class DefaultController extends Controller
         if (!empty($post)) {
             $entryIds = $post['entryIds'];
             $siteId = $post['siteId'];
+            $post['flatten'] = !!$post['flatten'];
+            $post['inlineScripts'] = !!$post['inlineScripts'];
+            $post['inlineStyles'] = !!$post['inlineStyles'];
         }
 
 
@@ -114,16 +117,17 @@ class DefaultController extends Controller
         $view = \Craft::$app->getView();
         $modalHtml = $view->renderTemplate('craft-page-exporter/export-modal', [
             'entryIds' => $entryIds,
-            'siteId' => $siteId,
-            'settings' => Craftpageexporter::$plugin->getSettings()
+            'siteId'   => $siteId,
+            'settings' => Craftpageexporter::$plugin->getSettings(),
         ]);
 
         // Set response to return
         $responseData = [
-            'success' => true,
+            'success'   => true,
             'modalHtml' => $modalHtml,
             'requestId' => $requestId,
         ];
+
         return $this->asJson($responseData);
     }
 

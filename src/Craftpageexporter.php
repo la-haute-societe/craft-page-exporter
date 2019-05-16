@@ -24,6 +24,8 @@ use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\services\CraftpageexporterService;
+use lhs\craftpageexporter\models\transformers\FlattenTransformer;
+use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 use Twig\Parser;
 use yii\base\Event;
 
@@ -116,38 +118,35 @@ class Craftpageexporter extends Plugin
     }
 
     /**
-     * @return bool|\craft\base\Model|null
+     * @param array $overrides
+     * @return Settings
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\SyntaxError
      */
     public function getExportConfig($overrides = [])
     {
         /** @var Settings $settings */
         $settings = $this->getSettings();
+        $settings = $this->overridesSettings($settings, $overrides);
 
-        $this->overridesSettings($settings, $overrides);
+        $exportConfig = [
+            'baseUrl'       => $settings->baseUrl,
+            'inlineStyles'  => $settings->inlineStyles,
+            'inlineScripts' => $settings->inlineScripts,
+            'transformers'  => [],
+        ];
 
-        foreach ($settings->transformers as $key => $options) {
-
-            // Check if transformer is enabled
-            if (!$options['enabled']) {
-                unset($settings->transformers[$key]);
-                continue;
-            }
-
-            $className = sprintf('lhs\craftpageexporter\models\transformers\%s', $key);
-
-            // Remove 'enabled' from transformer options
-            unset($options['enabled']);
-
-            // Interpret twig
-            foreach ($options as &$option) {
-                $option = Craft::$app->getView()->renderString($option);
-            }
-
-            // Use options as transformer properties
-            $settings->transformers[$key] = new $className($options);
+        if ($settings->flatten === true) {
+            $exportConfig['transformers'][] = new FlattenTransformer();
         }
 
-        return $settings;
+        if ($settings->prefixExportUrl) {
+            $exportConfig['transformers'][] = new PrefixExportUrlTransformer([
+                'prefix' => $settings->prefixExportUrl,
+            ]);
+        }
+
+        return $exportConfig;
     }
 
     // Protected Methods
@@ -174,8 +173,9 @@ class Craftpageexporter extends Plugin
         $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
 
         Craft::$app->view->registerAssetBundle(CraftpageexporterSettingsAssetBundle::class);
+
         return Craft::$app->view->renderTemplate('craft-page-exporter/settings', [
-            'settings' => $this->getSettings(),
+            'settings'  => $this->getSettings(),
             'overrides' => $this->array_keys_multi($overrides),
         ]);
     }
@@ -186,15 +186,16 @@ class Craftpageexporter extends Plugin
     // =========================================================================
 
     /**
-     * @param array $array
+     * @param array  $array
      * @param string $prefix
      * @return array
      */
-    private function array_keys_multi(array $array, $prefix = "") {
+    private function array_keys_multi(array $array, $prefix = "")
+    {
         $keys = [];
 
         foreach ($array as $key => $value) {
-            $keys[] = $prefix.$key;
+            $keys[] = $prefix . $key;
             if (is_array($value)) {
                 $keys = array_merge($keys, $this->array_keys_multi($value, sprintf('%s%s.', $prefix, $key)));
             }
@@ -205,12 +206,17 @@ class Craftpageexporter extends Plugin
 
     /**
      * @param Settings $settings
-     * @param array $overrides
+     * @param array    $overrides
+     * @return Settings
      */
-    private function overridesSettings(&$settings, $overrides) {
+    private function overridesSettings($settings, $overrides = [])
+    {
         foreach ($settings as $key => $value) {
-            if (!empty($overrides[$key]))
+            if (!is_null($overrides[$key])) {
                 $settings->$key = $overrides[$key];
+            }
         }
+
+        return $settings;
     }
 }

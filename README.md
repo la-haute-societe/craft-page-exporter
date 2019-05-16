@@ -70,5 +70,6 @@ The options that you defined will be added as properties of your class object.
 - Ajouter un bouton "Export" + "Custom export"
 - Doc surcharger les sélécteurs
 - Doc surcharger la fonction de récup du contenu (render vs "file_get_contents")
+- Template twig dans le champ prefix
 - Publier sur le store
 
