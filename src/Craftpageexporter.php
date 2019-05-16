@@ -119,7 +119,7 @@ class Craftpageexporter extends Plugin
 
     /**
      * @param array $overrides
-     * @return Settings
+     * @return array
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\SyntaxError
      */
@@ -212,7 +212,7 @@ class Craftpageexporter extends Plugin
     private function overridesSettings($settings, $overrides = [])
     {
         foreach ($settings as $key => $value) {
-            if (!is_null($overrides[$key])) {
+            if (isset($overrides[$key])) {
                 $settings->$key = $overrides[$key];
             }
         }
