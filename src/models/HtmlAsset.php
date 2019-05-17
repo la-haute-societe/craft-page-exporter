@@ -80,7 +80,8 @@ class HtmlAsset extends Asset
      */
     public function populateChildren()
     {
-        $this->crawler = new Crawler($this->fromString);
+        $this->crawler = new Crawler();
+        $this->crawler->addHtmlContent($this->fromString);
 
         // Add children
         foreach ($this->selectorTypes as $selectorType) {
