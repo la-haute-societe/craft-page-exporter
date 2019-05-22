@@ -1,12 +1,12 @@
 {
-  "craftpageexporter": {
+  "craftpageexporter":            {
     "css": "css/craftpageexporter.css",
-    "js": "js/craftpageexporter.js"
+    "js":  "js/craftpageexporter.js"
   },
   "CraftpageexporterExportModal": {
     "js": "js/CraftpageexporterExportModal.js"
   },
-  "CraftpageexporterEntryEdit": {
+  "CraftpageexporterEntryEdit":   {
     "js": "js/CraftpageexporterEntryEdit.js"
   }
 }

@@ -41,7 +41,8 @@ class Form extends Link implements \ArrayAccess
      *
      * @param \DOMElement $node       A \DOMElement instance
      * @param string      $currentUri The URI of the page where the form is embedded
-     * @param string      $method     The method to use for the link (if null, it defaults to the method defined by the form)
+     * @param string      $method     The method to use for the link (if null, it defaults to the method defined by the
+     *                                form)
      * @param string      $baseHref   The URI of the <base> used for relative links, but not for empty action
      *
      * @throws \LogicException if the node is not a button inside a form tag
@@ -83,9 +84,9 @@ class Form extends Link implements \ArrayAccess
     /**
      * Gets the field values.
      *
-     * The returned array does not include file fields (@see getFiles).
+     * The returned array does not include file fields (@return array An array of field values
+     * @see getFiles).
      *
-     * @return array An array of field values
      */
     public function getValues()
     {
@@ -158,11 +159,11 @@ class Form extends Link implements \ArrayAccess
      * This method converts fields with the array notation
      * (like foo[bar] to arrays) like PHP does.
      * The returned array is consistent with the array for field values
-     * (@see getPhpValues), rather than uploaded files found in $_FILES.
-     * For a compound file field foo[bar] it will create foo[bar][name],
-     * instead of foo[name][bar] which would be found in $_FILES.
+     * (@return array An array of file field values
+     * @see getPhpValues), rather than uploaded files found in $_FILES.
+     *      For a compound file field foo[bar] it will create foo[bar][name],
+     *      instead of foo[name][bar] which would be found in $_FILES.
      *
-     * @return array An array of file field values
      */
     public function getPhpFiles()
     {
@@ -203,7 +204,7 @@ class Form extends Link implements \ArrayAccess
 
             $pos = strpos($uri, '?');
             $base = false === $pos ? $uri : substr($uri, 0, $pos);
-            $uri = rtrim($base.'?'.$queryString, '?');
+            $uri = rtrim($base . '?' . $queryString, '?');
         }
 
         return $uri;
@@ -373,13 +374,15 @@ class Form extends Link implements \ArrayAccess
     protected function setNode(\DOMElement $node)
     {
         $this->button = $node;
-        if ('button' === $node->nodeName || ('input' === $node->nodeName && in_array(strtolower($node->getAttribute('type')), array('submit', 'button', 'image')))) {
+        if ('button' === $node->nodeName || ('input' === $node->nodeName && in_array(strtolower($node->getAttribute('type')),
+                    array('submit', 'button', 'image')))) {
             if ($node->hasAttribute('form')) {
                 // if the node has the HTML5-compliant 'form' attribute, use it
                 $formId = $node->getAttribute('form');
                 $form = $node->ownerDocument->getElementById($formId);
                 if (null === $form) {
-                    throw new \LogicException(sprintf('The selected node has an invalid form attribute (%s).', $formId));
+                    throw new \LogicException(sprintf('The selected node has an invalid form attribute (%s).',
+                        $formId));
                 }
                 $this->node = $form;
 
@@ -418,11 +421,11 @@ class Form extends Link implements \ArrayAccess
                 $this->button->setAttribute('value', '0');
 
                 // temporarily change the name of the input node for the x coordinate
-                $this->button->setAttribute('name', $name.'.x');
+                $this->button->setAttribute('name', $name . '.x');
                 $this->set(new Field\InputFormField($this->button));
 
                 // temporarily change the name of the input node for the y coordinate
-                $this->button->setAttribute('name', $name.'.y');
+                $this->button->setAttribute('name', $name . '.y');
                 $this->set(new Field\InputFormField($this->button));
 
                 // restore the original name of the input node
@@ -437,14 +440,16 @@ class Form extends Link implements \ArrayAccess
             // corresponding elements are either descendants or have a matching HTML5 form attribute
             $formId = Crawler::xpathLiteral($this->node->getAttribute('id'));
 
-            $fieldNodes = $xpath->query(sprintf('descendant::input[@form=%s] | descendant::button[@form=%s] | descendant::textarea[@form=%s] | descendant::select[@form=%s] | //form[@id=%s]//input[not(@form)] | //form[@id=%s]//button[not(@form)] | //form[@id=%s]//textarea[not(@form)] | //form[@id=%s]//select[not(@form)]', $formId, $formId, $formId, $formId, $formId, $formId, $formId, $formId));
+            $fieldNodes = $xpath->query(sprintf('descendant::input[@form=%s] | descendant::button[@form=%s] | descendant::textarea[@form=%s] | descendant::select[@form=%s] | //form[@id=%s]//input[not(@form)] | //form[@id=%s]//button[not(@form)] | //form[@id=%s]//textarea[not(@form)] | //form[@id=%s]//select[not(@form)]',
+                $formId, $formId, $formId, $formId, $formId, $formId, $formId, $formId));
             foreach ($fieldNodes as $node) {
                 $this->addField($node);
             }
         } else {
             // do the xpath query with $this->node as the context node, to only find descendant elements
             // however, descendant elements with form attribute are not part of this form
-            $fieldNodes = $xpath->query('descendant::input[not(@form)] | descendant::button[not(@form)] | descendant::textarea[not(@form)] | descendant::select[not(@form)]', $this->node);
+            $fieldNodes = $xpath->query('descendant::input[not(@form)] | descendant::button[not(@form)] | descendant::textarea[not(@form)] | descendant::select[not(@form)]',
+                $this->node);
             foreach ($fieldNodes as $node) {
                 $this->addField($node);
             }
@@ -474,7 +479,8 @@ class Form extends Link implements \ArrayAccess
             }
         } elseif ('input' == $nodeName && 'file' == strtolower($node->getAttribute('type'))) {
             $this->set(new Field\FileFormField($node));
-        } elseif ('input' == $nodeName && !in_array(strtolower($node->getAttribute('type')), array('submit', 'button', 'image'))) {
+        } elseif ('input' == $nodeName && !in_array(strtolower($node->getAttribute('type')),
+                array('submit', 'button', 'image'))) {
             $this->set(new Field\InputFormField($node));
         } elseif ('textarea' == $nodeName) {
             $this->set(new Field\TextareaFormField($node));

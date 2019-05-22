@@ -20,7 +20,8 @@ class InputFormFieldTest extends FormFieldTestCase
         $node = $this->createNode('input', '', array('type' => 'text', 'name' => 'name', 'value' => 'value'));
         $field = new InputFormField($node);
 
-        $this->assertEquals('value', $field->getValue(), '->initialize() sets the value of the field to the value attribute value');
+        $this->assertEquals('value', $field->getValue(),
+            '->initialize() sets the value of the field to the value attribute value');
 
         $node = $this->createNode('textarea', '');
         try {

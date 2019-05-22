@@ -120,7 +120,8 @@ class Crawler implements \Countable, \IteratorAggregate
         } elseif (is_string($node)) {
             $this->addContent($node);
         } elseif (null !== $node) {
-            throw new \InvalidArgumentException(sprintf('Expecting a DOMNodeList or DOMNode instance, an array, a string, or null, but got "%s".', is_object($node) ? get_class($node) : gettype($node)));
+            throw new \InvalidArgumentException(sprintf('Expecting a DOMNodeList or DOMNode instance, an array, a string, or null, but got "%s".',
+                is_object($node) ? get_class($node) : gettype($node)));
         }
     }
 
@@ -192,7 +193,9 @@ class Crawler implements \Countable, \IteratorAggregate
         $dom = new \DOMDocument('1.0', $charset);
         $dom->validateOnParse = true;
 
-        set_error_handler(function () { throw new \Exception(); });
+        set_error_handler(function () {
+            throw new \Exception();
+        });
 
         try {
             // Convert charset to HTML-entities to work around bugs in DOMDocument::loadHTML()
@@ -637,7 +640,7 @@ class Crawler implements \Countable, \IteratorAggregate
      */
     public function extract($attributes)
     {
-        $attributes = (array) $attributes;
+        $attributes = (array)$attributes;
         $count = count($attributes);
 
         $data = array();
@@ -713,8 +716,10 @@ class Crawler implements \Countable, \IteratorAggregate
      */
     public function selectLink($value)
     {
-        $xpath = sprintf('descendant-or-self::a[contains(concat(\' \', normalize-space(string(.)), \' \'), %s) ', static::xpathLiteral(' '.$value.' ')).
-                            sprintf('or ./img[contains(concat(\' \', normalize-space(string(@alt)), \' \'), %s)]]', static::xpathLiteral(' '.$value.' '));
+        $xpath = sprintf('descendant-or-self::a[contains(concat(\' \', normalize-space(string(.)), \' \'), %s) ',
+                static::xpathLiteral(' ' . $value . ' ')) .
+            sprintf('or ./img[contains(concat(\' \', normalize-space(string(@alt)), \' \'), %s)]]',
+                static::xpathLiteral(' ' . $value . ' '));
 
         return $this->filterRelativeXPath($xpath);
     }
@@ -728,7 +733,8 @@ class Crawler implements \Countable, \IteratorAggregate
      */
     public function selectImage($value)
     {
-        $xpath = sprintf('descendant-or-self::img[contains(normalize-space(string(@alt)), %s)]', static::xpathLiteral($value));
+        $xpath = sprintf('descendant-or-self::img[contains(normalize-space(string(@alt)), %s)]',
+            static::xpathLiteral($value));
 
         return $this->filterRelativeXPath($xpath);
     }
@@ -743,9 +749,13 @@ class Crawler implements \Countable, \IteratorAggregate
     public function selectButton($value)
     {
         $translate = 'translate(@type, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")';
-        $xpath = sprintf('descendant-or-self::input[((contains(%s, "submit") or contains(%s, "button")) and contains(concat(\' \', normalize-space(string(@value)), \' \'), %s)) ', $translate, $translate, static::xpathLiteral(' '.$value.' ')).
-                         sprintf('or (contains(%s, "image") and contains(concat(\' \', normalize-space(string(@alt)), \' \'), %s)) or @id=%s or @name=%s] ', $translate, static::xpathLiteral(' '.$value.' '), static::xpathLiteral($value), static::xpathLiteral($value)).
-                         sprintf('| descendant-or-self::button[contains(concat(\' \', normalize-space(string(.)), \' \'), %s) or @id=%s or @name=%s]', static::xpathLiteral(' '.$value.' '), static::xpathLiteral($value), static::xpathLiteral($value));
+        $xpath = sprintf('descendant-or-self::input[((contains(%s, "submit") or contains(%s, "button")) and contains(concat(\' \', normalize-space(string(@value)), \' \'), %s)) ',
+                $translate, $translate, static::xpathLiteral(' ' . $value . ' ')) .
+            sprintf('or (contains(%s, "image") and contains(concat(\' \', normalize-space(string(@alt)), \' \'), %s)) or @id=%s or @name=%s] ',
+                $translate, static::xpathLiteral(' ' . $value . ' '), static::xpathLiteral($value),
+                static::xpathLiteral($value)) .
+            sprintf('| descendant-or-self::button[contains(concat(\' \', normalize-space(string(.)), \' \'), %s) or @id=%s or @name=%s]',
+                static::xpathLiteral(' ' . $value . ' '), static::xpathLiteral($value), static::xpathLiteral($value));
 
         return $this->filterRelativeXPath($xpath);
     }
@@ -757,7 +767,8 @@ class Crawler implements \Countable, \IteratorAggregate
      *
      * @return Link A Link instance
      *
-     * @throws \InvalidArgumentException If the current node list is empty or the selected node is not instance of DOMElement
+     * @throws \InvalidArgumentException If the current node list is empty or the selected node is not instance of
+     *                                   DOMElement
      */
     public function link($method = 'get')
     {
@@ -768,7 +779,8 @@ class Crawler implements \Countable, \IteratorAggregate
         $node = $this->getNode(0);
 
         if (!$node instanceof \DOMElement) {
-            throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".', get_class($node)));
+            throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".',
+                get_class($node)));
         }
 
         return new Link($node, $this->baseHref, $method);
@@ -786,7 +798,8 @@ class Crawler implements \Countable, \IteratorAggregate
         $links = array();
         foreach ($this->nodes as $node) {
             if (!$node instanceof \DOMElement) {
-                throw new \InvalidArgumentException(sprintf('The current node list should contain only DOMElement instances, "%s" found.', get_class($node)));
+                throw new \InvalidArgumentException(sprintf('The current node list should contain only DOMElement instances, "%s" found.',
+                    get_class($node)));
             }
 
             $links[] = new Link($node, $this->baseHref, 'get');
@@ -811,7 +824,8 @@ class Crawler implements \Countable, \IteratorAggregate
         $node = $this->getNode(0);
 
         if (!$node instanceof \DOMElement) {
-            throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".', get_class($node)));
+            throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".',
+                get_class($node)));
         }
 
         return new Image($node, $this->baseHref);
@@ -827,7 +841,8 @@ class Crawler implements \Countable, \IteratorAggregate
         $images = array();
         foreach ($this as $node) {
             if (!$node instanceof \DOMElement) {
-                throw new \InvalidArgumentException(sprintf('The current node list should contain only DOMElement instances, "%s" found.', get_class($node)));
+                throw new \InvalidArgumentException(sprintf('The current node list should contain only DOMElement instances, "%s" found.',
+                    get_class($node)));
             }
 
             $images[] = new Image($node, $this->baseHref);
@@ -844,7 +859,8 @@ class Crawler implements \Countable, \IteratorAggregate
      *
      * @return Form A Form instance
      *
-     * @throws \InvalidArgumentException If the current node list is empty or the selected node is not instance of DOMElement
+     * @throws \InvalidArgumentException If the current node list is empty or the selected node is not instance of
+     *                                   DOMElement
      */
     public function form(array $values = null, $method = null)
     {
@@ -855,7 +871,8 @@ class Crawler implements \Countable, \IteratorAggregate
         $node = $this->getNode(0);
 
         if (!$node instanceof \DOMElement) {
-            throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".', get_class($node)));
+            throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".',
+                get_class($node)));
         }
 
         $form = new Form($node, $this->uri, $method, $this->baseHref);
@@ -1013,31 +1030,32 @@ class Crawler implements \Countable, \IteratorAggregate
             $expression = rtrim(substr($xpath, $startPosition, $i - $startPosition));
 
             if (0 === strpos($expression, 'self::*/')) {
-                $expression = './'.substr($expression, 8);
+                $expression = './' . substr($expression, 8);
             }
 
             // add prefix before absolute element selector
             if ('' === $expression) {
                 $expression = $nonMatchingExpression;
             } elseif (0 === strpos($expression, '//')) {
-                $expression = 'descendant-or-self::'.substr($expression, 2);
+                $expression = 'descendant-or-self::' . substr($expression, 2);
             } elseif (0 === strpos($expression, './/')) {
-                $expression = 'descendant-or-self::'.substr($expression, 3);
+                $expression = 'descendant-or-self::' . substr($expression, 3);
             } elseif (0 === strpos($expression, './')) {
-                $expression = 'self::'.substr($expression, 2);
+                $expression = 'self::' . substr($expression, 2);
             } elseif (0 === strpos($expression, 'child::')) {
-                $expression = 'self::'.substr($expression, 7);
+                $expression = 'self::' . substr($expression, 7);
             } elseif ('/' === $expression[0] || '.' === $expression[0] || 0 === strpos($expression, 'self::')) {
                 $expression = $nonMatchingExpression;
             } elseif (0 === strpos($expression, 'descendant::')) {
-                $expression = 'descendant-or-self::'.substr($expression, 12);
-            } elseif (preg_match('/^(ancestor|ancestor-or-self|attribute|following|following-sibling|namespace|parent|preceding|preceding-sibling)::/', $expression)) {
+                $expression = 'descendant-or-self::' . substr($expression, 12);
+            } elseif (preg_match('/^(ancestor|ancestor-or-self|attribute|following|following-sibling|namespace|parent|preceding|preceding-sibling)::/',
+                $expression)) {
                 // the fake root has no parent, preceding or following nodes and also no attributes (even no namespace attributes)
                 $expression = $nonMatchingExpression;
             } elseif (0 !== strpos($expression, 'descendant-or-self::')) {
-                $expression = 'self::'.$expression;
+                $expression = 'self::' . $expression;
             }
-            $expressions[] = $parenthesis.$expression;
+            $expressions[] = $parenthesis . $expression;
 
             if ($i === $xpathLen) {
                 return implode(' | ', $expressions);
@@ -1134,7 +1152,8 @@ class Crawler implements \Countable, \IteratorAggregate
         }
 
         // ask for one namespace, otherwise we'd get a collection with an item for each node
-        $namespaces = $domxpath->query(sprintf('(//namespace::*[name()="%s"])[last()]', $this->defaultNamespacePrefix === $prefix ? '' : $prefix));
+        $namespaces = $domxpath->query(sprintf('(//namespace::*[name()="%s"])[last()]',
+            $this->defaultNamespacePrefix === $prefix ? '' : $prefix));
 
         if ($node = $namespaces->item(0)) {
             return $node->nodeValue;

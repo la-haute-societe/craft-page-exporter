@@ -23,9 +23,10 @@ use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
-use lhs\craftpageexporter\services\CraftpageexporterService;
+use lhs\craftpageexporter\models\transformers\AssetTransformer;
 use lhs\craftpageexporter\models\transformers\FlattenTransformer;
 use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
+use lhs\craftpageexporter\services\CraftpageexporterService;
 use Twig\Parser;
 use yii\base\Event;
 
@@ -144,6 +145,18 @@ class Craftpageexporter extends Plugin
             $exportConfig['transformers'][] = new PrefixExportUrlTransformer([
                 'prefix' => $settings->prefixExportUrl,
             ]);
+        }
+
+        if (!is_null($settings->assetTransformers)) {
+            if (!is_array($settings->assetTransformers)) {
+                $settings->assetTransformers = [$settings->assetTransformers];
+            }
+
+            foreach ($settings->assetTransformers as $assetTransformer) {
+                $exportConfig['transformers'][] = new AssetTransformer([
+                    'transformer' => $assetTransformer,
+                ]);
+            }
         }
 
         return $exportConfig;

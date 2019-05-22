@@ -21,13 +21,22 @@ class FileFormField extends FormField
     /**
      * Sets the PHP error code associated with the field.
      *
-     * @param int $error The error code (one of UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE, UPLOAD_ERR_PARTIAL, UPLOAD_ERR_NO_FILE, UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE, or UPLOAD_ERR_EXTENSION)
+     * @param int $error The error code (one of UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE, UPLOAD_ERR_PARTIAL,
+     *                   UPLOAD_ERR_NO_FILE, UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE, or UPLOAD_ERR_EXTENSION)
      *
      * @throws \InvalidArgumentException When error code doesn't exist
      */
     public function setErrorCode($error)
     {
-        $codes = array(UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE, UPLOAD_ERR_PARTIAL, UPLOAD_ERR_NO_FILE, UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE, UPLOAD_ERR_EXTENSION);
+        $codes = array(
+            UPLOAD_ERR_INI_SIZE,
+            UPLOAD_ERR_FORM_SIZE,
+            UPLOAD_ERR_PARTIAL,
+            UPLOAD_ERR_NO_FILE,
+            UPLOAD_ERR_NO_TMP_DIR,
+            UPLOAD_ERR_CANT_WRITE,
+            UPLOAD_ERR_EXTENSION,
+        );
         if (!in_array($error, $codes)) {
             throw new \InvalidArgumentException(sprintf('The error code %s is not valid.', $error));
         }
@@ -59,9 +68,9 @@ class FileFormField extends FormField
             $name = $info['basename'];
 
             // copy to a tmp location
-            $tmp = sys_get_temp_dir().'/'.sha1(uniqid(mt_rand(), true));
+            $tmp = sys_get_temp_dir() . '/' . sha1(uniqid(mt_rand(), true));
             if (array_key_exists('extension', $info)) {
-                $tmp .= '.'.$info['extension'];
+                $tmp .= '.' . $info['extension'];
             }
             if (is_file($tmp)) {
                 unlink($tmp);
@@ -96,11 +105,13 @@ class FileFormField extends FormField
     protected function initialize()
     {
         if ('input' !== $this->node->nodeName) {
-            throw new \LogicException(sprintf('A FileFormField can only be created from an input tag (%s given).', $this->node->nodeName));
+            throw new \LogicException(sprintf('A FileFormField can only be created from an input tag (%s given).',
+                $this->node->nodeName));
         }
 
         if ('file' !== strtolower($this->node->getAttribute('type'))) {
-            throw new \LogicException(sprintf('A FileFormField can only be created from an input tag with a type of file (given type is %s).', $this->node->getAttribute('type')));
+            throw new \LogicException(sprintf('A FileFormField can only be created from an input tag with a type of file (given type is %s).',
+                $this->node->getAttribute('type')));
         }
 
         $this->setValue(null);

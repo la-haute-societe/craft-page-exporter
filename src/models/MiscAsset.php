@@ -5,7 +5,8 @@ namespace lhs\craftpageexporter\models;
 
 class MiscAsset extends Asset
 {
-    public function init() {
+    public function init()
+    {
         $this->url = $this->fromString;
         parent::init();
     }

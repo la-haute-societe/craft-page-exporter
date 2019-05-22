@@ -144,6 +144,7 @@ class HtmlAsset extends Asset
         }
 
         $domElement->parentNode->replaceChild($replaceElement, $domElement);
+        $this->updateContentFromDomCrawler();
     }
 
     /**
@@ -159,17 +160,8 @@ class HtmlAsset extends Asset
         }
 
         $domElement->parentNode->removeChild($domElement);
+        $this->updateContentFromDomCrawler();
     }
-
-    /**
-     * Return content from DomElement
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->crawler->html();
-    }
-
 
     /**
      * Replace $search by $replace in the DOM
@@ -180,5 +172,15 @@ class HtmlAsset extends Asset
     public function replaceInContent($search, $replace, $asset = null)
     {
         $asset->fromDomElement->nodeValue = str_replace($search, $replace, $asset->fromDomElement->nodeValue);
+        $this->updateContentFromDomCrawler();
+    }
+
+    /**
+     * Update content with HTML extracted from DOM tree
+     */
+    protected function updateContentFromDomCrawler()
+    {
+        var_dump('UPDATED HTML CONTENT');
+        $this->setContent($this->crawler->html());
     }
 }

@@ -29,7 +29,7 @@ class CraftpageexporterEntryEditAssetBundle extends AssetBundle
      */
     public function init()
     {
-        $assetsFilenames = json_decode(file_get_contents(__DIR__."/../resources/webpack-assets.json"), true);
+        $assetsFilenames = json_decode(file_get_contents(__DIR__ . "/../resources/webpack-assets.json"), true);
 
         // define the path that your publishable resources live
         $this->sourcePath = '@lhs/craftpageexporter/resources';
@@ -42,7 +42,7 @@ class CraftpageexporterEntryEditAssetBundle extends AssetBundle
         // define the relative path to CSS/JS files that should be registered with the page
         // when this asset bundle is registered
         $this->js = [
-            $assetsFilenames['CraftpageexporterEntryEdit']['js']
+            $assetsFilenames['CraftpageexporterEntryEdit']['js'],
         ];
 
         $this->css = [

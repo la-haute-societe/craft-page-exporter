@@ -12,7 +12,6 @@ namespace lhs\craftpageexporter\models;
 
 use craft\base\Model;
 use craft\helpers\UrlHelper;
-use lhs\craftpageexporter\models\transformers\BaseTransformer;
 
 /**
  * @author    La Haute Société
@@ -21,28 +20,72 @@ use lhs\craftpageexporter\models\transformers\BaseTransformer;
  */
 class Settings extends Model
 {
-    // Public Properties
-    // =========================================================================
-
-    /** @var string */
+    /**
+     * Base URL
+     * Default: baseRequestUrl()
+     * @var null
+     */
     public $baseUrl = null;
 
-    /** @var bool */
+    /**
+     * Inline styles inside HTML.
+     * Default: true
+     * @var bool
+     */
     public $inlineStyles = true;
 
-    /** @var bool */
+    /**
+     * Inline scripts inside HTML.
+     * Default: true
+     * @var bool
+     */
     public $inlineScripts = true;
 
-    /** @var bool */
+    /**
+     * Flatten all assets file path,
+     * all assets will be export to root folder.
+     * Default: true
+     * @var bool
+     */
     public $flatten = true;
 
-    /** @var null|string */
+    /**
+     * String used to prefix the exported URLs.
+     * If not defined, no prefix will be used.
+     * You can use twig templating in this string.
+     * Default: null
+     * @var null|string
+     */
     public $prefixExportUrl = null;
 
+    /**
+     * Callable function which should return the
+     * HTML content of one entry.
+     * If not defined, HTML content will be extracted
+     * using the CraftCMS rendering method.
+     * Default: null
+     * @var null|callable
+     */
+    public $entryContentExtractor = null;
 
+    /**
+     * Collection of callable functions
+     * Default: null
+     * @var null|callable[]
+     */
+    public $assetTransformers = null;
+
+
+    /**
+     * Init
+     */
     public function init()
     {
         parent::init();
-        $this->baseUrl = UrlHelper::baseRequestUrl();
+
+        // Default value for base URL
+        if (is_null($this->baseUrl)) {
+            $this->baseUrl = UrlHelper::baseRequestUrl();
+        }
     }
 }

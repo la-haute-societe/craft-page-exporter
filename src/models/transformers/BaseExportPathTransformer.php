@@ -17,5 +17,6 @@ class BaseExportPathTransformer extends Component
     {
         $asset->exportPath = $asset->getRelativePath();
         $asset->exportUrl = $asset->getRelativeUrl();
+        $asset->updateInitiatorContent();
     }
 }

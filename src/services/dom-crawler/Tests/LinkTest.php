@@ -104,10 +104,18 @@ class LinkTest extends TestCase
         return array(
             array('/foo', 'http://localhost/bar/foo/', 'http://localhost/foo'),
             array('/foo', 'http://localhost/bar/foo', 'http://localhost/foo'),
-            array('
-            /foo', 'http://localhost/bar/foo/', 'http://localhost/foo'),
-            array('/foo
-            ', 'http://localhost/bar/foo', 'http://localhost/foo'),
+            array(
+                '
+            /foo',
+                'http://localhost/bar/foo/',
+                'http://localhost/foo',
+            ),
+            array(
+                '/foo
+            ',
+                'http://localhost/bar/foo',
+                'http://localhost/foo',
+            ),
 
             array('foo', 'http://localhost/bar/foo/', 'http://localhost/bar/foo/foo'),
             array('foo', 'http://localhost/bar/foo', 'http://localhost/bar/foo'),

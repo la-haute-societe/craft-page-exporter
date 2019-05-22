@@ -61,7 +61,6 @@ abstract class Asset extends Component
     protected $_content = null;
 
 
-
     /**
      * Asset init
      * Define default configuration and retrieve the content of this asset
@@ -324,7 +323,8 @@ abstract class Asset extends Component
         }
         $path = $this->getSourcePath();
 
-        return file_get_contents($path);
+        // @TODO: How to deal with unreachable assets ?
+        return @file_get_contents($path);
     }
 
     /**

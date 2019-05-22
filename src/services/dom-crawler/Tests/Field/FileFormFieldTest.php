@@ -20,7 +20,12 @@ class FileFormFieldTest extends FormFieldTestCase
         $node = $this->createNode('input', '', array('type' => 'file'));
         $field = new FileFormField($node);
 
-        $this->assertEquals(array('name' => '', 'type' => '', 'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE, 'size' => 0), $field->getValue(), '->initialize() sets the value of the field to no file uploaded');
+        $this->assertEquals(array('name'     => '',
+                                  'type'     => '',
+                                  'tmp_name' => '',
+                                  'error'    => UPLOAD_ERR_NO_FILE,
+                                  'size'     => 0,
+        ), $field->getValue(), '->initialize() sets the value of the field to no file uploaded');
 
         $node = $this->createNode('textarea', '');
         try {
@@ -48,7 +53,12 @@ class FileFormFieldTest extends FormFieldTestCase
         $field = new FileFormField($node);
 
         $field->$method(null);
-        $this->assertEquals(array('name' => '', 'type' => '', 'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE, 'size' => 0), $field->getValue(), "->$method() clears the uploaded file if the value is null");
+        $this->assertEquals(array('name'     => '',
+                                  'type'     => '',
+                                  'tmp_name' => '',
+                                  'error'    => UPLOAD_ERR_NO_FILE,
+                                  'size'     => 0,
+        ), $field->getValue(), "->$method() clears the uploaded file if the value is null");
 
         $field->$method(__FILE__);
         $value = $field->getValue();
@@ -68,7 +78,7 @@ class FileFormFieldTest extends FormFieldTestCase
             "->$method() keeps the same file extension in the tmp_name copy"
         );
 
-        $field->$method(__DIR__.'/../Fixtures/no-extension');
+        $field->$method(__DIR__ . '/../Fixtures/no-extension');
         $value = $field->getValue();
 
         $this->assertArrayNotHasKey(
@@ -93,13 +103,15 @@ class FileFormFieldTest extends FormFieldTestCase
 
         $field->setErrorCode(UPLOAD_ERR_FORM_SIZE);
         $value = $field->getValue();
-        $this->assertEquals(UPLOAD_ERR_FORM_SIZE, $value['error'], '->setErrorCode() sets the file input field error code');
+        $this->assertEquals(UPLOAD_ERR_FORM_SIZE, $value['error'],
+            '->setErrorCode() sets the file input field error code');
 
         try {
             $field->setErrorCode('foobar');
             $this->fail('->setErrorCode() throws a \InvalidArgumentException if the error code is not valid');
         } catch (\InvalidArgumentException $e) {
-            $this->assertTrue(true, '->setErrorCode() throws a \InvalidArgumentException if the error code is not valid');
+            $this->assertTrue(true,
+                '->setErrorCode() throws a \InvalidArgumentException if the error code is not valid');
         }
     }
 

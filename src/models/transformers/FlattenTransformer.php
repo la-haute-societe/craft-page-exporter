@@ -48,6 +48,8 @@ class FlattenTransformer extends BaseTransformer
         // Set the new url to the asset
         $asset->exportUrl = $fullName;
         $asset->exportPath = $fullName;
+
+        $asset->updateInitiatorContent();
     }
 
     /**

@@ -90,13 +90,15 @@ class Export extends Component
     public function transform()
     {
         foreach ($this->transformers as $transformer) {
+            $class = new \ReflectionClass($transformer);
+            $className = $class->getName();
             foreach ($this->rootAssets as $rootAsset) {
                 $this->applyTransformer($rootAsset, $transformer);
             }
         }
-        foreach ($this->rootAssets as $rootAsset) {
-            $rootAsset->updateInitiatorContent();
-        }
+        // foreach ($this->rootAssets as $rootAsset) {
+        //     $rootAsset->updateInitiatorContent();
+        // }
     }
 
     /**

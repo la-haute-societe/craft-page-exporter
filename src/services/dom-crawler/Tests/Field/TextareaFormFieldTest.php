@@ -20,7 +20,8 @@ class TextareaFormFieldTest extends FormFieldTestCase
         $node = $this->createNode('textarea', 'foo bar');
         $field = new TextareaFormField($node);
 
-        $this->assertEquals('foo bar', $field->getValue(), '->initialize() sets the value of the field to the textarea node value');
+        $this->assertEquals('foo bar', $field->getValue(),
+            '->initialize() sets the value of the field to the textarea node value');
 
         $node = $this->createNode('input', '');
         try {
@@ -34,13 +35,15 @@ class TextareaFormFieldTest extends FormFieldTestCase
         $node = $this->createNode('textarea', 'foo bar <h1>Baz</h1>');
         $field = new TextareaFormField($node);
 
-        $this->assertEquals('foo bar <h1>Baz</h1>', $field->getValue(), '->initialize() sets the value of the field to the textarea node value');
+        $this->assertEquals('foo bar <h1>Baz</h1>', $field->getValue(),
+            '->initialize() sets the value of the field to the textarea node value');
 
         // Ensure that we don't do any DOM manipulation/validation by passing in
         // "invalid" HTML.
         $node = $this->createNode('textarea', 'foo bar <h1>Baz</h2>');
         $field = new TextareaFormField($node);
 
-        $this->assertEquals('foo bar <h1>Baz</h2>', $field->getValue(), '->initialize() sets the value of the field to the textarea node value');
+        $this->assertEquals('foo bar <h1>Baz</h2>', $field->getValue(),
+            '->initialize() sets the value of the field to the textarea node value');
     }
 }

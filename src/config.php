@@ -9,8 +9,6 @@
  */
 
 use craft\helpers\UrlHelper;
-use lhs\craftpageexporter\models\transformers\FlattenTransformer;
-use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 
 /**
  * craft-page-exporter config.php

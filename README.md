@@ -22,6 +22,17 @@ Add LHS repository in your `composer.json`
 
 Then execute : `composer require la-haute-societe\craft-page-exporter`
 
+
+## Config
+
+```
+    'entryContentExtractor' => function (Entry $entry) {
+        $url = $entry->getUrl();
+        $content = file_get_contents($url . '?pageExporterContext=1');
+        return $content;
+    },
+```
+
 ## Usage
 
 Select one or more entries from `admin/entries`, then select `Export` from context menu.

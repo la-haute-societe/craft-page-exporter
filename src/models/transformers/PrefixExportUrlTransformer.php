@@ -38,6 +38,8 @@ class PrefixExportUrlTransformer extends BaseTransformer
 
         // Set the new url to the asset
         $asset->exportUrl = PhpUri::parse($this->prefix)->join($asset->exportUrl);
+
+        $asset->updateInitiatorContent();
     }
 
     /**

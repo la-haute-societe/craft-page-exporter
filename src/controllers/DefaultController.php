@@ -12,12 +12,12 @@ namespace lhs\craftpageexporter\controllers;
 
 use Craft;
 use craft\elements\Entry;
-use craft\records\Element;
 use craft\web\Controller;
 use craft\web\Response;
 use craft\web\View;
 use lhs\craftpageexporter\Craftpageexporter;
 use lhs\craftpageexporter\models\Export;
+use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\ZipExporter;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
@@ -44,19 +44,20 @@ class DefaultController extends Controller
     // =========================================================================
 
     /**
+     * Export entries from IDs and siteId and produce a ZIP archive
      * @param string  $entryIds
      * @param integer $siteId
-     * @throws NotFoundHttpException
-     * @throws ServerErrorHttpException
-     * @throws \yii\base\Exception
      * @throws \yii\base\ExitException
      * @throws \yii\base\InvalidConfigException
-     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionExport($entryIds = null, $siteId = null)
     {
         $this->requireAdmin();
 
+        /** @var Settings $settings */
+        $settings = Craftpageexporter::$plugin->getSettings();
+
+        // Get params from POST if disponible
         $post = Craft::$app->request->getBodyParams();
         if (!empty($post)) {
             $entryIds = $post['entryIds'];
@@ -75,14 +76,20 @@ class DefaultController extends Controller
         foreach ($ids as $id) {
             // Get entry to export
             $entry = $this->getEntryModel($id, $siteId);
-            $entryContent = $this->getEntryContent($entry);
+
+            if (is_callable($settings->entryContentExtractor)) {
+                $entryContent = ($settings->entryContentExtractor)($entry);
+            } else {
+                $renderedEntry = $this->getEntryContent($entry);
+                $entryContent = $renderedEntry->data;
+            }
 
             // Assign a name to the page
             $pageName = sprintf('%s-%s', $entry->slug, Craft::$app->get('locale'));
 
             // Add page
             $pageUrl = $entry->url;
-            $export->addPage($pageName, $pageUrl, $entryContent->data);
+            $export->addPage($pageName, $pageUrl, $entryContent);
         }
 
         // Transform according to config
@@ -97,11 +104,11 @@ class DefaultController extends Controller
 
     /**
      * @return Response
-     * @throws \Twig_Error_Loader
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      * @throws \craft\errors\SiteNotFoundException
-     * @throws \yii\base\Exception
      * @throws \yii\web\BadRequestHttpException
-     * @throws \yii\web\ForbiddenHttpException
      */
     public function actionGetExportModalContent(): Response
     {
