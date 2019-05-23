@@ -20,7 +20,6 @@ class PageExporterVariable
      */
     public function registerAsset($url)
     {
-        var_dump($this);
         if (!$url) {
             return '';
         }

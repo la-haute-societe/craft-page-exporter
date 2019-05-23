@@ -24,8 +24,7 @@ use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
 use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\AssetTransformer;
-use lhs\craftpageexporter\models\transformers\FlattenTransformer;
-use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
+use lhs\craftpageexporter\models\transformers\PathAndUrlTransformer;
 use lhs\craftpageexporter\services\CraftpageexporterService;
 use yii\base\Event;
 
@@ -40,29 +39,14 @@ use yii\base\Event;
  */
 class Craftpageexporter extends Plugin
 {
-    // Static Properties
-    // =========================================================================
-
-    /**
-     * @var Craftpageexporter
-     */
+    /** @var Craftpageexporter */
     public static $plugin;
 
-    // Public Properties
-    // =========================================================================
-
-    /**
-     * @var string
-     */
+    /** @var string */
     public $schemaVersion = '1.0.0';
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $hasCpSettings = true;
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * @inheritdoc
@@ -72,12 +56,12 @@ class Craftpageexporter extends Plugin
         parent::init();
         self::$plugin = $this;
 
-
+        // Register asset bundle
         Craft::$app->view->hook('cp.entries.edit', function (&$context) {
             $this->view->registerAssetBundle(CraftpageexporterEntryEditAssetBundle::class);
         });
 
-        // Handler: CraftVariable::EVENT_INIT
+        // Register variable
         Event::on(
             CraftVariable::class,
             CraftVariable::EVENT_INIT,
@@ -88,6 +72,7 @@ class Craftpageexporter extends Plugin
             }
         );
 
+        // Register routes
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
@@ -105,6 +90,7 @@ class Craftpageexporter extends Plugin
             }
         );
 
+        // Info
         Craft::info(
             Craft::t(
                 'craft-page-exporter',
@@ -134,16 +120,17 @@ class Craftpageexporter extends Plugin
             'transformers'          => [],
         ];
 
-        if ($settings->flatten === true) {
-            $exportConfig['transformers'][] = new FlattenTransformer();
+        // Path and URL transformer
+        $pathAndUrlTransformerConfig = [];
+        if (!empty($settings->exportUrlFormat)) {
+            $pathAndUrlTransformerConfig['exportUrlFormat'] = $settings->exportUrlFormat;
         }
-
-        if ($settings->prefixExportUrl) {
-            $exportConfig['transformers'][] = new PrefixExportUrlTransformer([
-                'prefix' => $settings->prefixExportUrl,
-            ]);
+        if (!empty($settings->exportPathFormat)) {
+            $pathAndUrlTransformerConfig['exportPathFormat'] = $settings->exportPathFormat;
         }
+        $exportConfig['transformers'][] = new PathAndUrlTransformer($pathAndUrlTransformerConfig);
 
+        // Custom transformers
         if (!is_null($settings->assetTransformers)) {
             if (!is_array($settings->assetTransformers)) {
                 $settings->assetTransformers = [$settings->assetTransformers];

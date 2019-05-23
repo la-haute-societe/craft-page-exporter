@@ -35,21 +35,20 @@ class Settings extends Model
     public $inlineScripts = true;
 
     /**
-     * Flatten all assets file path,
-     * all assets will be export to root folder.
-     * Default: true
-     * @var bool
-     */
-    public $flatten = true;
-
-    /**
-     * String used to prefix the exported URLs.
-     * If not defined, no prefix will be used.
-     * You can use twig templating in this string.
+     * Format of the asset URL in export.
+     * Twig variables available :
      * Default: null
      * @var null|string
      */
-    public $prefixExportUrl = null;
+    public $exportUrlFormat = '{dirname}/{basename}';
+
+    /**
+     * Format of the asset path in export.
+     * Twig variables available :
+     * Default: null
+     * @var null|string
+     */
+    public $exportPathFormat = '{dirname}/{basename}';
 
     /**
      * Callable function which should return the
