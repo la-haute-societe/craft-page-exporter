@@ -41,24 +41,25 @@
         </div>
 
         <div class="col-12">
-            {{ forms.lightswitchField({
-                label: "Flatten"|t,
-                id: 'flatten',
-                name: 'flatten',
-                on: settings.flatten,
+            {{ forms.textField({
+                label: "Format of the asset URL in the export"|t,
+                instructions: "URL can be relative or absolute. Available variables: <code>{filename}, {extension}, {basename}, {dirname}, {hash}, {year}, {month}, {day}, {hour}, {minute}, {second}</code>."|t,
+                id: 'exportUrlFormat',
+                name: 'exportUrlFormat',
+                value: settings.exportUrlFormat,
                 required: true,
-                errors: settings.getErrors('flatten')
+                errors: settings.getErrors('exportUrlFormat')
             }) }}
         </div>
-
         <div class="col-12">
             {{ forms.textField({
-                label: "Prefix export URL"|t,
-                id: 'prefixExportUrl',
-                name: 'prefixExportUrl',
-                value: settings.prefixExportUrl,
-                required: false,
-                errors: settings.getErrors('prefixExportUrl')
+                label: "Format of the asset path in the export"|t,
+                instructions: "Available variables: <code>{filename}, {extension}, {basename}, {dirname}, {hash}, {year}, {month}, {day}, {hour}, {minute}, {second}</code>."|t,
+                id: 'exportPathFormat',
+                name: 'exportPathFormat',
+                value: settings.exportPathFormat,
+                required: true,
+                errors: settings.getErrors('exportPathFormat')
             }) }}
         </div>
     </div>

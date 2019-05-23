@@ -190,7 +190,6 @@ class DefaultController extends Controller
         if (!empty($post)) {
             $entryIds = $post['entryIds'];
             $siteId = $post['siteId'];
-            $post['flatten'] = !!$post['flatten'];
             $post['inlineScripts'] = !!$post['inlineScripts'];
             $post['inlineStyles'] = !!$post['inlineStyles'];
         }
