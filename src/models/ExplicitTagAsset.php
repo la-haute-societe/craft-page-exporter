@@ -38,6 +38,8 @@ class ExplicitTagAsset extends Asset
             ]);
             $this->addChild($asset);
         }
+
+        $this->updateInitiatorContent();
     }
 
     /**
