@@ -6,24 +6,10 @@ This plugin requires Craft CMS 3.0.0-RC1 or later.
 
 ## Installation
 
-Add LHS repository in your `composer.json`
-
-```
-{
-  [...]
-  "repositories": [
-    {
-      "type": "composer",
-      "url":  "http://packages.lahautesociete.int"
-    }
-  ]
-}
-```
-
-Then execute : `composer require la-haute-societe\craft-page-exporter`
+`composer require la-haute-societe\craft-page-exporter`
 
 
-## Config
+## Configuration
 
 ```
     'entryContentExtractor' => function (Entry $entry) {

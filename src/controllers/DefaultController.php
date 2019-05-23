@@ -211,8 +211,6 @@ class DefaultController extends Controller
                 $renderedEntry = $this->getEntryContent($entry);
                 $entryContent = $renderedEntry->data;
             }
-            var_dump($entry);
-            die();
 
             // Assign a name to the page
             $pageName = sprintf('%s-%s', $entry->slug, Craft::$app->get('locale'));

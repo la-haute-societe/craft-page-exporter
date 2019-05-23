@@ -57,7 +57,6 @@ use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
  */
 
 return [
-    // 'baseUrl'           => UrlHelper::baseRequestUrl(),
     // 'inlineStyles'      => true,
     // 'inlineScripts'     => true,
     // 'flatten'           => true,

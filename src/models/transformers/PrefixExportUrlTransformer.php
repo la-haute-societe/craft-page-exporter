@@ -35,10 +35,13 @@ class PrefixExportUrlTransformer extends BaseTransformer
             return;
         }
 
-        $prefix = Craft::$app->getView()->renderObjectTemplate($this->prefix, $asset->initiatorEntry, [
-            'year'  => date('Y'),
-            'month' => date('m'),
-            'day'   => date('d'),
+        $prefix = Craft::$app->getView()->renderString($this->prefix, [
+            'year'   => date('Y'),
+            'month'  => date('m'),
+            'day'    => date('d'),
+            'hour'   => date('H'),
+            'minute' => date('i'),
+            'second' => date('s'),
         ]);
 
         // Set the new url to the asset

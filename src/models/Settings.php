@@ -21,13 +21,6 @@ use craft\helpers\UrlHelper;
 class Settings extends Model
 {
     /**
-     * Base URL
-     * Default: baseRequestUrl()
-     * @var null
-     */
-    public $baseUrl = null;
-
-    /**
      * Inline styles inside HTML.
      * Default: true
      * @var bool
@@ -107,17 +100,4 @@ class Settings extends Model
      */
     public $sourcePathTransformer = null;
 
-
-    /**
-     * Init
-     */
-    public function init()
-    {
-        parent::init();
-
-        // Default value for base URL
-        if (is_null($this->baseUrl)) {
-            $this->baseUrl = UrlHelper::baseRequestUrl();
-        }
-    }
 }

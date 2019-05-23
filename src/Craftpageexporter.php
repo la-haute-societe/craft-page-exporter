@@ -16,6 +16,7 @@ use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\helpers\UrlHelper;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
@@ -125,7 +126,7 @@ class Craftpageexporter extends Plugin
         $settings = $this->overridesSettings($settings, $overrides);
 
         $exportConfig = [
-            'baseUrl'               => $settings->baseUrl,
+            'baseUrl'               => UrlHelper::baseRequestUrl(),
             'inlineStyles'          => $settings->inlineStyles,
             'inlineScripts'         => $settings->inlineScripts,
             'customSelectors'       => $settings->customSelectors,

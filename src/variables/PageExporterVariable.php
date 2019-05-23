@@ -16,24 +16,27 @@ class PageExporterVariable
      * Register explicitly an asset from its url
      * and return the export URL of this asset
      * @param $url
-     * @return \Twig\Markup
+     * @return string|null
      */
     public function registerAsset($url)
     {
+        var_dump($this);
+        if (!$url) {
+            return '';
+        }
+
         $pageExporterService = Craftpageexporter::$plugin->craftpageexporterService;
 
         if (!$pageExporterService->isInExportContext()) {
             return $url;
         }
 
-
-        return Template::raw(
-            $pageExporterService->registerAsset($url)
-        );
+        return $pageExporterService->registerAsset($url);
     }
 
     /**
      * @return \Twig\Markup
+     * @throws \Exception
      */
     public function getRegisteredAssetsSummary()
     {
