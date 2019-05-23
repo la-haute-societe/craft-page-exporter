@@ -75,6 +75,38 @@ class Settings extends Model
      */
     public $assetTransformers = null;
 
+    /**
+     * List of custom selectors in the following format.
+     * - ``selectors`` are XPath expressions (http://xmlfr.org/w3c/TR/xpath/).
+     * - ``assetClass`` is the class which will manage the content found by the XPath selectors.
+     *
+     * Example:
+     * ```php
+     * [
+     *    [
+     *      'selectors'  => [
+     *          '//video/@poster',
+     *          '//tag/@whatever',
+     *       ],
+     *       'assetClass' => MiscAsset::class,
+     *    ],
+     *    [
+     *       // ...
+     *    ]
+     * ],
+     * ```
+     *
+     * @var array
+     */
+    public $customSelectors = [];
+
+    /**
+     * Function used to to transform absolute URLs into paths/URLs
+     * in order to retrieve their content
+     * @var null|callable
+     */
+    public $sourcePathTransformer = null;
+
 
     /**
      * Init

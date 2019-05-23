@@ -10,6 +10,8 @@
 
 namespace lhs\craftpageexporter\console\controllers;
 
+use lhs\craftpageexporter\Craftpageexporter;
+
 use Craft;
 use yii\console\Controller;
 use yii\helpers\Console;

@@ -12,6 +12,7 @@ namespace lhs\craftpageexporter\controllers;
 
 use Craft;
 use craft\elements\Entry;
+use craft\errors\SiteNotFoundException;
 use craft\web\Controller;
 use craft\web\Response;
 use craft\web\View;
@@ -19,6 +20,10 @@ use lhs\craftpageexporter\Craftpageexporter;
 use lhs\craftpageexporter\models\Export;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\ZipExporter;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\ServerErrorHttpException;
 
@@ -40,6 +45,7 @@ class DefaultController extends Controller
      */
     protected $allowAnonymous = ['export', 'getExportModalContent'];
 
+
     // Public Methods
     // =========================================================================
 
@@ -48,52 +54,13 @@ class DefaultController extends Controller
      * @param string  $entryIds
      * @param integer $siteId
      * @throws \yii\base\ExitException
-     * @throws \yii\base\InvalidConfigException
+     * @throws \Exception
      */
     public function actionExport($entryIds = null, $siteId = null)
     {
         $this->requireAdmin();
 
-        /** @var Settings $settings */
-        $settings = Craftpageexporter::$plugin->getSettings();
-
-        // Get params from POST if disponible
-        $post = Craft::$app->request->getBodyParams();
-        if (!empty($post)) {
-            $entryIds = $post['entryIds'];
-            $siteId = $post['siteId'];
-            $post['flatten'] = !!$post['flatten'];
-            $post['inlineScripts'] = !!$post['inlineScripts'];
-            $post['inlineStyles'] = !!$post['inlineStyles'];
-        }
-
-
-        $ids = explode(',', $entryIds);
-
-        // Create export
-        $export = new Export(Craftpageexporter::$plugin->getExportConfig($post));
-
-        foreach ($ids as $id) {
-            // Get entry to export
-            $entry = $this->getEntryModel($id, $siteId);
-
-            if (is_callable($settings->entryContentExtractor)) {
-                $entryContent = ($settings->entryContentExtractor)($entry);
-            } else {
-                $renderedEntry = $this->getEntryContent($entry);
-                $entryContent = $renderedEntry->data;
-            }
-
-            // Assign a name to the page
-            $pageName = sprintf('%s-%s', $entry->slug, Craft::$app->get('locale'));
-
-            // Add page
-            $pageUrl = $entry->url;
-            $export->addPage($pageName, $pageUrl, $entryContent);
-        }
-
-        // Transform according to config
-        $export->transform();
+        $export = $this->createExport($entryIds, $siteId);
 
         // Export to zip
         $exporter = new ZipExporter(['export' => $export]);
@@ -103,12 +70,27 @@ class DefaultController extends Controller
     }
 
     /**
+     * Export entries from IDs and siteId and produce a ZIP archive
+     * @param string  $entryIds
+     * @param integer $siteId
+     * @throws \Exception
+     */
+    public function actionAnalyze($entryIds = null, $siteId = null)
+    {
+        $this->requireAdmin();
+
+        $export = $this->createExport($entryIds, $siteId);
+        $export->printTree();
+        die();
+    }
+
+    /**
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     * @throws \craft\errors\SiteNotFoundException
-     * @throws \yii\web\BadRequestHttpException
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws SiteNotFoundException
+     * @throws BadRequestHttpException
      */
     public function actionGetExportModalContent(): Response
     {
@@ -190,5 +172,59 @@ class DefaultController extends Controller
         }
 
         return $entry;
+    }
+
+    /**
+     * @param $entryIds
+     * @param $siteId
+     * @return Export
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function createExport($entryIds, $siteId): Export
+    {
+        /** @var Settings $settings */
+        $settings = Craftpageexporter::$plugin->getSettings();
+
+        // Get params from POST if disponible
+        $post = Craft::$app->request->getBodyParams();
+        if (!empty($post)) {
+            $entryIds = $post['entryIds'];
+            $siteId = $post['siteId'];
+            $post['flatten'] = !!$post['flatten'];
+            $post['inlineScripts'] = !!$post['inlineScripts'];
+            $post['inlineStyles'] = !!$post['inlineStyles'];
+        }
+
+        // Split IDs
+        $ids = explode(',', $entryIds);
+
+        // Create export
+        $export = new Export(Craftpageexporter::$plugin->getExportConfig($post));
+
+        // Add each entry to export
+        foreach ($ids as $id) {
+            $entry = $this->getEntryModel($id, $siteId);
+
+            if (is_callable($settings->entryContentExtractor)) {
+                $entryContent = ($settings->entryContentExtractor)($entry);
+            } else {
+                $renderedEntry = $this->getEntryContent($entry);
+                $entryContent = $renderedEntry->data;
+            }
+            var_dump($entry);
+            die();
+
+            // Assign a name to the page
+            $pageName = sprintf('%s-%s', $entry->slug, Craft::$app->get('locale'));
+
+            // Add page
+            $pageUrl = $entry->url;
+            $export->addPage($pageName, $pageUrl, $entryContent, $entry);
+        }
+
+        // Transform according to config
+        $export->transform();
+
+        return $export;
     }
 }

@@ -10,7 +10,7 @@ use ZipArchive;
  * Class ZipExporter
  * @package lhs\craftpageexporter\models
  */
-class ZipExporter extends Exporter
+class ZipExporter extends BaseExporter
 {
     /** @var \ZipArchive */
     protected $archive;
@@ -38,11 +38,15 @@ class ZipExporter extends Exporter
 
     /**
      * Export
-     * @throws \yii\base\ExitException
+     * @throws \Exception
      */
     public function export()
     {
-        foreach ($this->export->rootAssets as $rootAsset) {
+        foreach ($this->export->getRootAssets() as $rootAsset) {
+            if (!($rootAsset instanceof HtmlAsset)) {
+                throw new \Exception('Root asset mut be an HtmlAsset.');
+            }
+
             $this->addRootAsset($rootAsset);
         }
 
@@ -52,7 +56,6 @@ class ZipExporter extends Exporter
 
     /**
      * @return void
-     * @throws \yii\base\ExitException
      */
     public function sendZip()
     {
@@ -66,8 +69,8 @@ class ZipExporter extends Exporter
      */
     protected function addRootAsset(HtmlAsset $rootAsset)
     {
-
         $this->addFile($rootAsset->name, $rootAsset->getContent());
+
         foreach ($rootAsset->children as $child) {
             $this->addAsset($child);
         }

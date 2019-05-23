@@ -3,6 +3,7 @@
 namespace lhs\craftpageexporter\models;
 
 use craft\base\Component;
+use craft\elements\Entry;
 use craft\helpers\UrlHelper;
 use DOMElement;
 use lhs\craftpageexporter\helpers\PhpUri;
@@ -38,6 +39,9 @@ abstract class Asset extends Component
 
     /** @var Asset[] Extracted children of this asset */
     public $children = [];
+
+    /** @var Entry|null Initiator Craft entry */
+    public $initiatorEntry = null;
 
     /** @var Asset Who initiate this asset */
     public $initiator = null;
@@ -76,6 +80,11 @@ abstract class Asset extends Component
                 throw new \Exception('The export attribute must be defined for the root asset.');
             }
             $this->export = $this->initiator->export;
+        }
+
+        // Set initiatorEntry from initiator if not specified
+        if (!$this->initiatorEntry && $this->initiator) {
+            $this->initiatorEntry = $this->initiator->initiatorEntry;
         }
 
         // Set baseUrl from initiator if not specified
@@ -257,60 +266,6 @@ abstract class Asset extends Component
     }
 
     /**
-     * Debug
-     * @param bool $simple
-     * @throws \Exception
-     */
-    public function printTree($simple = false)
-    {
-
-        if (!$simple) {
-            $domElementNodeName = '';
-            $domElementContent = '';
-            if ($this->fromDomElement) {
-                $domElementNodeName = substr($this->fromDomElement->nodeName, 0, 200);
-                $domElementContent = substr($this->fromDomElement->nodeValue, 0, 200);
-            }
-            echo '<fieldset style="font-family: monospace; margin: 15px 0;">';
-            echo '<legend style="font-weight: bold;">' . $this->getAbsoluteUrl() . '</legend>';
-            echo '<div><b>Type:</b> ' . get_class($this) . '</div>';
-
-            echo '<div><b>Extract filter:</b> ' . $this->extractFilter . '</div>';
-            echo '<div><b>From string:</b> ' . substr($this->fromString, 0, 200) . '</div>';
-            echo '<div><b>From DomElement:</b> ' . $domElementNodeName . ' - ' . $domElementContent . '</div>';
-            echo '<div><b>Raw URL:</b> ' . $this->url . '</div>';
-            echo '<div><b>Absolute URL:</b> ' . $this->getAbsoluteUrl() . '</div>';
-            echo '<div><b>Relative URL:</b> ' . $this->getExportUrl() . '</div>';
-            echo '<div><b>Relative path:</b> ' . $this->getRelativePath() . '</div>';
-            echo '<div><b>File get contents Path:</b> ' . $this->getSourcePath() . '</div>';
-            echo '<div><b>Base URL:</b> ' . $this->baseUrl . '</div>';
-            echo '<div><b>Base Path:</b> ' . $this->basePath . '</div>';
-            echo '<div><b>In base URL:</b> ' . $this->isInBaseUrl() . '</div>';
-            echo '<div><b>Export path:</b> ' . $this->getExportPath() . '</div>';
-            echo '<div><b>Export URL:</b> ' . $this->getExportUrl() . '</div>';
-            //echo '<div><b>Content:</b> ' . substr($this->content, 0, 200) . '</div>';
-            echo '<div><b>Content:</b> ' . htmlentities(substr($this->getContent(), 0, 200)) . '</div>';
-            foreach ($this->children as $child) {
-                $child->printTree($simple);
-            }
-
-            echo '</fieldset>';
-        } else {
-            echo '<div style="font-family: monospace">';
-            $function = new \ReflectionClass($this);
-            echo '<b>' . $function->getShortName() . '</b> -- ' . $this->url . ' --> ' . $this->getExportUrl();
-            echo '<ul>';
-            foreach ($this->children as $child) {
-                echo '<li>';
-                $child->printTree($simple);
-                echo '</li>';
-            }
-            echo '</ul>';
-            echo '</div>';
-        }
-    }
-
-    /**
      * Return content of this file/asset (file_get_contents)
      * only if it's in the base URL
      * @return bool|string
@@ -366,6 +321,7 @@ abstract class Asset extends Component
 
     /**
      * Return true if this asset has asset child
+     * @return bool
      */
     public function hasChild()
     {
@@ -408,6 +364,60 @@ abstract class Asset extends Component
         $this->fromDomElement = $domElement;
         foreach ($this->children as $child) {
             $child->setRecursiveFromDomElement($domElement);
+        }
+    }
+
+    /**
+     * Debug
+     * @param bool $simple
+     * @throws \Exception
+     */
+    public function printTree($simple = false)
+    {
+
+        if (!$simple) {
+            $domElementNodeName = '';
+            $domElementContent = '';
+            if ($this->fromDomElement) {
+                $domElementNodeName = substr($this->fromDomElement->nodeName, 0, 200);
+                $domElementContent = substr($this->fromDomElement->nodeValue, 0, 200);
+            }
+            echo '<fieldset style="font-family: monospace; margin: 15px 0;">';
+            echo '<legend style="font-weight: bold;">' . $this->getAbsoluteUrl() . '</legend>';
+            echo '<div><b>Type:</b> ' . get_class($this) . '</div>';
+
+            echo '<div><b>Extract filter:</b> ' . $this->extractFilter . '</div>';
+            echo '<div><b>From string:</b> ' . substr(htmlentities($this->fromString), 0, 200) . '</div>';
+            echo '<div><b>From DomElement:</b> ' . $domElementNodeName . ' - ' . $domElementContent . '</div>';
+            echo '<div><b>Raw URL:</b> ' . $this->url . '</div>';
+            echo '<div><b>Absolute URL:</b> ' . $this->getAbsoluteUrl() . '</div>';
+            echo '<div><b>Relative URL:</b> ' . $this->getExportUrl() . '</div>';
+            echo '<div><b>Relative path:</b> ' . $this->getRelativePath() . '</div>';
+            echo '<div><b>File get contents Path:</b> ' . $this->getSourcePath() . '</div>';
+            echo '<div><b>Base URL:</b> ' . $this->baseUrl . '</div>';
+            echo '<div><b>Base Path:</b> ' . $this->basePath . '</div>';
+            echo '<div><b>In base URL:</b> ' . $this->isInBaseUrl() . '</div>';
+            echo '<div><b>Export path:</b> ' . $this->getExportPath() . '</div>';
+            echo '<div><b>Export URL:</b> ' . $this->getExportUrl() . '</div>';
+            //echo '<div><b>Content:</b> ' . substr($this->content, 0, 200) . '</div>';
+            echo '<div><b>Content:</b> ' . htmlentities(substr($this->getContent(), 0, 200)) . '</div>';
+            foreach ($this->children as $child) {
+                $child->printTree($simple);
+            }
+
+            echo '</fieldset>';
+        } else {
+            echo '<div style="font-family: monospace">';
+            $function = new \ReflectionClass($this);
+            echo '<b>' . $function->getShortName() . '</b> -- ' . $this->url . ' --> ' . $this->getExportUrl();
+            echo '<ul>';
+            foreach ($this->children as $child) {
+                echo '<li>';
+                $child->printTree($simple);
+                echo '</li>';
+            }
+            echo '</ul>';
+            echo '</div>';
         }
     }
 }

@@ -7,12 +7,20 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class HtmlAsset extends Asset
 {
-
     /** @var string */
     public $name;
 
-    /** @var array */
-    public $selectorTypes = [
+    /**
+     * @see Settings::$customSelectors
+     * @var array
+     */
+    public $customSelectors = [];
+
+    /**
+     * @see Settings::$customSelectors
+     * @var array
+     */
+    protected $selectorTypes = [
         [
             'selectors'  => [
                 '//page-exporter-registered-assets',
@@ -64,13 +72,6 @@ class HtmlAsset extends Asset
         ],
     ];
 
-    /** @var array */
-    public $sourceAttributes = [
-        'src',
-        'href',
-        'poster',
-    ];
-
     /** @var Crawler $crawler */
     protected $crawler;
 
@@ -83,8 +84,11 @@ class HtmlAsset extends Asset
         $this->crawler = new Crawler();
         $this->crawler->addHtmlContent($this->fromString);
 
+        // Default selectors + custom selectors
+        $selectorTypes = $this->selectorTypes + $this->customSelectors;
+
         // Add children
-        foreach ($this->selectorTypes as $selectorType) {
+        foreach ($selectorTypes as $selectorType) {
             $assetClass = $selectorType['assetClass'];
             $selectors = $selectorType['selectors'];
 
@@ -95,7 +99,7 @@ class HtmlAsset extends Asset
             }
         }
 
-        // Populate chilren
+        // Populate children
         foreach ($this->children as $child) {
             $child->populateChildren();
         }
@@ -109,7 +113,6 @@ class HtmlAsset extends Asset
     {
         return $this->fromString;
     }
-
 
     /**
      * @param Crawler $crawler
@@ -180,7 +183,6 @@ class HtmlAsset extends Asset
      */
     protected function updateContentFromDomCrawler()
     {
-        var_dump('UPDATED HTML CONTENT');
         $this->setContent($this->crawler->html());
     }
 }

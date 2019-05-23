@@ -26,18 +26,23 @@ class PrefixExportUrlTransformer extends BaseTransformer
 
     /**
      * @param Asset $asset
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\SyntaxError
+     * @throws \Throwable
+     * @throws \yii\base\Exception
      */
     public function transform($asset)
     {
         if (!$this->needToTransform($asset)) {
             return;
         }
-        $prefix = Craft::$app->getView()->renderString($this->prefix);
+
+        $prefix = Craft::$app->getView()->renderObjectTemplate($this->prefix, $asset->initiatorEntry, [
+            'year'  => date('Y'),
+            'month' => date('m'),
+            'day'   => date('d'),
+        ]);
 
         // Set the new url to the asset
-        $asset->exportUrl = PhpUri::parse($this->prefix)->join($asset->exportUrl);
+        $asset->exportUrl = PhpUri::parse($prefix)->join($asset->exportUrl);
 
         $asset->updateInitiatorContent();
     }

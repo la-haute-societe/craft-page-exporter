@@ -13,7 +13,6 @@ namespace lhs\craftpageexporter;
 use Craft;
 use craft\base\Element;
 use craft\base\Plugin;
-use craft\console\Application as ConsoleApplication;
 use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
@@ -27,7 +26,6 @@ use lhs\craftpageexporter\models\transformers\AssetTransformer;
 use lhs\craftpageexporter\models\transformers\FlattenTransformer;
 use lhs\craftpageexporter\models\transformers\PrefixExportUrlTransformer;
 use lhs\craftpageexporter\services\CraftpageexporterService;
-use Twig\Parser;
 use yii\base\Event;
 
 /**
@@ -73,9 +71,6 @@ class Craftpageexporter extends Plugin
         parent::init();
         self::$plugin = $this;
 
-        if (Craft::$app instanceof ConsoleApplication) {
-            $this->controllerNamespace = 'lhs\craftpageexporter\console\controllers';
-        }
 
         Craft::$app->view->hook('cp.entries.edit', function (&$context) {
             $this->view->registerAssetBundle(CraftpageexporterEntryEditAssetBundle::class);
@@ -98,6 +93,7 @@ class Craftpageexporter extends Plugin
             function (RegisterUrlRulesEvent $event) {
                 Craft::warning('REGISTER URL EXPORTER');
                 $event->rules['page-exporter/export/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/export';
+                $event->rules['page-exporter/analyze/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/analyze';
             }
         );
 
@@ -121,8 +117,6 @@ class Craftpageexporter extends Plugin
     /**
      * @param array $overrides
      * @return array
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\SyntaxError
      */
     public function getExportConfig($overrides = [])
     {
@@ -131,10 +125,12 @@ class Craftpageexporter extends Plugin
         $settings = $this->overridesSettings($settings, $overrides);
 
         $exportConfig = [
-            'baseUrl'       => $settings->baseUrl,
-            'inlineStyles'  => $settings->inlineStyles,
-            'inlineScripts' => $settings->inlineScripts,
-            'transformers'  => [],
+            'baseUrl'               => $settings->baseUrl,
+            'inlineStyles'          => $settings->inlineStyles,
+            'inlineScripts'         => $settings->inlineScripts,
+            'customSelectors'       => $settings->customSelectors,
+            'sourcePathTransformer' => $settings->sourcePathTransformer,
+            'transformers'          => [],
         ];
 
         if ($settings->flatten === true) {

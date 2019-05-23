@@ -24,7 +24,6 @@ class ExplicitTagAsset extends Asset
      */
     public function populateChildren()
     {
-
         $assetsFromJson = json_decode($this->fromString, true);
 
         if (!is_array($assetsFromJson)) {

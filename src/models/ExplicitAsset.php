@@ -8,6 +8,7 @@ class ExplicitAsset extends Asset
     /** @var string Save the original export path */
     protected $_initialExportPath;
 
+    /** @var string */
     public $sourcePath;
 
     /**
@@ -17,7 +18,6 @@ class ExplicitAsset extends Asset
     {
         $this->_initialExportPath = $this->exportPath;
         $this->url = $this->exportPath;
-
 
         parent::init();
         $this->exportPath = $this->_initialExportPath;
@@ -45,7 +45,6 @@ class ExplicitAsset extends Asset
     {
         return $this->sourcePath;
     }
-
 
     /**
      * Override
