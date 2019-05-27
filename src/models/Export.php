@@ -140,7 +140,7 @@ class Export extends Component
     }
 
     /**
-     * Default function used to transform the url of ``$âsset`` to path used for getting the content of $asset
+     * Default function used to transform the url of ``$asset`` to path used for getting the content of $asset
      * This function transform URL to path relative to @``webroot``
      * Can be overriden by ``sourcePathTransformer`` attribute
      * @param Asset $asset
