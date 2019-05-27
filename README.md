@@ -71,7 +71,7 @@ If false, external stylesheets will be left in external files.
 
 Whether external scripts must be inlined in the main HTML page inside a `script` tag.
 
-If true, external scripts content will be moved inside a ``<style>`` tags.
+If true, external scripts content will be moved inside a ``<script>`` tags.
 
 If false, external scripts will be left in external files.
 
@@ -86,7 +86,7 @@ It's possible to keep the structure of the original folders: ``{dirname}/{basena
 
 or to put all assets in a single folder: ``media/{filename}{extension}``,
 
-in this case it is preferable to add a hash in the file name to avoid any collision: ``media/{filename}-{hash}{extension}``
+in this case it's recommended to add a hash in the file name to avoid any collision: ``media/{filename}-{hash}{extension}``
 
 The following variables are available:
 
@@ -96,7 +96,7 @@ The following variables are available:
 | `{extension}`   | ``.png`` (the dot is already contains in the value) | 
 | `{basename}`    | `filename.png` | 
 | `{dirname}`     | `/path/to/folder` | 
-| `{hash}`        | `c023d66f` | 
+| `{hash}`        | `c023d66f` (hash of the file content) | 
 | `{year}`        | `date('Y')` | 
 | `{month}`       | `date('m')` | 
 | `{day}`         | `date('d')` | 
@@ -106,7 +106,9 @@ The following variables are available:
 
 You can also use any Twig expression like:
 
-`my-folder/{{ "now"|date("Y-m") }}/{{ hash[:1] }}/{{ hash[1:1] }}/{{hash}}/{{ filename|upper }}{{extension}}`
+```twig
+my-folder/{{ "now"|date("Y-m") }}/{{ hash[:1] }}/{{ hash[1:1] }}/{hash}/{{ filename|upper }}{extension}
+```
 
 which will create this path:
 
@@ -128,6 +130,36 @@ If you plan to place your assets on a CDN for example, you can specify an absolu
 
 #### `assetTransformers`
 
+Collection of transformers that can be used to modify the content or path of assets.
+
+For example, to add a comment at the beginning of an HTML file:
+
+```php
+return [
+    // ...
+    'assetTransformers' => [
+        function (lhs\craftpageexporter\models\Asset $asset) {
+            // Target only HTML asset
+            if (!($asset instanceof lhs\craftpageexporter\models\HtmlAsset)) {
+                return;
+            }
+
+            $content = $asset->getContent();
+
+            $user = Craft::$app->getUser()->getIdentity();
+            $manifest = '<!-- Page generated on ' . date('Y-m-d H:i:s') . ' by ' . $user->username . ' -->';
+            $content = $manifest . PHP_EOL . $content;
+
+            $asset->setContent($content);
+        },
+    ]
+];
+```
+
+If you modify content or path of child assets you should call 
+the method ``$asset->updateInitiatorContent()`` after updating the asset
+in order to forward the update to his parent.
+
 
 #### `entryContentExtractor`
 
@@ -137,6 +169,8 @@ If you plan to place your assets on a CDN for example, you can specify an absolu
 
 #### `sourcePathTransformer`
 
+
+## Explicit asset registering
 
 ## Contributing
 
