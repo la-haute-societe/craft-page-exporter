@@ -12,7 +12,7 @@ This plugin requires Craft CMS 3.0.0-RC1 or later.
 You can install this plugin from the Plugin Store or with Composer.
 
 #### From the Plugin Store
-Go to the Plugin Store in your project’s Control Panel and search for “Element API”. Then click on the “Install” button in its modal window.
+Go to the Plugin Store in your project’s Control Panel and search for “Page exporter”. Then click on the “Install” button in its modal window.
 
 
 #### With Composer
@@ -23,7 +23,7 @@ Open your terminal and run the following commands:
 cd /path/to/my-project
 
 # tell Composer to load the plugin
-composer require la-haute-societe\craft-page-exporter
+composer require la-haute-societe/craft-page-exporter
 
 # tell Craft to install the plugin
 ./craft install/plugin craft-page-exporter
