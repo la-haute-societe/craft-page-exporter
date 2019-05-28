@@ -85,7 +85,7 @@ class HtmlAsset extends Asset
         $this->crawler->addHtmlContent($this->fromString);
 
         // Default selectors + custom selectors
-        $selectorTypes = $this->selectorTypes + $this->customSelectors;
+        $selectorTypes = array_merge($this->selectorTypes, $this->customSelectors);
 
         // Add children
         foreach ($selectorTypes as $selectorType) {
