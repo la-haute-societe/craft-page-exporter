@@ -77,8 +77,9 @@ class Export extends Component
      * @param string $pageName
      * @param string $pageUrl
      * @param string $content
-     * @param Entry $entry
+     * @param Entry  $entry
      * @return $this
+     * @throws \Exception
      */
     public function addPage($pageName, $pageUrl, $content, $entry)
     {
