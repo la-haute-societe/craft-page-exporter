@@ -129,6 +129,7 @@ If you plan to place your assets on a CDN for example, you can specify an absolu
  
 
 #### `assetTransformers`
+*Default: ``[]``*
 
 Collection of transformers that can be used to modify the content or path of assets.
 
@@ -161,14 +162,77 @@ the method ``$asset->updateInitiatorContent()`` after updating the asset
 in order to forward the update to his parent.
 
 
-#### `entryContentExtractor`
-
-
 #### `customSelectors`
+Child assets are found thanks to [XPath expressions](http://xmlfr.org/w3c/TR/xpath/).
 
+If you want to register asset with custom XPath for something like:
+
+```twig
+<tag whatever="{{ myImageUrl }}"></tag>
+``` 
+ 
+you can add selectors like that:
+
+```php
+return [
+    // ...
+    'customSelectors' => [
+       [
+         'selectors'  => [
+             '//tag/@whatever',
+          ],
+          'assetClass' => lhs\craftpageexporter\models\MiscAsset::class,
+       ]
+    ],
+];
+```
+
+ - ``selectors``: collection of XPath expression
+ - ``assetClass``: One of the following ``Asset`` class: 
+    - ``ImageAsset``: external image(s) URL
+    - ``InlineStyleAsset``: inline stylesheet
+    - ``StyleAsset``: external stylesheet URL
+    - ``ScriptAsset``: external script URL
+    - ``MiscAsset``: any type of external asset URL (video, audio...)
+ 
 
 #### `sourcePathTransformer`
+*Default: ``null``*
 
+Function used to transform the absolute url of assets to file path.
+If not set, paths are defined like that:
+
+```php
+return [
+    // ...
+    'sourcePathTransformer' => function (lhs\craftpageexporter\models\Asset $asset) {
+        return str_replace(
+            UrlHelper::baseRequestUrl(),
+            Yii::getAlias('@webroot/'),
+            $asset->getAbsoluteUrl()
+        );
+    },
+];
+```
+
+> By default, if asset file is not found, its content will be empty. No error is displayed.
+
+
+#### `entryContentExtractor`
+*Default: ``null``*
+
+If not set, the content of entries is generated with th Craft method ``Controller::renderTemplate()``.
+
+You can define a custom callback function which return HTML content from entry:
+
+ ```php
+ return [
+     // ...
+    'entryContentExtractor' => function (\craft\elements\Entry $entry) {
+        return file_get_contents($entry->getUrl());
+    },
+ ];
+ ```
 
 ## Explicit asset registering
 

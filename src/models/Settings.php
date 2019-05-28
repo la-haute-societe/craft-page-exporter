@@ -81,9 +81,6 @@ class Settings extends Model
      *          '//tag/@whatever',
      *       ],
      *       'assetClass' => MiscAsset::class,
-     *    ],
-     *    [
-     *       // ...
      *    ]
      * ],
      * ```
