@@ -165,7 +165,7 @@ in order to forward the update to his parent.
 #### `customSelectors`
 Child assets are found thanks to [XPath expressions](http://xmlfr.org/w3c/TR/xpath/).
 
-If you want to register asset with custom XPath for something like:
+If you want to add asset to the ZIP archive with custom XPath, for something like:
 
 ```twig
 <tag whatever="{{ myImageUrl }}"></tag>
@@ -188,7 +188,7 @@ return [
 ```
 
  - ``selectors``: collection of XPath expression
- - ``assetClass``: One of the following ``Asset`` class: 
+ - ``assetClass``: one of the following ``Asset`` class: 
     - ``ImageAsset``: external image(s) URL
     - ``InlineStyleAsset``: inline stylesheet
     - ``StyleAsset``: external stylesheet URL
@@ -234,7 +234,26 @@ You can define a custom callback function which return HTML content from entry:
  ];
  ```
 
-## Explicit asset registering
+
+## Register assets explicitly
+
+If some assets cannot be targeted by an XPath expression, 
+for example if you need to generate a JSON containing URLs,
+you can explicitly register assets from twig template during
+rendering the page:
+
+```twig
+{% set object = {
+    video: craft.pageExporter.registerAsset(video),
+    image: craft.pageExporter.registerAsset(image),
+} %}
+
+<script>
+    const myObject = {{ object|json_encode|raw }};
+    console.log(myObject);
+</script>
+```
+
 
 ## Contributing
 
