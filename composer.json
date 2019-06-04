@@ -1,42 +1,43 @@
 {
-  "name":         "la-haute-societe/craft-page-exporter",
-  "description":  "This plugin allows you to export entries in ZIP format.",
-  "type":         "craft-plugin",
+  "name":              "la-haute-societe/craft-page-exporter",
+  "version":           "1.0.0",
+  "description":       "This plugin allows you to export entries in ZIP format.",
+  "type":              "craft-plugin",
   "minimum-stability": "stable",
-  "keywords":     [
+  "keywords":          [
     "craft",
     "cms",
     "craftcms",
     "craft-plugin",
     "craft-page-exporter"
   ],
-  "support":      {
+  "support":           {
     "docs":   "https://github.com/la-haute-societe/craft-page-exporter",
     "issues": "https://github.com/la-haute-societe/craft-page-exporter/issues"
   },
-  "license":      "proprietary",
-  "authors":      [
+  "license":           "proprietary",
+  "authors":           [
     {
       "name":     "La Haute Société",
       "homepage": "https://www.lahautesociete.com"
     }
   ],
-  "require":      {
+  "require":           {
     "craftcms/cms":        "^3.0.0-RC1",
     "symfony/dom-crawler": "^3.3.0"
   },
-  "autoload":     {
+  "autoload":          {
     "psr-4": {
       "lhs\\craftpageexporter\\": "src/"
     }
   },
-  "extra":        {
-    "name":          "Page exporter",
-    "handle":        "craft-page-exporter",
-    "hasCpSection":  false,
-    "components":    {
+  "extra":             {
+    "name":         "Page exporter",
+    "handle":       "craft-page-exporter",
+    "hasCpSection": false,
+    "components":   {
       "craftpageexporterService": "lhs\\craftpageexporter\\services\\CraftpageexporterService"
     },
-    "class":         "lhs\\craftpageexporter\\Craftpageexporter"
+    "class":        "lhs\\craftpageexporter\\Craftpageexporter"
   }
 }
