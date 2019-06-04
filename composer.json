@@ -41,7 +41,7 @@
     }
   },
   "extra":        {
-    "name":          "craft-page-exporter",
+    "name":          "Page exporter",
     "handle":        "craft-page-exporter",
     "hasCpSection":  false,
     "changelogUrl":  "???",
