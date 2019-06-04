@@ -271,6 +271,9 @@ yarn dev    # Build assets in development mode
 yarn build  # Build assets in production mode
 ```
 
+## Licensing
+
+This plugin is free to try in development environments, but requires payment to be used in production environments. The license fee for this plugin is $29 (license + one year of updates) via the Craft Plugin Store, then $5 per year for updates (optional).
 
 Icon: Package by Vectorstall from the Noun Project.
 
