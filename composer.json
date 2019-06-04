@@ -1,6 +1,6 @@
 {
   "name":         "la-haute-societe/craft-page-exporter",
-  "description":  "Craft page exporter",
+  "description":  "This plugin allows you to export entries in ZIP format.",
   "type":         "craft-plugin",
   "minimum-stability": "stable",
   "keywords":     [
@@ -11,24 +11,14 @@
     "craft-page-exporter"
   ],
   "support":      {
-    "docs":   "???",
-    "issues": "???"
+    "docs":   "https://github.com/la-haute-societe/craft-page-exporter",
+    "issues": "https://github.com/la-haute-societe/craft-page-exporter/issues"
   },
-  "license":      "MIT",
+  "license":      "proprietary",
   "authors":      [
     {
       "name":     "La Haute Société",
       "homepage": "https://www.lahautesociete.com"
-    }
-  ],
-  "repositories": [
-    {
-      "type": "composer",
-      "url":  "http://packages.lahautesociete.int"
-    },
-    {
-      "type": "composer",
-      "url":  "https://asset-packagist.org"
     }
   ],
   "require":      {
@@ -44,7 +34,6 @@
     "name":          "Page exporter",
     "handle":        "craft-page-exporter",
     "hasCpSection":  false,
-    "changelogUrl":  "???",
     "components":    {
       "craftpageexporterService": "lhs\\craftpageexporter\\services\\CraftpageexporterService"
     },
