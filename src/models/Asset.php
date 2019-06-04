@@ -10,13 +10,6 @@ use lhs\craftpageexporter\helpers\PhpUri;
 
 /**
  * Class Asset
- *
- * Asset lifecycle :
- * 1. Init -> retrieve content
- * 2. Populate children
- * 3. Update initiator content (URL, inline styles...)
- * 4. From exporter: getExportPath
- *
  * @package lhs\craftpageexporter\models
  */
 abstract class Asset extends Component

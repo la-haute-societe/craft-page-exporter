@@ -179,6 +179,7 @@ class DefaultController extends Controller
      * @param $siteId
      * @return Export
      * @throws \yii\base\InvalidConfigException
+     * @throws \Exception
      */
     protected function createExport($entryIds, $siteId): Export
     {

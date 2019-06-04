@@ -270,3 +270,8 @@ yarn watch  # Build assets in development mode & watch them for changes
 yarn dev    # Build assets in development mode
 yarn build  # Build assets in production mode
 ```
+
+
+Icon: Package by Vectorstall from the Noun Project.
+
+Brought to you by ![Logo La Haute Société](.readme/logo-lahautesociete.png) [La Haute Société](https://www.lahautesociete.com)
