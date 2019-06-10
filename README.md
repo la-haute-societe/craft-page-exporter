@@ -1,7 +1,7 @@
 # Craft Page Exporter
 
-This plugin allows you to export entries in ZIP format.
-The archive contains the HTML rendering of the entry with images, videos, scripts and styles attached to the page.
+This plugin allows you to export entries in ZIP format from the control panel.
+The resulting archive contains the HTML rendering of the entry with its images, videos, scripts and styles attached to the page.
 
 ## Requirements
 
@@ -33,7 +33,7 @@ composer require la-haute-societe/craft-page-exporter
 
 Select one or more entries from `admin/entries`, then select `Export` from context menu.
 
-You can also export one entry from his edit page.
+You can also export one entry from its edit page.
 
 ## Configuration
 
