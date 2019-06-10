@@ -129,6 +129,7 @@ class HtmlAsset extends Asset
             'fromDomElement' => $crawler->getNode(0),
             'extractFilter'  => $filter,
             'initiator'      => $this,
+            'rootAsset'      => $this,
         ]);
         $this->addChild($asset);
     }

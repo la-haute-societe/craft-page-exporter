@@ -68,6 +68,7 @@ class StyleAsset extends Asset
             'initiator'     => $this,
             'baseUrl'       => $baseUrl,
             'basePath'      => $this->basePath,
+            'rootAsset'     => $this->getRootAsset(),
         ]);
         $this->addChild($this->inlineAsset);
         $this->inlineAsset->populateChildren();

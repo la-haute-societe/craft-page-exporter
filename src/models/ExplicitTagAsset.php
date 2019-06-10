@@ -35,6 +35,7 @@ class ExplicitTagAsset extends Asset
                 'initiator'  => $this,
                 'sourcePath' => $rawAsset['sourcePath'],
                 'exportPath' => $rawAsset['exportPath'],
+                'rootAsset'  => $this->getRootAsset(),
             ]);
             $this->addChild($asset);
         }

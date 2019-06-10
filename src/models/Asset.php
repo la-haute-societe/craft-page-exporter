@@ -33,9 +33,6 @@ abstract class Asset extends Component
     /** @var Asset[] Extracted children of this asset */
     public $children = [];
 
-    /** @var Entry|null Initiator Craft entry */
-    public $initiatorEntry = null;
-
     /** @var Asset Who initiate this asset */
     public $initiator = null;
 
@@ -53,6 +50,9 @@ abstract class Asset extends Component
 
     /** @var string Export UrL */
     public $exportUrl;
+
+    /** @var HtmlAsset */
+    protected $rootAsset;
 
     /** @var null Content of this asset */
     protected $_content = null;
@@ -75,11 +75,6 @@ abstract class Asset extends Component
             $this->export = $this->initiator->export;
         }
 
-        // Set initiatorEntry from initiator if not specified
-        if (!$this->initiatorEntry && $this->initiator) {
-            $this->initiatorEntry = $this->initiator->initiatorEntry;
-        }
-
         // Set baseUrl from initiator if not specified
         if (!$this->baseUrl && $this->initiator) {
             $this->baseUrl = $this->initiator->baseUrl;
@@ -93,11 +88,6 @@ abstract class Asset extends Component
         // Set fromDomElement from initiator if not specified
         if (!$this->fromDomElement && $this->initiator) {
             $this->fromDomElement = $this->initiator->fromDomElement;
-        }
-
-        // Set sourcePathTransformer from initiator if not specified
-        if (!$this->export->sourcePathTransformer && $this->initiator) {
-            $this->export->sourcePathTransformer = $this->initiator->export->sourcePathTransformer;
         }
 
         $this->exportUrl = $this->getRelativeUrl();
@@ -251,13 +241,18 @@ abstract class Asset extends Component
             return null;
         }
 
-        if (strpos($absoluteUrl, $this->baseUrl) === 0) {
+        // If no root asset, we're the root asset
+        // So we're in the base URL
+        if (!$this->getRootAsset()) {
+            return true;
+        }
+
+        if (strpos($absoluteUrl, $this->getRootAsset()->getBaseUrl()) === 0) {
             return true;
         }
 
         return false;
     }
-
     /**
      * Return content of this file/asset (file_get_contents)
      * only if it's in the base URL
@@ -346,6 +341,38 @@ abstract class Asset extends Component
     protected function retrieveAndUpdateContent()
     {
         $this->_content = $this->retrieveContent();
+    }
+
+    /**
+     * @return HtmlAsset
+     */
+    public function getRootAsset()
+    {
+        return $this->rootAsset;
+    }
+
+    /**
+     * @param HtmlAsset $rootAsset
+     */
+    public function setRootAsset($rootAsset)
+    {
+        $this->rootAsset = $rootAsset;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUrl()
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * @param string $baseUrl
+     */
+    public function setBaseUrl($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
     }
 
     /**

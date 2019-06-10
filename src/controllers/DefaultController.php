@@ -43,7 +43,7 @@ class DefaultController extends Controller
      *         The actions must be in 'kebab-case'
      * @access protected
      */
-    protected $allowAnonymous = ['export', 'getExportModalContent'];
+    // protected $allowAnonymous = ['export', 'getExportModalContent'];
 
 
     // Public Methods
@@ -58,7 +58,7 @@ class DefaultController extends Controller
      */
     public function actionExport($entryIds = null, $siteId = null)
     {
-        $this->requireAdmin();
+        $this->requirePermission('pageExporter.export');
 
         $export = $this->createExport($entryIds, $siteId);
 
@@ -77,7 +77,7 @@ class DefaultController extends Controller
      */
     public function actionAnalyze($entryIds = null, $siteId = null)
     {
-        $this->requireAdmin();
+        $this->requirePermission('pageExporter.export');
 
         $export = $this->createExport($entryIds, $siteId);
         $export->printTree();
@@ -85,16 +85,17 @@ class DefaultController extends Controller
     }
 
     /**
-     * @return Response
+     * @return \yii\web\Response
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
      * @throws SiteNotFoundException
      * @throws BadRequestHttpException
+     * @throws \yii\web\ForbiddenHttpException
      */
-    public function actionGetExportModalContent(): Response
+    public function actionGetExportModalContent()
     {
-        $this->requireAdmin();
+        $this->requirePermission('pageExporter.export');
         $this->requirePostRequest();
         $this->requireAcceptsJson();
 
@@ -127,7 +128,7 @@ class DefaultController extends Controller
      * @throws ServerErrorHttpException
      * @throws \yii\base\Exception
      */
-    private function getEntryContent($entry)
+    protected function getEntryContent($entry)
     {
         $pageExporterService = Craftpageexporter::$plugin->craftpageexporterService;
         $pageExporterService->setExportContext(true);
@@ -163,7 +164,7 @@ class DefaultController extends Controller
      * @return Entry
      * @throws NotFoundHttpException
      */
-    private function getEntryModel($entryId, $siteId): Entry
+    protected function getEntryModel($entryId, $siteId): Entry
     {
         $entry = Craft::$app->getEntries()->getEntryById($entryId, $siteId);
 

@@ -40,6 +40,7 @@ class ImageAsset extends Asset
                 'fromString'    => $match,
                 'extractFilter' => $this->extractFilter,
                 'initiator'     => $this,
+                'rootAsset'     => $this->getRootAsset(),
             ]);
             $this->addChild($asset);
             $asset->populateChildren();

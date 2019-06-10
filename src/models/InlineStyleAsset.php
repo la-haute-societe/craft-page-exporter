@@ -33,6 +33,7 @@ class InlineStyleAsset extends Asset
                 'fromString'    => $match,
                 'extractFilter' => '/url\([\'"]?(.*?)[\'"]?\)/',
                 'initiator'     => $this,
+                'rootAsset'     => $this->getRootAsset(),
             ]);
             $this->addChild($asset);
             $asset->populateChildren();

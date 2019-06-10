@@ -16,7 +16,9 @@ use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
+use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\UrlHelper;
+use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
@@ -87,6 +89,18 @@ class Craftpageexporter extends Plugin
         Event::on(Entry::class, Element::EVENT_REGISTER_ACTIONS,
             function (RegisterElementActionsEvent $event) {
                 $event->actions[] = CraftpageexporterElementAction::class;
+            }
+        );
+
+        Event::on(
+            UserPermissions::class,
+            UserPermissions::EVENT_REGISTER_PERMISSIONS,
+            function(RegisterUserPermissionsEvent $event) {
+                $event->permissions['Page exporter'] = [
+                    'pageExporter.export' => [
+                        'label' => 'Export entries',
+                    ],
+                ];
             }
         );
 

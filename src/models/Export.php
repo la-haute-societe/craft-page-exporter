@@ -87,7 +87,6 @@ class Export extends Component
             'name'            => $pageName . '.html',
             'url'             => $pageUrl,
             'fromString'      => $content,
-            'initiatorEntry'  => $entry,
             'export'          => $this,
             'baseUrl'         => $this->baseUrl,
             'basePath'        => $this->baseUrl,
