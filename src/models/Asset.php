@@ -57,6 +57,9 @@ abstract class Asset extends Component
     /** @var null Content of this asset */
     protected $_content = null;
 
+    /** @var bool Whether this asset will be present in the resulting archive */
+    public $willBeInArchive = false;
+
 
     /**
      * Asset init
@@ -90,11 +93,12 @@ abstract class Asset extends Component
             $this->fromDomElement = $this->initiator->fromDomElement;
         }
 
-        $this->exportUrl = $this->getRelativeUrl();
+        // $this->exportUrl = $this->getRelativeUrl();
         $this->exportPath = $this->getRelativePath();
 
         $this->retrieveAndUpdateContent();
 
+        $this->willBeInArchive = $this->isInBaseUrl();
     }
 
     /**
@@ -138,12 +142,30 @@ abstract class Asset extends Component
     }
 
     /**
+     * @param string $exportPath
+     */
+    public function setExportPath($exportPath)
+    {
+        $this->exportPath = $exportPath;
+    }
+
+    /**
      * Return URL of this asset in the export
      * @return string|null
      */
     public function getExportUrl()
     {
         return $this->exportUrl;
+    }
+
+    /**
+     * @param string $exportUrl
+     */
+    public function setExportUrl($exportUrl)
+    {
+        $this->exportUrl = $exportUrl;
+        $this->updateInitiatorContent();
+        $this->url = $this->exportUrl;
     }
 
     /**
@@ -176,11 +198,7 @@ abstract class Asset extends Component
             return $this->url;
         }
 
-        if (is_null($this->initiator)) {
-            return $this->url;
-        }
-
-        $parentUrl = $this->initiator->getAbsoluteUrl();
+        $parentUrl = $this->getBaseUrl();
         $absoluteUrl = PhpUri::parse($parentUrl)->join($this->url);
 
         return $absoluteUrl;
@@ -229,8 +247,56 @@ abstract class Asset extends Component
     }
 
     /**
+     * @param $base
+     * @param $absoluteUrl
+     * @return string
+     */
+    public function calculateRelativePath($base, $absoluteUrl)
+    {
+        // Remove empty items
+        $splitBaseUrl = array_filter(explode('/', $base));
+        $splitAbsoluteUrl = array_filter(explode('/', $absoluteUrl));
+
+        // Reorder keys
+        $splitBaseUrl = array_values($splitBaseUrl);
+        $splitAbsoluteUrl = array_values($splitAbsoluteUrl);
+
+        // Not in the same domain return the original absolute url
+        if ($splitBaseUrl[0] !== $splitAbsoluteUrl[0] || $splitBaseUrl[1] !== $splitAbsoluteUrl[1]) {
+            return $absoluteUrl;
+        }
+
+        foreach ($splitBaseUrl as $key => $item) {
+            if ($splitBaseUrl[$key] === $splitAbsoluteUrl[$key]) {
+                unset($splitBaseUrl[$key]);
+                unset($splitAbsoluteUrl[$key]);
+            } else {
+                break;
+            }
+        }
+
+        $splitBackwards = array_fill(0, count($splitBaseUrl), '..');
+        $splitFull = $splitBackwards + $splitAbsoluteUrl;
+        $fullRelativeUrl = implode('/', $splitFull);
+
+        return $fullRelativeUrl;
+    }
+
+    /**
+     * @param $parentUrl
+     * @param $url
+     * @return string
+     */
+    public function calculateAbsoluteUrl($parentUrl, $url)
+    {
+        $absoluteUrl = PhpUri::parse($parentUrl)->join($url);
+
+        return $absoluteUrl;
+    }
+
+    /**
      * Return true if the absolute URL of this asset
-     * is in base URL
+     * is in root asset base URL
      * @return bool|null
      */
     public function isInBaseUrl()
@@ -253,6 +319,7 @@ abstract class Asset extends Component
 
         return false;
     }
+
     /**
      * Return content of this file/asset (file_get_contents)
      * only if it's in the base URL
@@ -279,6 +346,21 @@ abstract class Asset extends Component
         foreach ($this->children as $child) {
             $child->updateInitiatorContent();
         }
+    }
+
+    /**
+     * Replace current asset URL with the new export URL in the initiator content
+     */
+    public function replaceUrlWithExportUrlInInitiator()
+    {
+        $exportUrl = $this->getExportUrl();
+
+        // No replacement needed
+        if (!$this->willBeInArchive || !$this->url || !$exportUrl || !$this->initiator) {
+            return;
+        }
+
+        $this->initiator->replaceInContent($this->url, $exportUrl, $this);
     }
 
     /**
@@ -368,11 +450,15 @@ abstract class Asset extends Component
     }
 
     /**
+     * Update base URL on current asset and its children
      * @param string $baseUrl
      */
     public function setBaseUrl($baseUrl)
     {
         $this->baseUrl = $baseUrl;
+        foreach ($this->children as $child) {
+            $child->setBaseUrl($baseUrl);
+        }
     }
 
     /**
@@ -417,6 +503,7 @@ abstract class Asset extends Component
             echo '<div><b>Base URL:</b> ' . $this->baseUrl . '</div>';
             echo '<div><b>Base Path:</b> ' . $this->basePath . '</div>';
             echo '<div><b>In base URL:</b> ' . $this->isInBaseUrl() . '</div>';
+            echo '<div><b>willBeInArchive:</b> ' . $this->willBeInArchive . '</div>';
             echo '<div><b>Export path:</b> ' . $this->getExportPath() . '</div>';
             echo '<div><b>Export URL:</b> ' . $this->getExportUrl() . '</div>';
             //echo '<div><b>Content:</b> ' . substr($this->content, 0, 200) . '</div>';

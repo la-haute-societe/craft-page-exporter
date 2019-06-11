@@ -59,16 +59,20 @@ class PathAndUrlTransformer extends BaseTransformer
             'minute'    => date('i'),
             'second'    => date('s'),
         ];
-// var_dump($this->exportUrlFormat);
-// die();
+
+        // Render URL format
         $exportUrl = Craft::$app->getView()->renderObjectTemplate($this->exportUrlFormat, null, $variables);
         $exportPath = Craft::$app->getView()->renderObjectTemplate($this->exportPathFormat, null, $variables);
 
-        // Set the new url to the asset
-        $asset->exportUrl = $exportUrl;
-        $asset->exportPath = $exportPath;
+        // Calculate absolute URL of the new path
+        $absoluteNewUrl = $asset->calculateAbsoluteUrl($asset->getRootAsset()->getBaseUrl(), $exportUrl);
 
-        $asset->updateInitiatorContent();
+        // Calculate URL relative to initiator URL from the absolute URL
+        $relativeNewUrl = $asset->calculateRelativePath($asset->getBaseUrl(), $absoluteNewUrl);
+
+        // Set the new url to the asset
+        $asset->setExportUrl($relativeNewUrl);
+        $asset->setExportPath($exportPath);
     }
 
     /**
@@ -79,7 +83,7 @@ class PathAndUrlTransformer extends BaseTransformer
      */
     protected function needToTransform($asset)
     {
-        if (!$asset->isInBaseUrl()) {
+        if (!$asset->willBeInArchive) {
             return false;
         }
 

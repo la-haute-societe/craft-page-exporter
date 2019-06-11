@@ -80,7 +80,7 @@ class StyleAsset extends Asset
      */
     public function updateInitiatorContent()
     {
-        if (!$this->isInBaseUrl() || !$this->url) {
+        if (!$this->willBeInArchive || !$this->url) {
             return;
         }
 
@@ -93,6 +93,12 @@ class StyleAsset extends Asset
         } else {
             $this->replaceStyleTagHref();
         }
+    }
+
+    public function setExportUrl($exportUrl)
+    {
+        parent::setExportUrl($exportUrl);
+        $this->setBaseUrl($this->computeBaseUrl());
     }
 
     /**
@@ -117,9 +123,7 @@ class StyleAsset extends Asset
      */
     protected function replaceStyleTagHref()
     {
-        if ($this->initiator) {
-            $this->initiator->replaceInContent($this->url, $this->getExportUrl(), $this);
-        }
+        $this->replaceUrlWithExportUrlInInitiator();
     }
 
     /**
@@ -128,7 +132,7 @@ class StyleAsset extends Asset
      * depending on whether this resource is inlined or not.
      * @return string
      */
-    protected function computeBaseUrl(): string
+    protected function computeBaseUrl()
     {
         if (!$this->export->inlineStyles) {
             return dirname($this->getAbsoluteUrl()) . '/';

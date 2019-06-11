@@ -81,7 +81,7 @@ class ZipExporter extends BaseExporter
      */
     protected function addAsset(Asset $asset)
     {
-        if ($asset->isInBaseUrl()) {
+        if ($asset->willBeInArchive) {
             $name = $asset->getExportPath();
 
             if ($name) {

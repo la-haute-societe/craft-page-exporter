@@ -96,10 +96,7 @@ class ImageAsset extends Asset
     public function updateInitiatorContent()
     {
         parent::updateInitiatorContent();
-
-        if ($this->isInBaseUrl() && $this->url && $this->initiator) {
-            $this->initiator->replaceInContent($this->url, $this->getExportUrl(), $this);
-        }
+        $this->replaceUrlWithExportUrlInInitiator();
     }
 
     /**

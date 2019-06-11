@@ -29,7 +29,7 @@ class InlineStyleAsset extends Asset
     {
         preg_match_all('/url\([\'"]?(.*?)[\'"]?\)/', $this->fromString, $matches);
         foreach ($matches[1] as $match) {
-            $asset = new ImageAsset([
+            $asset = new MiscAsset([
                 'fromString'    => $match,
                 'extractFilter' => '/url\([\'"]?(.*?)[\'"]?\)/',
                 'initiator'     => $this,

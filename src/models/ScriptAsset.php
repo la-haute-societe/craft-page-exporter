@@ -18,7 +18,7 @@ class ScriptAsset extends Asset
      */
     public function updateInitiatorContent()
     {
-        if (!$this->isInBaseUrl() || !$this->url) {
+        if (!$this->willBeInArchive || !$this->url) {
             return;
         }
 
@@ -66,8 +66,6 @@ class ScriptAsset extends Asset
      */
     protected function replaceScriptTagHref()
     {
-        if ($this->initiator) {
-            $this->initiator->replaceInContent($this->url, $this->getExportUrl(), $this);
-        }
+        $this->replaceUrlWithExportUrlInInitiator();
     }
 }
