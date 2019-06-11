@@ -54,7 +54,8 @@ class StyleAsset extends Asset
             return null;
         }
 
-        $baseUrl = $this->computeBaseUrl();
+        // URL of its children is relative to this asset (not the root asset)
+        $baseUrl = dirname($this->getAbsoluteUrl()) . '/';
 
         // Do not store content in this asset
         // Use InlineStyleAsset child instead
@@ -98,7 +99,14 @@ class StyleAsset extends Asset
     public function setExportUrl($exportUrl)
     {
         parent::setExportUrl($exportUrl);
-        $this->setBaseUrl($this->computeBaseUrl());
+
+        // If we change the url of this asset, we have to recalculate
+        // url of its children
+        if (!$this->export->inlineStyles) {
+            foreach ($this->children as $child) {
+                $child->setBaseUrl(dirname($this->getAbsoluteUrl()) . '/');
+            }
+        }
     }
 
     /**
@@ -106,6 +114,8 @@ class StyleAsset extends Asset
      */
     protected function inlineStyleInHtmlAsset()
     {
+        $this->setBaseUrl($this->getRootAsset()->getBaseUrl());
+
         $document = $this->fromDomElement->ownerDocument;
         $replaceElement = $document->createElement('style', $this->getContent());
         $this->initiator->replaceDomElement($this->fromDomElement, $replaceElement);
@@ -124,21 +134,6 @@ class StyleAsset extends Asset
     protected function replaceStyleTagHref()
     {
         $this->replaceUrlWithExportUrlInInitiator();
-    }
-
-    /**
-     * Compute base URL of this asset.
-     * BaseURL is relative to the HTML document or to the external style file
-     * depending on whether this resource is inlined or not.
-     * @return string
-     */
-    protected function computeBaseUrl()
-    {
-        if (!$this->export->inlineStyles) {
-            return dirname($this->getAbsoluteUrl()) . '/';
-        }
-
-        return $this->baseUrl;
     }
 
 }

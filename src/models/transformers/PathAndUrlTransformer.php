@@ -9,6 +9,7 @@ use lhs\craftpageexporter\models\ImageAsset;
 use lhs\craftpageexporter\models\MiscAsset;
 use lhs\craftpageexporter\models\ScriptAsset;
 use lhs\craftpageexporter\models\StyleAsset;
+use yii\base\Exception;
 
 class PathAndUrlTransformer extends BaseTransformer
 {
@@ -26,7 +27,7 @@ class PathAndUrlTransformer extends BaseTransformer
     /**
      * @param Asset $asset
      * @throws \Throwable
-     * @throws \yii\base\Exception
+     * @throws Exception
      */
     public function transform($asset)
     {
@@ -34,8 +35,14 @@ class PathAndUrlTransformer extends BaseTransformer
             return;
         }
 
+        // Get URL of this asset relative to root asset instead of its initiator
+        // because "url format" is relative to the root asset (root of the archive)
+        $absoluteUrl = $asset->calculateAbsoluteUrl($asset->getBaseUrl(), $asset->url);
+        $urlRelativeToRootAsset = $asset->calculateRelativePath($asset->getRootAsset()->getBaseUrl(),
+            $absoluteUrl);
+
         // Filename components
-        $parseUrl = parse_url($asset->url);
+        $parseUrl = parse_url($urlRelativeToRootAsset);
         $pathinfo = pathinfo($parseUrl['path']);
         $filename = isset($pathinfo['filename']) ? $pathinfo['filename'] : '';
         $extension = isset($pathinfo['extension']) ? '.' . $pathinfo['extension'] : '';
@@ -60,23 +67,35 @@ class PathAndUrlTransformer extends BaseTransformer
             'second'    => date('s'),
         ];
 
-        // Render URL format
+        // Render URL format with the variables above.
         $exportUrl = Craft::$app->getView()->renderObjectTemplate($this->exportUrlFormat, null, $variables);
         $exportPath = Craft::$app->getView()->renderObjectTemplate($this->exportPathFormat, null, $variables);
 
-        // Calculate absolute URL of the new path
+        // So, here we got the new URL of the asset relative to the root asset, but want the URL relative
+        // to its initiator. For that we have to calculate first the absolute URL.
+        // -----------------------------------------------------------------------------------------------
+        // Calculate absolute URL of the new path.
         $absoluteNewUrl = $asset->calculateAbsoluteUrl($asset->getRootAsset()->getBaseUrl(), $exportUrl);
+        $absoluteNewPath = $asset->calculateAbsoluteUrl($asset->getRootAsset()->getBaseUrl(), $exportPath);
 
-        // Calculate URL relative to initiator URL from the absolute URL
-        $relativeNewUrl = $asset->calculateRelativePath($asset->getBaseUrl(), $absoluteNewUrl);
+        // Calculate URL relative to initiator URL from the absolute URL.
+        $newUrlRelativeToInitiator = $asset->calculateRelativePath($asset->getBaseUrl(), $absoluteNewUrl);
+        $newUrlRelativeToRootAsset = $asset->calculateRelativePath(
+            $asset->getRootAsset()->getBaseUrl(),
+            $absoluteNewPath
+        );
 
-        // Set the new url to the asset
-        $asset->setExportUrl($relativeNewUrl);
-        $asset->setExportPath($exportPath);
+        // Set the new url and path to our asset.
+        // -------------------------------------
+        // Url is relative to its initiator.
+        $asset->setExportUrl($newUrlRelativeToInitiator);
+
+        // Path is relative to the root of the archive.
+        $asset->setExportPath($newUrlRelativeToRootAsset);
     }
 
     /**
-     * Return true if $asset class name is in assetClasses and in base url
+     * Return true if $asset class name is in assetClasses and in base url.
      * @param Asset $asset
      * @return bool
      * @throws \ReflectionException

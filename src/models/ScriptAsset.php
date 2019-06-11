@@ -41,15 +41,7 @@ class ScriptAsset extends Asset
         $document = $this->fromDomElement->ownerDocument;
         $replaceElement = $document->createElement('script');
         $content = $this->getContent();
-        // for ($i = 0; $i < strlen($content); $i++) {
-        //     try {
-        //         $replaceElement->nodeValue = substr($content, 0, $i);
-        //     }catch(\Exception $e){
-        //         var_dump($e->getMessage());
-        //         var_dump(substr($content, 0, $i));
-        //         die();
-        //     }
-        // }
+
         $replaceElement->nodeValue = htmlspecialchars($content);
         $this->initiator->replaceDomElement($this->fromDomElement, $replaceElement);
         $this->setRecursiveFromDomElement($replaceElement);

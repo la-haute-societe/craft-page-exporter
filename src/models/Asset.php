@@ -99,6 +99,11 @@ abstract class Asset extends Component
         $this->retrieveAndUpdateContent();
 
         $this->willBeInArchive = $this->isInBaseUrl();
+
+        // Replace relative URL with absolute URL in content
+        if($this->getAbsoluteUrl()) {
+            $this->setExportUrl($this->getAbsoluteUrl());
+        }
     }
 
     /**
