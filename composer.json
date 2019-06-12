@@ -1,6 +1,5 @@
 {
   "name":              "la-haute-societe/craft-page-exporter",
-  "version":           "1.1.1",
   "description":       "This plugin allows you to export entries in ZIP format.",
   "type":              "craft-plugin",
   "minimum-stability": "stable",
