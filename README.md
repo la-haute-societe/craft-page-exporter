@@ -157,7 +157,7 @@ return [
 ];
 ```
 
-If you modify content or path of child assets you should call 
+If you modify content of child assets you should call 
 the method ``$asset->updateInitiatorContent()`` after updating the asset
 in order to forward the update to his parent.
 
@@ -229,10 +229,17 @@ You can define a custom callback function which return HTML content from entry:
  return [
      // ...
     'entryContentExtractor' => function (\craft\elements\Entry $entry) {
-        return file_get_contents($entry->getUrl());
+        return file_get_contents($entry->initialAbsoluteUrl);
     },
  ];
  ```
+
+
+#### `failOnFileNotFound`
+*Default: ``false``*
+
+If `true` an exception will be thrown if an asset file is not found. 
+Otherwise, no error is displayed and an empty file will be created in the archive.
 
 
 ## Register assets explicitly

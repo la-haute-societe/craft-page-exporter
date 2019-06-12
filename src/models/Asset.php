@@ -39,8 +39,14 @@ abstract class Asset extends Component
     /** @var string|null How this asset was extracted */
     public $extractFilter = null;
 
-    /** @var string|null $url URL as found in sources (if this asset has URL) */
+    /** @var string|null $url URL of this asset (can be transformed) */
     public $url = null;
+
+    /** @var string|null $url URL as found in sources (if this asset has URL) */
+    public $initialUrl = null;
+
+    /** @var string|null $url URL as found in sources (if this asset has URL) */
+    public $initialAbsoluteUrl = null;
 
     /** @var Export The export object to which this asset belongs */
     public $export;
@@ -93,15 +99,20 @@ abstract class Asset extends Component
             $this->fromDomElement = $this->initiator->fromDomElement;
         }
 
-        // $this->exportUrl = $this->getRelativeUrl();
+        // Default export path
         $this->exportPath = $this->getRelativePath();
+
+        // Keep the initial URL
+        $this->initialUrl = $this->url;
+        $this->initialAbsoluteUrl = $this->getAbsoluteUrl();
 
         $this->retrieveAndUpdateContent();
 
+        // If this asset is in base url, it should be in the archive
         $this->willBeInArchive = $this->isInBaseUrl();
 
         // Replace relative URL with absolute URL in content
-        if($this->getAbsoluteUrl()) {
+        if ($this->getAbsoluteUrl()) {
             $this->setExportUrl($this->getAbsoluteUrl());
         }
     }
@@ -338,7 +349,11 @@ abstract class Asset extends Component
         }
         $path = $this->getSourcePath();
 
-        // @TODO: How to deal with unreachable assets ?
+
+        if ($this->export->failOnFileNotFound && !file_exists($path)) {
+            throw new \Exception('Asset file not found: "' . $path . '"');
+        }
+
         return @file_get_contents($path);
     }
 

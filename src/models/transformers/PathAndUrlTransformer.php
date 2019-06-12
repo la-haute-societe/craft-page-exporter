@@ -67,6 +67,7 @@ class PathAndUrlTransformer extends BaseTransformer
             'second'    => date('s'),
         ];
 
+
         // Render URL format with the variables above.
         $exportUrl = Craft::$app->getView()->renderObjectTemplate($this->exportUrlFormat, null, $variables);
         $exportPath = Craft::$app->getView()->renderObjectTemplate($this->exportPathFormat, null, $variables);

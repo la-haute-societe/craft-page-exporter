@@ -95,7 +95,7 @@ class Craftpageexporter extends Plugin
         Event::on(
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
-            function(RegisterUserPermissionsEvent $event) {
+            function (RegisterUserPermissionsEvent $event) {
                 $event->permissions['Page exporter'] = [
                     'pageExporter.export' => [
                         'label' => 'Export entries',
@@ -131,6 +131,7 @@ class Craftpageexporter extends Plugin
             'inlineScripts'         => $settings->inlineScripts,
             'customSelectors'       => $settings->customSelectors,
             'sourcePathTransformer' => $settings->sourcePathTransformer,
+            'failOnFileNotFound'    => $settings->failOnFileNotFound,
             'transformers'          => [],
         ];
 

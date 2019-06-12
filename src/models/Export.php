@@ -54,10 +54,17 @@ class Export extends Component
     public $transformers = [];
 
     /**
+     * Whether throw exception if an asset file is not found
+     * @var bool
+     */
+    public $failOnFileNotFound = false;
+
+    /**
      * Collection of root assets composing this export
      * @var Asset[]
      */
     protected $rootAssets = [];
+
 
     /**
      * Init
@@ -151,7 +158,7 @@ class Export extends Component
         return str_replace(
             UrlHelper::baseRequestUrl(),
             Yii::getAlias('@webroot/'),
-            $asset->getAbsoluteUrl()
+            $asset->initialAbsoluteUrl
         );
     }
 

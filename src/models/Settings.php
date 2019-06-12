@@ -68,6 +68,14 @@ class Settings extends Model
     public $assetTransformers = null;
 
     /**
+     * Whether throw exception if an asset file is not found
+     * In the case a file is not found and this param is false, the file will be empty.
+     * Default: false
+     * @var bool
+     */
+    public $failOnFileNotFound = false;
+
+    /**
      * List of custom selectors in the following format.
      * - ``selectors`` are XPath expressions (http://xmlfr.org/w3c/TR/xpath/).
      * - ``assetClass`` is the class which will manage the content found by the XPath selectors.

@@ -11,9 +11,11 @@
 namespace lhs\craftpageexporter\services;
 
 use craft\base\Component;
+use craft\helpers\UrlHelper;
 use lhs\craftpageexporter\Craftpageexporter;
 use lhs\craftpageexporter\models\Asset;
 use lhs\craftpageexporter\models\Export;
+use lhs\craftpageexporter\models\HtmlAsset;
 use lhs\craftpageexporter\models\MiscAsset;
 
 /**
@@ -74,15 +76,26 @@ class CraftpageexporterService extends Component
      */
     protected function createAsset($url)
     {
+        $baseUrl = UrlHelper::baseRequestUrl();
         $export = new Export(Craftpageexporter::$plugin->getExportConfig());
+
+        $htmlAsset = new HtmlAsset([
+            'export'   => $export,
+            'baseUrl'  => $baseUrl,
+            'basePath' => $baseUrl,
+        ]);
+
         $asset = new MiscAsset([
             'fromString' => $url,
             'baseUrl'    => $export->baseUrl,
             'basePath'   => $export->baseUrl,
             'export'     => $export,
+            'rootAsset'  => $htmlAsset,
         ]);
-        $export->addRootAsset($asset);
+        $htmlAsset->addChild($asset);
+        $export->addRootAsset($htmlAsset);
         $export->transform();
+
 
         return $asset;
     }

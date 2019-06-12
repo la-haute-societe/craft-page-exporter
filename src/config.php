@@ -61,6 +61,7 @@ return [
     // 'inlineScripts'     => true,
     // 'flatten'           => true,
     // 'prefixExportUrl'   => null,
+    // 'failOnFileNotFound' => false,
     // 'customSelectors' => [
     //     [
     //         'selectors'  => [
