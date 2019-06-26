@@ -1,3 +1,5 @@
+<img src="src/icon.svg" align="right" />
+
 # Craft Page Exporter
 
 This plugin allows you to export entries in ZIP format from the control panel.
