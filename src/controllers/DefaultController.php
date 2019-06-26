@@ -86,11 +86,10 @@ class DefaultController extends Controller
 
     /**
      * @return \yii\web\Response
+     * @throws BadRequestHttpException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws SiteNotFoundException
-     * @throws BadRequestHttpException
      * @throws \yii\web\ForbiddenHttpException
      */
     public function actionGetExportModalContent()
@@ -101,7 +100,7 @@ class DefaultController extends Controller
 
         $entryIds = Craft::$app->getRequest()->getRequiredParam('entryIds');
         $requestId = Craft::$app->getRequest()->getRequiredParam('requestId');
-        $siteId = Craft::$app->sites->getCurrentSite()->id;
+        $siteId = Craft::$app->getRequest()->getRequiredParam('siteId');
 
         // Get modal content
         $view = \Craft::$app->getView();
