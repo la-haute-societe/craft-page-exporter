@@ -1,9 +1,26 @@
-<img src="src/icon.svg" align="right" />
+![Craft Page Exporter icon](src/icon.svg)
 
 # Craft Page Exporter
 
 This plugin allows you to export entries in ZIP format from the control panel.
 The resulting archive contains the HTML rendering of the entry with its images, videos, scripts and styles attached to the page.
+
+![Screenshot](.readme/screenshot.png)
+
+Example of resulting archive:
+```
+export.zip    
+├── page-name-1-en.html
+├── page-name-2-en.html
+└── media
+    ├── styles.5875592d.css
+    ├── scripts.8b5a78f2.js
+    ├── image-1.808162ef.jpg
+    ├── logo.5b4d3420.svg
+    ├── my-font.9a212477.woff
+    └── ...
+```
+
 
 ## Requirements
 
