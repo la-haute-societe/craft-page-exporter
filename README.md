@@ -54,6 +54,8 @@ Select one or more entries from `admin/entries`, then select `Export` from conte
 
 You can also export one entry from its edit page.
 
+![Screenshot](.readme/entries-list.png)
+
 ## Configuration
 
 You can configure the plugin's behavior from the plugin settings page. 
