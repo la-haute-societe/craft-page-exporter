@@ -3,6 +3,7 @@
 ## 1.1.4 - 2019-08-19
 ### Fixed
 - Fix minor compatibility issue with Craft 3.2.10
+- Fix issue #2 "html" and "doctype" tags are now in the export
 
 ## 1.1.3 - 2019-06-23
 ### Fixed

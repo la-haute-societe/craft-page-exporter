@@ -184,6 +184,12 @@ class HtmlAsset extends Asset
      */
     protected function updateContentFromDomCrawler()
     {
-        $this->setContent($this->crawler->html());
+        // Use "saveDocument" instead of "html", otherwise the 'html' tag is not exported
+        $html = '';
+        foreach ($this->crawler as $domElement) {
+            $html.= $domElement->ownerDocument->saveHTML();
+        }
+
+        $this->setContent($html);
     }
 }
