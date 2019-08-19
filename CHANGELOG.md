@@ -1,6 +1,6 @@
 # Craft Page Exporter Changelog
 
-## 1.1.4 - 2019-08-19
+## 1.1.5 - 2019-08-19
 ### Fixed
 - Fix minor compatibility issue with Craft 3.2.10
 - Fix issue #2 "html" and "doctype" tags are now in the export
