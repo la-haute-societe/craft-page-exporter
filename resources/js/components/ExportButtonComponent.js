@@ -1,7 +1,7 @@
 export default class ExportButtonComponent {
     init() {
         // Get element we want to insert btn after
-        let btnShare = document.querySelector('.btn.sharebtn');
+        let btnShare = document.querySelector('.btn.sharebtn, #share-btn');
         if (btnShare === null) return;
 
         // Create btn group
