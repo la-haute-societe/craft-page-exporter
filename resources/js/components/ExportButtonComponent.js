@@ -1,4 +1,4 @@
-export default class ShareButtonComponent {
+export default class ExportButtonComponent {
     init() {
         // Get element we want to insert btn after
         let btnShare = document.querySelector('.btn.sharebtn');

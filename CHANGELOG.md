@@ -1,5 +1,9 @@
 # Craft Page Exporter Changelog
 
+## 1.1.4 - 2019-08-19
+### Fixed
+- Fix minor compatibility issue with Craft 3.2.10
+
 ## 1.1.3 - 2019-06-23
 ### Fixed
 - Use site selected by user instead of default site (Fix #1)

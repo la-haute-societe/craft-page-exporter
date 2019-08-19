@@ -1,5 +1,5 @@
 import * as GarnishExportModal from './components/GarnishExportModal';
-import ShareButtonComponent from './components/ShareButtonComponent';
+import ExportButtonComponent from './components/ExportButtonComponent';
 
-let shareButtonComponent = new ShareButtonComponent();
-shareButtonComponent.init();
+let exportButtonComponent = new ExportButtonComponent();
+exportButtonComponent.init();
