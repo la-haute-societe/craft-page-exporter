@@ -1,5 +1,9 @@
 # Craft Page Exporter Changelog
 
+## 1.1.6 - 2019-11-05
+### Fixed
+- Fix Craft 3.3 incompatibility
+
 ## 1.1.5 - 2019-08-19
 ### Fixed
 - Fix minor compatibility issue with Craft 3.2.10

@@ -73,7 +73,7 @@ Craft.CraftpageexporterExportModal = Garnish.Modal.extend({
                 return siteIdInput.value;
             }
 
-            if (Craft.elementIndex.siteId) {
+            if (Craft.elementIndex && Craft.elementIndex.siteId) {
                 return Craft.elementIndex.siteId;
             }
 
