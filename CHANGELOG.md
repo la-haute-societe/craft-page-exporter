@@ -1,5 +1,9 @@
 # Craft Page Exporter Changelog
 
+## 1.1.7 - 2020-03-11
+### Fixed
+- Fixed: Set current site instead of current language
+
 ## 1.1.6 - 2019-11-05
 ### Fixed
 - Fix Craft 3.3 incompatibility
