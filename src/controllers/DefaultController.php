@@ -144,9 +144,8 @@ class DefaultController extends Controller
             throw new ServerErrorHttpException('Invalid site ID: ' . $entry->siteId);
         }
 
-        // Set current language
-        Craft::$app->language = $site->language;
-        Craft::$app->set('locale', Craft::$app->getI18n()->getLocaleById($site->language));
+        // Set current site
+        craft::$app->getSites()->setCurrentSite($site);
 
         // Switch to template mode site
         \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
