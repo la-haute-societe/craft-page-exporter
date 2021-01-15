@@ -1,6 +1,6 @@
 <?php
 
-namespace lhs\craftpageexporter;
+namespace lhs\craftpageexporter\variables;
 
 
 use craft\helpers\Template;
