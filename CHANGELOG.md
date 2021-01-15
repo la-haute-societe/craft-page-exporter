@@ -2,6 +2,10 @@
 
 ## 1.1.7 - 2020-03-11
 ### Fixed
+- Fixed: PSR-4 compliance of the PageExporterVariable class
+
+## 1.1.7 - 2020-03-11
+### Fixed
 - Fixed: Set current site instead of current language
 
 ## 1.1.6 - 2019-11-05
