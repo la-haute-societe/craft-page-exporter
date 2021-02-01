@@ -28,6 +28,7 @@ use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\AssetTransformer;
 use lhs\craftpageexporter\models\transformers\PathAndUrlTransformer;
 use lhs\craftpageexporter\services\CraftpageexporterService;
+use lhs\craftpageexporter\variables\PageExporterVariable;
 use yii\base\Event;
 
 /**
