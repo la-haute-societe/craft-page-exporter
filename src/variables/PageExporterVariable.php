@@ -4,7 +4,7 @@ namespace lhs\craftpageexporter\variables;
 
 
 use craft\helpers\Template;
-
+use lhs\craftpageexporter\Craftpageexporter;
 
 class PageExporterVariable
 {
