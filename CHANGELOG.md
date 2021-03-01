@@ -1,5 +1,9 @@
 # Craft Page Exporter Changelog
 
+## 1.1.9 - 2021-01-03
+### Fixed
+- Fix classes import with new namespace
+
 ## 1.1.8 - 2020-03-11
 ### Fixed
 - Fixed: PSR-4 compliance of the PageExporterVariable class
