@@ -3,6 +3,7 @@
 namespace lhs\craftpageexporter\models;
 
 use Craft;
+use lhs\craftpageexporter\Craftpageexporter;
 use Yii;
 use ZipArchive;
 
@@ -48,6 +49,10 @@ class ZipExporter extends BaseExporter
             }
 
             $this->addRootAsset($rootAsset);
+        }
+
+        foreach (Craftpageexporter::$plugin->craftpageexporterService->getRegisteredAssets() as $asset) {
+            $this->addAsset($asset);
         }
 
         $this->sendZip();

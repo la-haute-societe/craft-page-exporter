@@ -1,5 +1,9 @@
 # Craft Page Exporter Changelog
 
+## Unreleased
+### Fixed
+- Fix manually registered asset (using `{{ craft.pageExporter.registerAsset() }}`) missing in exported archive
+
 ## 1.1.9 - 2021-01-03
 ### Fixed
 - Fix classes import with new namespace
