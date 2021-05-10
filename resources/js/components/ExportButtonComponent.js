@@ -62,7 +62,7 @@ export default class ExportButtonComponent {
     }
 
     getEntryId() {
-        let entryIdInput = document.getElementsByName('entryId')[0];
+        let entryIdInput = document.getElementsByName('sourceId')[0];
         return entryIdInput.value;
     }
 
