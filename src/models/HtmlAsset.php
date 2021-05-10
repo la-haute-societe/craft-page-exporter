@@ -55,6 +55,8 @@ class HtmlAsset extends Asset
                 '//*/@data-bgset',
                 '//*/@data-srcset',
                 '//*/@data-src',
+                '//link[contains(@rel, "icon")]/@href',
+                '//link[@rel="manifest"]/@href',
             ],
             'assetClass' => ImageAsset::class,
         ],

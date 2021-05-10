@@ -3,6 +3,7 @@
 ## Unreleased
 ### Fixed
 - Fix manually registered asset (using `{{ craft.pageExporter.registerAsset() }}`) missing in exported archive
+- Fix favicon missing in exported archive
 
 ## 1.1.9 - 2021-01-03
 ### Fixed
