@@ -12,7 +12,6 @@ namespace lhs\craftpageexporter;
 
 use Craft;
 use craft\base\Element;
-use craft\base\Plugin;
 use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
@@ -23,11 +22,11 @@ use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
-use lhs\craftpageexporter\elements\actions\CraftpageexporterElementAction;
+use lhs\craftpageexporter\elements\actions\ExportElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\AssetTransformer;
 use lhs\craftpageexporter\models\transformers\PathAndUrlTransformer;
-use lhs\craftpageexporter\services\CraftpageexporterService;
+use lhs\craftpageexporter\services\Service;
 use lhs\craftpageexporter\variables\PageExporterVariable;
 use yii\base\Event;
 
@@ -38,15 +37,12 @@ use yii\base\Event;
  * @package   Craftpageexporter
  * @since     1.0.0
  *
- * @property  CraftpageexporterService $craftpageexporterService
+ * @property  Service $craftpageexporterService
  */
-class Craftpageexporter extends Plugin
+class Plugin extends \craft\base\Plugin
 {
-    /** @var Craftpageexporter */
+    /** @var Plugin */
     public static $plugin;
-
-    /** @var string */
-    public $schemaVersion = '1.0.0';
 
     /** @var bool */
     public $hasCpSettings = true;
@@ -80,16 +76,15 @@ class Craftpageexporter extends Plugin
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
             function (RegisterUrlRulesEvent $event) {
-                Craft::warning('REGISTER URL EXPORTER');
                 $event->rules['page-exporter/export/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/export';
                 $event->rules['page-exporter/analyze/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/analyze';
             }
         );
 
-        // Register element action to assets for clearing transforms
+        // Register element action to export entries
         Event::on(Entry::class, Element::EVENT_REGISTER_ACTIONS,
             function (RegisterElementActionsEvent $event) {
-                $event->actions[] = CraftpageexporterElementAction::class;
+                $event->actions[] = ExportElementAction::class;
             }
         );
 

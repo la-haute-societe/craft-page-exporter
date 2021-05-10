@@ -35,8 +35,8 @@
     "handle":       "craft-page-exporter",
     "hasCpSection": false,
     "components":   {
-      "craftpageexporterService": "lhs\\craftpageexporter\\services\\CraftpageexporterService"
+      "craftpageexporterService": "lhs\\craftpageexporter\\services\\Service"
     },
-    "class":        "lhs\\craftpageexporter\\Craftpageexporter"
+    "class": "lhs\\craftpageexporter\\Plugin"
   }
 }

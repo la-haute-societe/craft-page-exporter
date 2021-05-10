@@ -4,7 +4,7 @@ namespace lhs\craftpageexporter\variables;
 
 
 use craft\helpers\Template;
-use lhs\craftpageexporter\Craftpageexporter;
+use lhs\craftpageexporter\Plugin;
 
 
 class PageExporterVariable
@@ -25,7 +25,7 @@ class PageExporterVariable
             return '';
         }
 
-        $pageExporterService = Craftpageexporter::$plugin->craftpageexporterService;
+        $pageExporterService = Plugin::$plugin->craftpageexporterService;
 
         if (!$pageExporterService->isInExportContext()) {
             return $url;
@@ -40,7 +40,7 @@ class PageExporterVariable
      */
     public function getRegisteredAssetsSummary()
     {
-        $pageExporterService = Craftpageexporter::$plugin->craftpageexporterService;
+        $pageExporterService = Plugin::$plugin->craftpageexporterService;
         $json = json_encode($pageExporterService->getRegisteredAssetsSummary());
 
         return Template::raw(
@@ -53,7 +53,7 @@ class PageExporterVariable
      */
     public function isInExportContext()
     {
-        $pageExporterService = Craftpageexporter::$plugin->craftpageexporterService;
+        $pageExporterService = Plugin::$plugin->craftpageexporterService;
 
         return $pageExporterService->isInExportContext();
     }

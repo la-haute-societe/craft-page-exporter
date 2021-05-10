@@ -12,14 +12,12 @@ namespace lhs\craftpageexporter\controllers;
 
 use Craft;
 use craft\elements\Entry;
-use craft\errors\SiteNotFoundException;
 use craft\web\Controller;
-use craft\web\Response;
 use craft\web\View;
-use lhs\craftpageexporter\Craftpageexporter;
 use lhs\craftpageexporter\models\Export;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\ZipExporter;
+use lhs\craftpageexporter\Plugin;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -107,7 +105,7 @@ class DefaultController extends Controller
         $modalHtml = $view->renderTemplate('craft-page-exporter/export-modal', [
             'entryIds' => $entryIds,
             'siteId'   => $siteId,
-            'settings' => Craftpageexporter::$plugin->getSettings(),
+            'settings' => Plugin::$plugin->getSettings(),
         ]);
 
         // Set response to return
@@ -129,7 +127,7 @@ class DefaultController extends Controller
      */
     protected function getEntryContent($entry)
     {
-        $pageExporterService = Craftpageexporter::$plugin->craftpageexporterService;
+        $pageExporterService = Plugin::$plugin->craftpageexporterService;
         $pageExporterService->setExportContext(true);
 
         // Get section
@@ -183,9 +181,9 @@ class DefaultController extends Controller
     protected function createExport($entryIds, $siteId): Export
     {
         /** @var Settings $settings */
-        $settings = Craftpageexporter::$plugin->getSettings();
+        $settings = Plugin::$plugin->getSettings();
 
-        // Get params from POST if disponible
+        // Get params from POST if available
         $post = Craft::$app->request->getBodyParams();
         if (!empty($post)) {
             $entryIds = $post['entryIds'];
@@ -198,7 +196,7 @@ class DefaultController extends Controller
         $ids = explode(',', $entryIds);
 
         // Create export
-        $export = new Export(Craftpageexporter::$plugin->getExportConfig($post));
+        $export = new Export(Plugin::$plugin->getExportConfig($post));
 
         // Add each entry to export
         foreach ($ids as $id) {

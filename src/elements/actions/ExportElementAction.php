@@ -1,12 +1,4 @@
 <?php
-/**
- * Imager plugin for Craft CMS 3.x
- *
- * Image transforms gone wild
- *
- * @link      https://www.vaersaagod.no
- * @copyright Copyright (c) 2018 André Elvan
- */
 
 namespace lhs\craftpageexporter\elements\actions;
 
@@ -15,16 +7,22 @@ use craft\base\ElementAction;
 use craft\helpers\Json;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterExportModalAssetBundle;
 
-class CraftpageexporterElementAction extends ElementAction
+class ExportElementAction extends ElementAction
 {
     public $label;
 
     public function init()
     {
         if ($this->label === null) {
-            $this->label = 'Export';
+            $this->label = Craft::t('craft-page-exporter', 'Export');
         }
     }
+
+    public static function isDownload(): bool
+    {
+        return true;
+    }
+
 
     /**
      * @inheritdoc
@@ -33,7 +31,6 @@ class CraftpageexporterElementAction extends ElementAction
     {
         return $this->label;
     }
-
 
     /**
      * @inheritdoc
@@ -58,7 +55,7 @@ class CraftpageexporterElementAction extends ElementAction
                 return $(this).data('id');
             }).get();
             entryIds = entryIds.join(",");
-            
+
             var modal = new Craft.CraftpageexporterExportModal(entryIds);
         }
     });
