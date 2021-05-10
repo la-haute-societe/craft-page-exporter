@@ -1,6 +1,6 @@
 {
   "name":              "la-haute-societe/craft-page-exporter",
-  "description":       "This plugin allows you to export entries in ZIP format.",
+  "description":       "Export Craft CMS entries to a zip archive containing a static HTML files and its assets",
   "type":              "craft-plugin",
   "minimum-stability": "stable",
   "keywords":          [
@@ -22,7 +22,11 @@
     }
   ],
   "require":           {
-    "craftcms/cms":        "^3.0.0-RC1",
+    "ext-dom": "*",
+    "ext-dom": "*",
+    "ext-json": "*",
+    "ext-zip": "*",
+    "craftcms/cms": "^3.0.0-RC1",
     "symfony/dom-crawler": "^3.3.0"
   },
   "autoload":          {
