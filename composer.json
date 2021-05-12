@@ -2,7 +2,7 @@
   "name":              "la-haute-societe/craft-page-exporter",
   "description":       "Export Craft CMS entries to a zip archive containing a static HTML files and its assets",
   "type":              "craft-plugin",
-  "minimum-stability": "stable",
+  "prefer-stable":     true,
   "keywords":          [
     "craft",
     "cms",
@@ -39,7 +39,9 @@
     "handle":       "craft-page-exporter",
     "hasCpSection": false,
     "components":   {
-      "craftpageexporterService": "lhs\\craftpageexporter\\services\\Service"
+      "export":  "lhs\\craftpageexporter\\services\\Export",
+      "context": "lhs\\craftpageexporter\\services\\Context",
+      "assets":  "lhs\\craftpageexporter\\services\\Assets"
     },
     "class": "lhs\\craftpageexporter\\Plugin"
   }

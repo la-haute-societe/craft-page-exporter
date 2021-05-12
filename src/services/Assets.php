@@ -21,13 +21,11 @@ use lhs\craftpageexporter\models\MiscAsset;
 /**
  * @author    La Haute Société
  * @package   Craftpageexporter
- * @since     1.0.0
  */
-class Service extends Component
+class Assets extends Component
 {
     /** @var Asset[] */
     protected $_registeredAssets = [];
-    protected $_exportContext;
 
     /*
      * Register explicitly an asset from its url
@@ -98,26 +96,5 @@ class Service extends Component
 
 
         return $asset;
-    }
-
-    /**
-     * Return true if the current request is an export
-     * From Get param or explicitly defined with setExportContext method
-     * @return bool
-     */
-    public function isInExportContext()
-    {
-        $fromGetParam = (int)\Craft::$app->request->getParam('pageExporterContext') === 1;
-
-        return $this->_exportContext || $fromGetParam;
-    }
-
-    /**
-     * Set export context
-     * @param bool $status
-     */
-    public function setExportContext($status = true)
-    {
-        $this->_exportContext = $status;
     }
 }

@@ -51,7 +51,7 @@ class ZipExporter extends BaseExporter
             $this->addRootAsset($rootAsset);
         }
 
-        foreach (Plugin::$plugin->craftpageexporterService->getRegisteredAssets() as $asset) {
+        foreach (Plugin::$plugin->assets->getRegisteredAssets() as $asset) {
             $this->addAsset($asset);
         }
 

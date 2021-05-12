@@ -25,13 +25,11 @@ class PageExporterVariable
             return '';
         }
 
-        $pageExporterService = Plugin::$plugin->craftpageexporterService;
-
-        if (!$pageExporterService->isInExportContext()) {
+        if (!Plugin::$plugin->context->isInExportContext()) {
             return $url;
         }
 
-        return $pageExporterService->registerAsset($url);
+        return Plugin::$plugin->assets->registerAsset($url);
     }
 
     /**
@@ -40,8 +38,7 @@ class PageExporterVariable
      */
     public function getRegisteredAssetsSummary()
     {
-        $pageExporterService = Plugin::$plugin->craftpageexporterService;
-        $json = json_encode($pageExporterService->getRegisteredAssetsSummary());
+        $json = json_encode(Plugin::$plugin->assets->getRegisteredAssetsSummary());
 
         return Template::raw(
             '<page-exporter-registered-assets>' . $json . '</page-exporter-registered-assets>'
@@ -53,8 +50,6 @@ class PageExporterVariable
      */
     public function isInExportContext()
     {
-        $pageExporterService = Plugin::$plugin->craftpageexporterService;
-
-        return $pageExporterService->isInExportContext();
+        return Plugin::$plugin->context->isInExportContext();
     }
 }

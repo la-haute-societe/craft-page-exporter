@@ -26,7 +26,9 @@ use lhs\craftpageexporter\elements\actions\ExportElementAction;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\AssetTransformer;
 use lhs\craftpageexporter\models\transformers\PathAndUrlTransformer;
-use lhs\craftpageexporter\services\Service;
+use lhs\craftpageexporter\services\Context;
+use lhs\craftpageexporter\services\Assets;
+use lhs\craftpageexporter\services\Export;
 use lhs\craftpageexporter\variables\PageExporterVariable;
 use yii\base\Event;
 
@@ -37,7 +39,9 @@ use yii\base\Event;
  * @package   Craftpageexporter
  * @since     1.0.0
  *
- * @property  Service $craftpageexporterService
+ * @property  Context $context
+ * @property  Assets $assets
+ * @property  Export $export
  */
 class Plugin extends \craft\base\Plugin
 {
