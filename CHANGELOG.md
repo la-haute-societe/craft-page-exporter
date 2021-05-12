@@ -1,6 +1,6 @@
 # Craft Page Exporter Changelog
 
-## Unreleased
+## 1.2.0 - 2021-05-12
 ### Added
 - Add compatibility with SEOmatic plugin
 - Use an HTTP request to retrieve the source of the pages to export instead of
