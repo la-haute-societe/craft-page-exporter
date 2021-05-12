@@ -13,7 +13,7 @@ namespace lhs\craftpageexporter\controllers;
 use Craft;
 use craft\elements\Entry;
 use craft\web\Controller;
-use craft\web\View;
+use GuzzleHttp\Client;
 use lhs\craftpageexporter\models\Export;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\ZipExporter;
@@ -127,30 +127,11 @@ class DefaultController extends Controller
      */
     protected function getEntryContent($entry)
     {
-        $pageExporterService = Plugin::$plugin->craftpageexporterService;
-        $pageExporterService->setExportContext(true);
+        $client = new Client();
+        $response = $client->get($entry->getUrl());
 
-        // Get section
-        $sectionSiteSettings = $entry->getSection()->getSiteSettings();
-        if (!isset($sectionSiteSettings[$entry->siteId]) || !$sectionSiteSettings[$entry->siteId]->hasUrls) {
-            throw new ServerErrorHttpException('The entry ' . $entry->id . ' doesn’t have a URL for the site ' . $entry->siteId . '.');
-        }
-
-        // Get site
-        $site = Craft::$app->getSites()->getSiteById($entry->siteId);
-        if (!$site) {
-            throw new ServerErrorHttpException('Invalid site ID: ' . $entry->siteId);
-        }
-
-        // Set current site
-        craft::$app->getSites()->setCurrentSite($site);
-
-        // Switch to template mode site
-        \Craft::$app->view->setTemplateMode(View::TEMPLATE_MODE_SITE);
-
-        return $this->renderTemplate($sectionSiteSettings[$entry->siteId]->template, [
-            'entry' => $entry,
-        ]);
+        $entryContent = $response->getBody()->__toString();
+        return (object)['data' => $entryContent];
     }
 
 
@@ -177,6 +158,7 @@ class DefaultController extends Controller
      * @return Export
      * @throws \yii\base\InvalidConfigException
      * @throws \Exception
+     * @FIXME: Move this to its own service
      */
     protected function createExport($entryIds, $siteId): Export
     {
@@ -188,8 +170,8 @@ class DefaultController extends Controller
         if (!empty($post)) {
             $entryIds = $post['entryIds'];
             $siteId = $post['siteId'];
-            $post['inlineScripts'] = !!$post['inlineScripts'];
-            $post['inlineStyles'] = !!$post['inlineStyles'];
+            $post['inlineScripts'] = (bool)$post['inlineScripts'];
+            $post['inlineStyles'] = (bool)$post['inlineStyles'];
         }
 
         // Split IDs

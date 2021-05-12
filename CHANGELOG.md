@@ -1,6 +1,10 @@
 # Craft Page Exporter Changelog
 
 ## Unreleased
+### Added
+- Add compatibility with SEOmatic plugin
+- Use an HTTP request to retrieve the source of the pages to export instead of
+  having Craft render them (helps with SEOmatic compatibility)
 ### Fixed
 - Fix manually registered asset (using `{{ craft.pageExporter.registerAsset() }}`) missing in exported archive
 - Fix favicon missing in exported archive
