@@ -5,6 +5,8 @@
 - Add compatibility with SEOmatic plugin
 - Use an HTTP request to retrieve the source of the pages to export instead of
   having Craft render them (helps with SEOmatic compatibility)
+- Add support for all meta having a `property` attribute containing `image`
+  (e.g. `og:image` & `twitter:image`)
 ### Fixed
 - Fix manually registered asset (using
   `{{ craft.pageExporter.registerAsset() }}`) missing in exported archive

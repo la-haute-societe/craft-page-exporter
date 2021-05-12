@@ -57,6 +57,7 @@ class HtmlAsset extends Asset
                 '//*/@data-src',
                 '//link[contains(@rel, "icon")]/@href',
                 '//link[@rel="manifest"]/@href',
+                '//meta[contains(@property, "image")]/@content',
             ],
             'assetClass' => ImageAsset::class,
         ],
