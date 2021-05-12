@@ -27,35 +27,26 @@ use lhs\craftpageexporter\models\Export as ExportModel;
 class Export extends Component
 {
     /**
-     * @param $entryIds
-     * @param $siteId
-     * @return \lhs\craftpageexporter\models\ExportModel
+     * @param array $entryIds
+     * @param int   $siteId
+     * @param array $config
+     * @return ExportModel
+     * @throws NotFoundHttpException
+     * @throws ServerErrorHttpException
+     * @throws \yii\base\Exception
      * @throws \yii\base\InvalidConfigException
-     * @throws \Exception
      */
-    public function createExport($entryIds, $siteId): ExportModel
+    public function createExport(array $entryIds, int $siteId, array $config = []): ExportModel
     {
         /** @var Settings $settings */
         $settings = Plugin::$plugin->getSettings();
 
-        // Get params from POST if available
-        $post = Craft::$app->request->getBodyParams();
-        if (!empty($post)) {
-            $entryIds = $post['entryIds'];
-            $siteId = $post['siteId'];
-            $post['inlineScripts'] = (bool)$post['inlineScripts'];
-            $post['inlineStyles'] = (bool)$post['inlineStyles'];
-        }
-
-        // Split IDs
-        $ids = explode(',', $entryIds);
-
         // Create export
-        $export = new ExportModel(Plugin::$plugin->getExportConfig($post));
+        $export = new ExportModel(Plugin::$plugin->getExportConfig($config));
 
         // Add each entry to export
-        foreach ($ids as $id) {
-            $entry = $this->getEntryModel($id, $siteId);
+        foreach ($entryIds as $id) {
+            $entry = $this->getEntryModel((int)$id, $siteId);
 
             if (is_callable($settings->entryContentExtractor)) {
                 $entryContent = ($settings->entryContentExtractor)($entry);
@@ -100,7 +91,7 @@ class Export extends Component
      * @return Entry
      * @throws NotFoundHttpException
      */
-    protected function getEntryModel($entryId, $siteId): Entry
+    protected function getEntryModel(int $entryId, int $siteId): Entry
     {
         $entry = Craft::$app->getEntries()->getEntryById($entryId, $siteId);
 

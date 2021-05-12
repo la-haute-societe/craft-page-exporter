@@ -44,7 +44,7 @@ class DefaultController extends Controller
     /**
      * Export entries from IDs and siteId and produce a ZIP archive
      * @param string  $entryIds
-     * @param integer $siteId
+     * @param $siteId
      * @throws \yii\base\ExitException
      * @throws \Exception
      */
@@ -52,7 +52,29 @@ class DefaultController extends Controller
     {
         $this->requirePermission('pageExporter.export');
 
-        $export = Plugin::$plugin->export->createExport($entryIds, $siteId);
+        $request = Craft::$app->request;
+
+        $siteId = $siteId ?? $request->getRequiredParam('siteId');
+        $ids = $entryIds ?? $request->getRequiredParam('entryIds');
+        if(!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+
+        $exportModelParams = [
+            'inlineScripts' => (bool)$request->getBodyParam('inlineScripts', true),
+            'inlineStyles'  => (bool)$request->getBodyParam('inlineStyles', true),
+        ];
+
+        $exportUrlFormat = $request->getBodyParam('exportUrlFormat');
+        if ($exportUrlFormat !== null) {
+            $exportModelParams['exportUrlFormat'] = $exportUrlFormat;
+        }
+        $exportPathFormat = $request->getBodyParam('exportPathFormat');
+        if ($exportPathFormat !== null) {
+            $exportModelParams['exportPathFormat'] = $exportPathFormat;
+        }
+
+        $export = Plugin::$plugin->export->createExport($ids, (int)$siteId, $exportModelParams);
 
         // Export to zip
         $exporter = new ZipExporter(['export' => $export]);
