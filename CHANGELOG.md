@@ -6,9 +6,11 @@
 - Use an HTTP request to retrieve the source of the pages to export instead of
   having Craft render them (helps with SEOmatic compatibility)
 ### Fixed
-- Fix manually registered asset (using `{{ craft.pageExporter.registerAsset() }}`) missing in exported archive
+- Fix manually registered asset (using
+  `{{ craft.pageExporter.registerAsset() }}`) missing in exported archive
 - Fix favicon missing in exported archive
 - Fix missing export button in entry edit page
+- Fix empty assets in the exported archive when URL contains a querystring
 
 ## 1.1.9 - 2021-01-03
 ### Fixed

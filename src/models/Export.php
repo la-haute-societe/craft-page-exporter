@@ -158,7 +158,7 @@ class Export extends Component
         return str_replace(
             UrlHelper::baseRequestUrl(),
             Yii::getAlias('@webroot/'),
-            $asset->initialAbsoluteUrl
+            strtok($asset->initialAbsoluteUrl, '?') // Discard the query string
         );
     }
 
