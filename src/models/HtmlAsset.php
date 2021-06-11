@@ -178,7 +178,7 @@ class HtmlAsset extends Asset
      */
     public function replaceInContent($search, $replace, $asset = null)
     {
-        $asset->fromDomElement->nodeValue = str_replace($search, $replace, $asset->fromDomElement->nodeValue);
+        $asset->fromDomElement->nodeValue = htmlentities(str_replace($search, $replace, $asset->fromDomElement->nodeValue));
         $this->updateContentFromDomCrawler();
     }
 
