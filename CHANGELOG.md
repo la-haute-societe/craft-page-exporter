@@ -1,7 +1,7 @@
 # Craft Page Exporter Changelog
 
 
-## Unreleased
+## 1.2.2 - 2021-07-05
 ### Fixed
 - Fix a bug introduced in 1.2.0 that caused
   `craft.pageExporter.isInExportContext()` to always return `false`
