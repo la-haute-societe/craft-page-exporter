@@ -16,13 +16,16 @@ use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
+use craft\web\View;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
 use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
 use lhs\craftpageexporter\elements\actions\ExportElementAction;
+use lhs\craftpageexporter\models\Asset;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\models\transformers\AssetTransformer;
 use lhs\craftpageexporter\models\transformers\PathAndUrlTransformer;
@@ -103,6 +106,27 @@ class Plugin extends \craft\base\Plugin
                 ];
             }
         );
+
+        Event::on(View::class, View::EVENT_END_BODY, function () {
+            if (!$this->context->isInExportContext()) {
+                return;
+            }
+
+            $assets = $this->assets->getRegisteredAssets();
+            if (empty($assets)) {
+                return;
+            }
+
+            printf(
+                '<page-exporter-registered-assets>%s</page-exporter-registered-assets>',
+                Json::encode(array_map(static function(Asset $asset) {
+                    return [
+                        'sourcePath' => $asset->getSourcePath(),
+                        'exportPath' => $asset->getExportPath(),
+                    ];
+                }, $assets))
+            );
+        });
 
         // Info
         Craft::info(

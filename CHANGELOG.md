@@ -5,6 +5,8 @@
 ### Fixed
 - Fix a bug introduced in 1.2.0 that caused
   `craft.pageExporter.isInExportContext()` to always return `false`
+- Fix a bug introduced in 1.2.0 that caused explicitly registered assets not to
+  be exported anymore
 
 
 ## 1.2.1 - 2021-06-11
