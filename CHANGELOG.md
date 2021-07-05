@@ -1,6 +1,12 @@
 # Craft Page Exporter Changelog
 
 
+## Unreleased
+### Fixed
+- Fix a bug introduced in 1.2.0 that caused
+  `craft.pageExporter.isInExportContext()` to always return `false`
+
+
 ## 1.2.1 - 2021-06-11
 ### Fixed
 - Fix a bug caused by asset URLs containing a querystring

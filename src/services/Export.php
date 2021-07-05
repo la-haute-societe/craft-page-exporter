@@ -13,6 +13,7 @@ namespace lhs\craftpageexporter\services;
 use Craft;
 use craft\base\Component;
 use craft\elements\Entry;
+use craft\helpers\UrlHelper;
 use GuzzleHttp\Client;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\Plugin;
@@ -79,7 +80,9 @@ class Export extends Component
     protected function getEntryContent($entry)
     {
         $client = new Client();
-        $response = $client->get($entry->getUrl());
+        $response = $client->get(UrlHelper::urlWithParams($entry->getUrl(), [
+            'pageExporterContext' => 1,
+        ]));
 
         $entryContent = $response->getBody()->__toString();
         return (object)['data' => $entryContent];
