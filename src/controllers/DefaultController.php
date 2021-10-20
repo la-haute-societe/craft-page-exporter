@@ -60,9 +60,11 @@ class DefaultController extends Controller
             $ids = explode(',', $ids);
         }
 
+        $settings = Plugin::getInstance()->getSettings();
+
         $exportModelParams = [
-            'inlineScripts' => (bool)$request->getBodyParam('inlineScripts', true),
-            'inlineStyles'  => (bool)$request->getBodyParam('inlineStyles', true),
+            'inlineScripts' => (bool)$request->getBodyParam('inlineScripts', $settings->inlineScripts),
+            'inlineStyles'  => (bool)$request->getBodyParam('inlineStyles', $settings->inlineStyles),
         ];
 
         $exportUrlFormat = $request->getBodyParam('exportUrlFormat');
