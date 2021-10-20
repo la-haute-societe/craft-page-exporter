@@ -1,6 +1,15 @@
 # Craft Page Exporter Changelog
 
 
+## 1.3.0 - 2021-10-20
+### Added
+- Add archive filename in config, so the user can define his own ZIP filename 
+  before exporting
+### Fixed
+- Fix HTMLasset filename which could contain the wrong locale
+- Fix inlineStyles and inlineScripts config which was not considered by default
+
+
 ## 1.2.2 - 2021-07-05
 ### Fixed
 - Fix a bug introduced in 1.2.0 that caused

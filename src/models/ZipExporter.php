@@ -20,7 +20,7 @@ class ZipExporter extends BaseExporter
     protected $tempFilename;
 
     /** @var string */
-    protected $archiveName = 'export';
+    public $archiveName = 'export';
 
     /**
      * @throws \Exception

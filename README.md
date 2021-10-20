@@ -160,6 +160,12 @@ absolute URL :
 ````https://my.cdn.example.com/xyz/{dirname}/{basename}````
 
 
+#### `archiveFilename`
+*Default: `export`*
+
+Filename of the ZIP archive.
+
+
 #### `assetTransformers`
 *Default: `[]`*
 

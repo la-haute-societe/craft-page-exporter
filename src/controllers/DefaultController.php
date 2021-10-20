@@ -79,7 +79,10 @@ class DefaultController extends Controller
         $export = Plugin::$plugin->export->createExport($ids, (int)$siteId, $exportModelParams);
 
         // Export to zip
-        $exporter = new ZipExporter(['export' => $export]);
+        $exporter = new ZipExporter([
+            'export' => $export,
+            'archiveName' => (string)$request->getBodyParam('archiveName', $settings->archiveName),
+        ]);
         $exporter->export();
 
         Craft::$app->end();

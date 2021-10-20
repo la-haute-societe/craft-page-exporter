@@ -104,4 +104,10 @@ class Settings extends Model
      */
     public $sourcePathTransformer = null;
 
+    /**
+     * Exported archive filename
+     * Default: 'export'
+     * @var string
+     */
+    public $archiveName = 'export';
 }

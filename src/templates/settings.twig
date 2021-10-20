@@ -62,6 +62,16 @@
                 errors: settings.getErrors('exportPathFormat')
             }) }}
         </div>
+        <div class="col-12">
+            {{ forms.textField({
+                label: "Archive filename"|t,
+                id: 'archiveName',
+                name: 'archiveName',
+                value: settings.archiveName,
+                required: true,
+                errors: settings.getErrors('archiveName')
+            }) }}
+        </div>
     </div>
 </div>
 
