@@ -57,7 +57,7 @@ class Export extends Component
             }
 
             // Assign a name to the page
-            $pageName = sprintf('%s-%s', $entry->slug, Craft::$app->get('locale'));
+            $pageName = sprintf('%s-%s', $entry->slug, strtoupper(Craft::$app->sites->getSiteById($siteId)->language));
 
             // Add page
             $pageUrl = $entry->url;
