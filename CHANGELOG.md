@@ -1,12 +1,15 @@
 # Craft Page Exporter Changelog
 
+## 1.4.0 - 2021-12-14
+- Refactor frontend asset management to get rid of outdated dependencies
+
 
 ## 1.3.0 - 2021-10-20
 ### Added
-- Add archive filename in config, so the user can define his own ZIP filename 
+- Add archive filename in config, so the user can define his own ZIP filename
   before exporting
 ### Fixed
-- Fix HTMLasset filename which could contain the wrong locale
+- Fix HTML asset filename which could contain the wrong locale
 - Fix inlineStyles and inlineScripts config which was not considered by default
 
 

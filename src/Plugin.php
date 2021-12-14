@@ -22,8 +22,7 @@ use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
 use craft\web\View;
-use lhs\craftpageexporter\assetbundles\CraftpageexporterEntryEditAssetBundle;
-use lhs\craftpageexporter\assetbundles\CraftpageexporterSettingsAssetBundle;
+use lhs\craftpageexporter\assetbundles\CpAssetBundle;
 use lhs\craftpageexporter\elements\actions\ExportElementAction;
 use lhs\craftpageexporter\models\Asset;
 use lhs\craftpageexporter\models\Settings;
@@ -62,10 +61,9 @@ class Plugin extends \craft\base\Plugin
         parent::init();
         self::$plugin = $this;
 
-        // Register asset bundle
-        Craft::$app->view->hook('cp.entries.edit', function (&$context) {
-            $this->view->registerAssetBundle(CraftpageexporterEntryEditAssetBundle::class);
-        });
+        if (Craft::$app->getRequest()->isCpRequest) {
+            Craft::$app->view->registerAssetBundle(CpAssetBundle::class);
+        }
 
         // Register variable
         Event::on(
@@ -207,8 +205,6 @@ class Plugin extends \craft\base\Plugin
 
         // Get the settings that are being defined by the config file
         $overrides = Craft::$app->getConfig()->getConfigFromFile(strtolower($this->handle));
-
-        Craft::$app->view->registerAssetBundle(CraftpageexporterSettingsAssetBundle::class);
 
         return Craft::$app->view->renderTemplate('craft-page-exporter/settings', [
             'settings'  => $this->getSettings(),

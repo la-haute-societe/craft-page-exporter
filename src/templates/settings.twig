@@ -16,69 +16,51 @@
 {% import "_includes/forms" as forms %}
 {% import "craft-page-exporter/macros" as macros %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            {{ forms.lightswitchField({
-                label: "Inline styles"|t,
-                id: 'inlineStyles',
-                name: 'inlineStyles',
-                on: settings.inlineStyles,
-                required: true,
-                errors: settings.getErrors('inlineStyles')
-            }) }}
-        </div>
+<div class="row">
+    {{ forms.lightswitchField({
+        label: "Inline styles"|t,
+        id: 'inlineStyles',
+        name: 'inlineStyles',
+        on: settings.inlineStyles,
+        required: true,
+        errors: settings.getErrors('inlineStyles')
+    }) }}
 
-        <div class="col-12">
-            {{ forms.lightswitchField({
-                label: "Inline scripts"|t,
-                id: 'inlineScripts',
-                name: 'inlineScripts',
-                on: settings.inlineScripts,
-                required: true,
-                errors: settings.getErrors('inlineScripts')
-            }) }}
-        </div>
+    {{ forms.lightswitchField({
+        label: "Inline scripts"|t,
+        id: 'inlineScripts',
+        name: 'inlineScripts',
+        on: settings.inlineScripts,
+        required: true,
+        errors: settings.getErrors('inlineScripts')
+    }) }}
 
-        <div class="col-12">
-            {{ forms.textField({
-                label: "Format of the asset URL in the export"|t,
-                instructions: "URL can be relative or absolute. Available variables: <code>{filename}, {extension}, {basename}, {dirname}, {hash}, {year}, {month}, {day}, {hour}, {minute}, {second}</code>."|t,
-                id: 'exportUrlFormat',
-                name: 'exportUrlFormat',
-                value: settings.exportUrlFormat,
-                required: true,
-                errors: settings.getErrors('exportUrlFormat')
-            }) }}
-        </div>
-        <div class="col-12">
-            {{ forms.textField({
-                label: "Format of the asset path in the export"|t,
-                instructions: "Available variables: <code>{filename}, {extension}, {basename}, {dirname}, {hash}, {year}, {month}, {day}, {hour}, {minute}, {second}</code>."|t,
-                id: 'exportPathFormat',
-                name: 'exportPathFormat',
-                value: settings.exportPathFormat,
-                required: true,
-                errors: settings.getErrors('exportPathFormat')
-            }) }}
-        </div>
-        <div class="col-12">
-            {{ forms.textField({
-                label: "Archive filename"|t,
-                id: 'archiveName',
-                name: 'archiveName',
-                value: settings.archiveName,
-                required: true,
-                errors: settings.getErrors('archiveName')
-            }) }}
-        </div>
-    </div>
+    {{ forms.textField({
+        label: "Format of the asset URL in the export"|t,
+        instructions: "URL can be relative or absolute. Available variables: <code>{filename}, {extension}, {basename}, {dirname}, {hash}, {year}, {month}, {day}, {hour}, {minute}, {second}</code>."|t,
+        id: 'exportUrlFormat',
+        name: 'exportUrlFormat',
+        value: settings.exportUrlFormat,
+        required: true,
+        errors: settings.getErrors('exportUrlFormat')
+    }) }}
+
+    {{ forms.textField({
+        label: "Format of the asset path in the export"|t,
+        instructions: "Available variables: <code>{filename}, {extension}, {basename}, {dirname}, {hash}, {year}, {month}, {day}, {hour}, {minute}, {second}</code>."|t,
+        id: 'exportPathFormat',
+        name: 'exportPathFormat',
+        value: settings.exportPathFormat,
+        required: true,
+        errors: settings.getErrors('exportPathFormat')
+    }) }}
+
+    {{ forms.textField({
+        label: "Archive filename"|t,
+        id: 'archiveName',
+        name: 'archiveName',
+        value: settings.archiveName,
+        required: true,
+        errors: settings.getErrors('archiveName')
+    }) }}
 </div>
-
-
-
-
-
-
-
-

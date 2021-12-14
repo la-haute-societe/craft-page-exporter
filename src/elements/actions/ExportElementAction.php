@@ -5,7 +5,6 @@ namespace lhs\craftpageexporter\elements\actions;
 use Craft;
 use craft\base\ElementAction;
 use craft\helpers\Json;
-use lhs\craftpageexporter\assetbundles\CraftpageexporterExportModalAssetBundle;
 
 class ExportElementAction extends ElementAction
 {
@@ -61,9 +60,5 @@ class ExportElementAction extends ElementAction
     });
 })();
 EOD;
-
-        $view = Craft::$app->getView();
-        $view->registerJs($js);
-        $view->registerAssetBundle(CraftpageexporterExportModalAssetBundle::class);
     }
 }
