@@ -60,5 +60,7 @@ class ExportElementAction extends ElementAction
     });
 })();
 EOD;
+        $view = Craft::$app->getView();
+        $view->registerJs($js);
     }
 }

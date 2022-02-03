@@ -1,5 +1,10 @@
 # Craft Page Exporter Changelog
 
+## Unreleased
+### Fixed
+- Fix a bug that broke the Export element action
+
+
 ## 1.4.0 - 2021-12-14
 - Refactor frontend asset management to get rid of outdated dependencies
 
