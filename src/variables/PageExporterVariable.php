@@ -2,17 +2,14 @@
 
 namespace lhs\craftpageexporter\variables;
 
-
 use craft\helpers\Template;
 use lhs\craftpageexporter\Plugin;
+use nystudio107\pluginvite\variables\ViteVariableInterface;
+use nystudio107\pluginvite\variables\ViteVariableTrait;
 
-
-class PageExporterVariable
+class PageExporterVariable implements ViteVariableInterface
 {
-    // Public Methods
-    // =========================================================================
-
-
+    use ViteVariableTrait;
     /**
      * Register explicitly an asset from its url
      * and return the export URL of this asset

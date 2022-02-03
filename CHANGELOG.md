@@ -3,6 +3,7 @@
 ## Unreleased
 ### Fixed
 - Fix a bug that broke the Export element action
+- Fix a bug that caused the export button not to be shown in entry edit pages
 - Fix Readme
 
 

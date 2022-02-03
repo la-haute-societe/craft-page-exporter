@@ -23,11 +23,11 @@
   ],
   "require":           {
     "ext-dom": "*",
-    "ext-dom": "*",
     "ext-json": "*",
     "ext-zip": "*",
     "craftcms/cms": "^3.0.0-RC1",
-    "symfony/dom-crawler": "^3.3.0"
+    "symfony/dom-crawler": "^3.3.0",
+    "nystudio107/craft-plugin-vite": "^1.0"
   },
   "autoload":          {
     "psr-4": {
@@ -38,11 +38,12 @@
     "name":         "Page exporter",
     "handle":       "craft-page-exporter",
     "hasCpSection": false,
-    "components":   {
-      "export":  "lhs\\craftpageexporter\\services\\Export",
-      "context": "lhs\\craftpageexporter\\services\\Context",
-      "assets":  "lhs\\craftpageexporter\\services\\Assets"
-    },
     "class": "lhs\\craftpageexporter\\Plugin"
+  },
+  "config": {
+    "allow-plugins": {
+      "craftcms/plugin-installer": true,
+      "yiisoft/yii2-composer": true
+    }
   }
 }

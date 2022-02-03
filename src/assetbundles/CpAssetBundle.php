@@ -26,9 +26,7 @@ class CpAssetBundle extends AssetBundle
     public function init()
     {
         $this->depends = [CpAsset::class];
-        $this->sourcePath = '@lhs/craftpageexporter/resources';
-        $this->js = ['craft-page-exporter.umd.min.js'];
-        $this->css = ['craft-page-exporter.css'];
+        $this->sourcePath = '@lhs/craftpageexporter/web/assets/dist';
 
         parent::init();
     }

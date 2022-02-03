@@ -16,6 +16,7 @@ use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
+use craft\helpers\App;
 use craft\helpers\Json;
 use craft\helpers\UrlHelper;
 use craft\services\UserPermissions;
@@ -33,17 +34,17 @@ use lhs\craftpageexporter\services\Assets;
 use lhs\craftpageexporter\services\Export;
 use lhs\craftpageexporter\variables\PageExporterVariable;
 use yii\base\Event;
+use nystudio107\pluginvite\services\VitePluginService;
 
 /**
- * Class Craftpageexporter
+ * @author   La Haute Société
+ * @package  Craftpageexporter
+ * @since    1.0.0
  *
- * @author    La Haute Société
- * @package   Craftpageexporter
- * @since     1.0.0
- *
- * @property  Context $context
- * @property  Assets $assets
- * @property  Export $export
+ * @property Context $context
+ * @property Assets $assets
+ * @property Export $export
+ * @property VitePluginService $vite
  */
 class Plugin extends \craft\base\Plugin
 {
@@ -52,6 +53,26 @@ class Plugin extends \craft\base\Plugin
 
     /** @var bool */
     public $hasCpSettings = true;
+
+    public function __construct($id, $parent = null, array $config = [])
+    {
+        $config['components'] = [
+            'export'  => Export::class,
+            'context' => Context::class,
+            'assets'  => Assets::class,
+            'vite'    => [
+                'class' => VitePluginService::class,
+                'assetClass' => CpAssetBundle::class,
+                'useDevServer' => true,
+                'devServerPublic' => 'http://localhost:3001',
+                'serverPublic' => App::env('ALIAS_WEB'),
+                'errorEntry' => 'src/js/app.ts',
+                'devServerInternal' => 'http://host.docker.internal:3001',
+                'checkDevServer' => true,
+            ],
+        ];
+        parent::__construct($id, $parent, $config);
+    }
 
     /**
      * @inheritdoc
@@ -62,7 +83,11 @@ class Plugin extends \craft\base\Plugin
         self::$plugin = $this;
 
         if (Craft::$app->getRequest()->isCpRequest) {
-            Craft::$app->view->registerAssetBundle(CpAssetBundle::class);
+            $this->vite->register('src/js/main.js', false, [
+                'depends' => [
+                    CpAssetBundle::class,
+                ],
+            ]);
         }
 
         // Register variable
@@ -72,7 +97,10 @@ class Plugin extends \craft\base\Plugin
             function (Event $event) {
                 /** @var CraftVariable $variable */
                 $variable = $event->sender;
-                $variable->set('pageExporter', PageExporterVariable::class);
+                $variable->set('pageExporter', [
+                    'class' => PageExporterVariable::class,
+                    'viteService' => $this->vite,
+                ]);
             }
         );
 

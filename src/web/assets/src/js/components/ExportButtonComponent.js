@@ -8,7 +8,7 @@ export default class ExportButtonComponent {
         let btnGroup = this.createBtnGroup();
 
         // Add btn
-        this.insertAfter(btnGroup, btnShare);
+        this.insertAfter(btnGroup, btnShare.parentNode);
 
         // Add menu
         this.addMenu(btnGroup);
@@ -78,6 +78,7 @@ export default class ExportButtonComponent {
     }
 
     insertAfter(el, referenceNode) {
+        console.log('Insert before', referenceNode);
         referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
     }
 }
