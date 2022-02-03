@@ -90,6 +90,10 @@ class Plugin extends \craft\base\Plugin
             ]);
         }
 
+        if ($this->context->isInExportContext()) {
+            Craft::$app->getConfig()->getGeneral()->generateTransformsBeforePageLoad = true;
+        }
+
         // Register variable
         Event::on(
             CraftVariable::class,

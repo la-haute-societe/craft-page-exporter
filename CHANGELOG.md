@@ -1,6 +1,9 @@
 # Craft Page Exporter Changelog
 
 ## Unreleased
+### Added
+- Force the [`generateTransformsBeforePageLoad`](https://craftcms.com/docs/3.x/config/config-settings.html#generatetransformsbeforepageload)
+  Craft general setting when exporting to ensure all images are exported
 ### Fixed
 - Fix a bug that broke the Export element action
 - Fix a bug that caused the export button not to be shown in entry edit pages
