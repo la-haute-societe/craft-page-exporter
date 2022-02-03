@@ -1,6 +1,9 @@
 # Craft Page Exporter Changelog
 
 ## Unreleased
+
+
+## [1.5.0] - 2022-02-03
 ### Added
 - Force the [`generateTransformsBeforePageLoad`](https://craftcms.com/docs/3.x/config/config-settings.html#generatetransformsbeforepageload)
   Craft general setting when exporting to ensure all images are exported
@@ -10,11 +13,11 @@
 - Fix Readme
 
 
-## 1.4.0 - 2021-12-14
+## [1.4.0] - 2021-12-14
 - Refactor frontend asset management to get rid of outdated dependencies
 
 
-## 1.3.0 - 2021-10-20
+## [1.3.0] - 2021-10-20
 ### Added
 - Add archive filename in config, so the user can define his own ZIP filename
   before exporting
@@ -23,7 +26,7 @@
 - Fix inlineStyles and inlineScripts config which was not considered by default
 
 
-## 1.2.2 - 2021-07-05
+## [1.2.2] - 2021-07-05
 ### Fixed
 - Fix a bug introduced in 1.2.0 that caused
   `craft.pageExporter.isInExportContext()` to always return `false`
@@ -31,12 +34,12 @@
   be exported anymore
 
 
-## 1.2.1 - 2021-06-11
+## [1.2.1] - 2021-06-11
 ### Fixed
 - Fix a bug caused by asset URLs containing a querystring
 
 
-## 1.2.0 - 2021-05-12
+## [1.2.0] - 2021-05-12
 ### Added
 - Add compatibility with SEOmatic plugin
 - Use an HTTP request to retrieve the source of the pages to export instead of
@@ -51,52 +54,69 @@
 - Fix empty assets in the exported archive when URL contains a querystring
 
 
-## 1.1.9 - 2021-01-03
+## [1.1.9] - 2021-01-03
 ### Fixed
 - Fix classes import with new namespace
 
 
-## 1.1.8 - 2020-03-11
+## [1.1.8] - 2020-03-11
 ### Fixed
 - Fixed: PSR-4 compliance of the PageExporterVariable class
 
 
-## 1.1.7 - 2020-03-11
+## [1.1.7] - 2020-03-11
 ### Fixed
 - Fixed: Set current site instead of current language
 
 
-## 1.1.6 - 2019-11-05
+## [1.1.6] - 2019-11-05
 ### Fixed
 - Fix Craft 3.3 incompatibility
 
 
-## 1.1.5 - 2019-08-19
+## [1.1.5] - 2019-08-19
 ### Fixed
 - Fix minor compatibility issue with Craft 3.2.10
 - Fix issue #2 "html" and "doctype" tags are now in the export
 
 
-## 1.1.3 - 2019-06-23
+## [1.1.3] - 2019-06-23
 ### Fixed
 - Use site selected by user instead of default site (Fix #1)
 
 
-## 1.1.2 - 2019-06-12
+## [1.1.2] - 2019-06-12
 ### Fixed
 - Path of explicitly registered assets
 
 
-## 1.1.1 - 2019-06-11
+## [1.1.1] - 2019-06-11
 ### Fixed
 - Path and URL of assets in external stylesheets
 
 
-## 1.1.0 - 2019-06-10
+## [1.1.0] - 2019-06-10
 ### Added
 - User permissions
 
 
-## 1.0.0 - 2019-06-01
+## [1.0.0] - 2019-06-01
 ### Added
 - Initial release
+
+[1.0.0]: https://github.com/la-haute-societe/craft-page-exporter/releases/tag/1.0.0
+[1.1.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.0.0...1.1.0
+[1.1.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.0...1.1.1
+[1.1.2]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.1...1.1.2
+[1.1.3]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.2...1.1.3
+[1.1.5]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.3...1.1.5
+[1.1.6]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.5...1.1.6
+[1.1.7]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.6...1.1.7
+[1.1.8]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.7...1.1.8
+[1.1.9]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.8...1.1.9
+[1.2.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.9...1.2.0
+[1.2.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.2.0...1.2.1
+[1.2.2]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.2.1...1.2.2
+[1.3.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.2.2...1.3.0
+[1.4.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.3.0...1.4.0
+[1.5.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.4.0...1.5.0
