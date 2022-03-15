@@ -79,7 +79,7 @@ class Export extends Component
      */
     protected function getEntryContent($entry)
     {
-        $client = new Client();
+        $client = Craft::createGuzzleClient();
         $response = $client->get(UrlHelper::urlWithParams($entry->getUrl(), [
             'pageExporterContext' => 1,
         ]));
