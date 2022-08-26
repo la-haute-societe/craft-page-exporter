@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
+### Fixed
+- Bug that prevented installing the plugin using the 
+  `craft plugin/install craft-page-exporter` command (fixes [#33][], thanks [BillBushee][])
 
 
 ## [1.5.0] - 2022-02-03
@@ -109,6 +112,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release
 
+
+[#33]: https://github.com/la-haute-societe/craft-page-exporter/issues/33
+[BillBushee]: https://github.com/BillBushee
 [1.0.0]: https://github.com/la-haute-societe/craft-page-exporter/releases/tag/1.0.0
 [1.1.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.0.0...1.1.0
 [1.1.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.0...1.1.1

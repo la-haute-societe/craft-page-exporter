@@ -10,6 +10,7 @@
 
 namespace lhs\craftpageexporter\services;
 
+use Craft;
 use craft\base\Component;
 
 /**
@@ -27,7 +28,12 @@ class Context extends Component
      */
     public function isInExportContext()
     {
-        $fromGetParam = (int)\Craft::$app->request->getParam('pageExporterContext') === 1;
+        $request = Craft::$app->getRequest();
+        if ($request->getIsConsoleRequest()) {
+            return false;
+        }
+
+        $fromGetParam = (int)$request->getParam('pageExporterContext') === 1;
 
         return $this->_exportContext || $fromGetParam;
     }
