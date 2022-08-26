@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
+
+
+## [2.0.0] - 2022-08-26
 ### Changed
 - [BREAKING] Craft 4 compatibility
 - Change plugin icon
@@ -146,3 +149,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.4.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.3.0...1.4.0
 [1.5.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.4.0...1.5.0
 [1.5.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.5.0...1.5.1
+[2.0.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.5.0...2.0.0
