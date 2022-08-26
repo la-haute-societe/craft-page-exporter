@@ -6,11 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
+
+
+## [1.5.1] - 2022-08-26
 ### Changed
-- Use the Craft Guzzle client (thanks [@markdrzy][])
+- Use the Craft Guzzle client (thanks [@markdrzy][], fixes [#36][] & [#37][])
 ### Fixed
 - Bug that prevented installing the plugin using the 
-  `craft plugin/install craft-page-exporter` command (fixes [#33][], thanks [BillBushee][])
+  `craft plugin/install craft-page-exporter` command (fixes [#33][] & [#34], 
+  thanks [@BillBushee][])
 
 
 ## [1.5.0] - 2022-02-03
@@ -116,8 +120,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 [#33]: https://github.com/la-haute-societe/craft-page-exporter/issues/33
-[BillBushee]: https://github.com/BillBushee
-[markdrzy]: https://github.com/markdrzy
+[#34]: https://github.com/la-haute-societe/craft-page-exporter/issues/34
+[#36]: https://github.com/la-haute-societe/craft-page-exporter/issues/36
+[#37]: https://github.com/la-haute-societe/craft-page-exporter/issues/37
+[@BillBushee]: https://github.com/BillBushee
+[@markdrzy]: https://github.com/markdrzy
+
 [1.0.0]: https://github.com/la-haute-societe/craft-page-exporter/releases/tag/1.0.0
 [1.1.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.0.0...1.1.0
 [1.1.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.0...1.1.1
@@ -134,3 +142,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.3.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.2.2...1.3.0
 [1.4.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.3.0...1.4.0
 [1.5.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.4.0...1.5.0
+[1.5.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.5.0...1.5.1
