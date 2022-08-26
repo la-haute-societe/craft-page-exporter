@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
+### Changed
+- Use the Craft Guzzle client (thanks [@markdrzy][])
 ### Fixed
 - Bug that prevented installing the plugin using the 
   `craft plugin/install craft-page-exporter` command (fixes [#33][], thanks [BillBushee][])
@@ -115,6 +117,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [#33]: https://github.com/la-haute-societe/craft-page-exporter/issues/33
 [BillBushee]: https://github.com/BillBushee
+[markdrzy]: https://github.com/markdrzy
 [1.0.0]: https://github.com/la-haute-societe/craft-page-exporter/releases/tag/1.0.0
 [1.1.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.0.0...1.1.0
 [1.1.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.1.0...1.1.1
