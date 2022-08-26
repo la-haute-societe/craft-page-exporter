@@ -2,7 +2,7 @@
   "name":              "la-haute-societe/craft-page-exporter",
   "description":       "Export Craft CMS entries to a zip archive containing a static HTML files and its assets",
   "type":              "craft-plugin",
-  "prefer-stable":     true,
+  "prefer-stable": true,
   "keywords":          [
     "craft",
     "cms",
@@ -25,9 +25,10 @@
     "ext-dom": "*",
     "ext-json": "*",
     "ext-zip": "*",
-    "craftcms/cms": "^3.0.0-RC1",
+    "craftcms/cms": "^4.0.0",
     "symfony/dom-crawler": "^3.3.0",
-    "nystudio107/craft-plugin-vite": "^1.0"
+    "nystudio107/craft-plugin-vite": "^4.0.0",
+    "php": "^8.0.2"
   },
   "autoload":          {
     "psr-4": {
@@ -45,5 +46,9 @@
       "craftcms/plugin-installer": true,
       "yiisoft/yii2-composer": true
     }
+  },
+  "minimum-stability": "dev",
+  "require-dev": {
+    "craftcms/rector": "dev-main"
   }
 }

@@ -9,15 +9,16 @@ use lhs\craftpageexporter\models\ImageAsset;
 use lhs\craftpageexporter\models\MiscAsset;
 use lhs\craftpageexporter\models\ScriptAsset;
 use lhs\craftpageexporter\models\StyleAsset;
+use Throwable;
 use yii\base\Exception;
 
 class PathAndUrlTransformer extends BaseTransformer
 {
-    public $exportUrlFormat = '';
-    public $exportPathFormat = '';
+    public string $exportUrlFormat = '';
+    public string $exportPathFormat = '';
 
-    /** @var array Only theses Asset type will be flattened */
-    protected $assetClasses = [
+    /** @var array Only these Asset type will be flattened */
+    protected array $assetClasses = [
         ImageAsset::class,
         MiscAsset::class,
         ScriptAsset::class,
@@ -26,10 +27,10 @@ class PathAndUrlTransformer extends BaseTransformer
 
     /**
      * @param Asset $asset
-     * @throws \Throwable
+     * @throws Throwable
      * @throws Exception
      */
-    public function transform($asset)
+    public function transform($asset): void
     {
         if (!$this->needToTransform($asset)) {
             return;
@@ -44,9 +45,9 @@ class PathAndUrlTransformer extends BaseTransformer
         // Filename components
         $parseUrl = parse_url($urlRelativeToRootAsset);
         $pathinfo = pathinfo($parseUrl['path']);
-        $filename = isset($pathinfo['filename']) ? $pathinfo['filename'] : '';
+        $filename = $pathinfo['filename'] ?? '';
         $extension = isset($pathinfo['extension']) ? '.' . $pathinfo['extension'] : '';
-        $basename = isset($pathinfo['basename']) ? $pathinfo['basename'] : '';
+        $basename = $pathinfo['basename'] ?? '';
         $dirname = isset($pathinfo['dirname']) ? ltrim($pathinfo['dirname'], '/') : '';
 
         // Hash content
@@ -97,19 +98,17 @@ class PathAndUrlTransformer extends BaseTransformer
 
     /**
      * Return true if $asset class name is in assetClasses and in base url.
+     *
      * @param Asset $asset
      * @return bool
-     * @throws \ReflectionException
      */
-    protected function needToTransform($asset)
+    protected function needToTransform(Asset $asset): bool
     {
         if (!$asset->willBeInArchive) {
             return false;
         }
 
         $class = new \ReflectionClass($asset);
-        $className = $class->getName();
-
-        return in_array($className, $this->assetClasses);
+        return in_array($class->getName(), $this->assetClasses, true);
     }
 }

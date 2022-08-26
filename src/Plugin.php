@@ -12,13 +12,14 @@ namespace lhs\craftpageexporter;
 
 use Craft;
 use craft\base\Element;
+use craft\base\Model;
+use craft\base\Plugin as BasePlugin;
 use craft\elements\Entry;
 use craft\events\RegisterElementActionsEvent;
 use craft\events\RegisterUrlRulesEvent;
 use craft\events\RegisterUserPermissionsEvent;
 use craft\helpers\App;
 use craft\helpers\Json;
-use craft\helpers\UrlHelper;
 use craft\services\UserPermissions;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\UrlManager;
@@ -35,6 +36,7 @@ use lhs\craftpageexporter\services\Export;
 use lhs\craftpageexporter\variables\PageExporterVariable;
 use yii\base\Event;
 use nystudio107\pluginvite\services\VitePluginService;
+use yii\base\InvalidConfigException;
 
 /**
  * @author   La Haute Société
@@ -45,14 +47,13 @@ use nystudio107\pluginvite\services\VitePluginService;
  * @property Assets $assets
  * @property Export $export
  * @property VitePluginService $vite
+ * @method Settings getSettings()
  */
-class Plugin extends \craft\base\Plugin
+class Plugin extends BasePlugin
 {
-    /** @var Plugin */
-    public static $plugin;
+    public static Plugin $plugin;
 
-    /** @var bool */
-    public $hasCpSettings = true;
+    public bool $hasCpSettings = true;
 
     public function __construct($id, $parent = null, array $config = [])
     {
@@ -76,8 +77,9 @@ class Plugin extends \craft\base\Plugin
 
     /**
      * @inheritdoc
+     * @throws InvalidConfigException
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
         self::$plugin = $this;
@@ -112,7 +114,7 @@ class Plugin extends \craft\base\Plugin
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_SITE_URL_RULES,
-            function (RegisterUrlRulesEvent $event) {
+            static function (RegisterUrlRulesEvent $event) {
                 $event->rules['page-exporter/export/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/export';
                 $event->rules['page-exporter/analyze/entry-<entryIds:\d+(,\d+)*>/site-<siteId:\d+>'] = 'craft-page-exporter/default/analyze';
             }
@@ -120,7 +122,7 @@ class Plugin extends \craft\base\Plugin
 
         // Register element action to export entries
         Event::on(Entry::class, Element::EVENT_REGISTER_ACTIONS,
-            function (RegisterElementActionsEvent $event) {
+            static function (RegisterElementActionsEvent $event) {
                 $event->actions[] = ExportElementAction::class;
             }
         );
@@ -128,7 +130,7 @@ class Plugin extends \craft\base\Plugin
         Event::on(
             UserPermissions::class,
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
-            function (RegisterUserPermissionsEvent $event) {
+            static function (RegisterUserPermissionsEvent $event) {
                 $event->permissions['Page exporter'] = [
                     'pageExporter.export' => [
                         'label' => 'Export entries',
@@ -158,7 +160,6 @@ class Plugin extends \craft\base\Plugin
             );
         });
 
-        // Info
         Craft::info(
             Craft::t(
                 'craft-page-exporter',
@@ -173,14 +174,14 @@ class Plugin extends \craft\base\Plugin
      * @param array $overrides
      * @return array
      */
-    public function getExportConfig($overrides = [])
+    public function getExportConfig(array $overrides = []): array
     {
         /** @var Settings $settings */
         $settings = $this->getSettings();
         $settings = $this->overridesSettings($settings, $overrides);
 
         $exportConfig = [
-            'baseUrl'               => UrlHelper::baseRequestUrl(),
+            'baseUrl'               => Craft::getAlias('@web'),
             'inlineStyles'          => $settings->inlineStyles,
             'inlineScripts'         => $settings->inlineScripts,
             'customSelectors'       => $settings->customSelectors,
@@ -215,13 +216,10 @@ class Plugin extends \craft\base\Plugin
         return $exportConfig;
     }
 
-    // Protected Methods
-    // =========================================================================
-
     /**
      * @inheritdoc
      */
-    protected function createSettingsModel()
+    protected function createSettingsModel(): ?Model
     {
         return new Settings();
     }
@@ -229,7 +227,7 @@ class Plugin extends \craft\base\Plugin
     /**
      * @inheritdoc
      */
-    protected function settingsHtml(): string
+    protected function settingsHtml(): ?string
     {
         // Get and pre-validate the settings
         $settings = $this->getSettings();
@@ -245,16 +243,12 @@ class Plugin extends \craft\base\Plugin
     }
 
 
-
-    // Private Methods
-    // =========================================================================
-
     /**
      * @param array  $array
      * @param string $prefix
      * @return array
      */
-    private function array_keys_multi(array $array, $prefix = "")
+    private function array_keys_multi(array $array, string $prefix = ""): array
     {
         $keys = [];
 
@@ -270,10 +264,10 @@ class Plugin extends \craft\base\Plugin
 
     /**
      * @param Settings $settings
-     * @param array    $overrides
+     * @param array $overrides
      * @return Settings
      */
-    private function overridesSettings($settings, $overrides = [])
+    private function overridesSettings(Settings $settings, array $overrides = []): Settings
     {
         foreach ($settings as $key => $value) {
             if (isset($overrides[$key])) {

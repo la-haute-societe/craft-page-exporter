@@ -5,10 +5,9 @@ namespace lhs\craftpageexporter\models;
 
 class ScriptAsset extends Asset
 {
-    public function init()
+    public function init(): void
     {
-        // In this case the extracted string (from initiator)
-        // is the URL of this asset
+        // In this case the extracted string (from initiator) is the URL of this asset
         $this->url = $this->fromString;
         parent::init();
     }
@@ -16,7 +15,7 @@ class ScriptAsset extends Asset
     /**
      * Replace paths and inline styles if needed
      */
-    public function updateInitiatorContent()
+    public function updateInitiatorContent(): void
     {
         if (!$this->willBeInArchive || !$this->url) {
             return;
@@ -36,7 +35,7 @@ class ScriptAsset extends Asset
     /**
      * Replace style tag with style content in the HtmlAsset when this asset is inlined.
      */
-    protected function inlineScriptInHtmlAsset()
+    protected function inlineScriptInHtmlAsset(): void
     {
         $document = $this->fromDomElement->ownerDocument;
         $replaceElement = $document->createElement('script');
@@ -56,7 +55,7 @@ class ScriptAsset extends Asset
     /**
      * Replace style tag href in HtmlAsset content.
      */
-    protected function replaceScriptTagHref()
+    protected function replaceScriptTagHref(): void
     {
         $this->replaceUrlWithExportUrlInInitiator();
     }

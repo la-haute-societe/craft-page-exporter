@@ -19,14 +19,14 @@ use craft\base\Component;
  */
 class Context extends Component
 {
-    protected $_exportContext;
+    protected bool $_exportContext = false;
 
     /**
      * Return true if the current request is an export
      * From Get param or explicitly defined with setExportContext method
      * @return bool
      */
-    public function isInExportContext()
+    public function isInExportContext(): bool
     {
         $request = Craft::$app->getRequest();
         if ($request->getIsConsoleRequest()) {
@@ -42,7 +42,7 @@ class Context extends Component
      * Set export context
      * @param bool $status
      */
-    public function setExportContext($status = true)
+    public function setExportContext(bool $status = true): void
     {
         $this->_exportContext = $status;
     }

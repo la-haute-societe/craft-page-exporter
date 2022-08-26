@@ -3,27 +3,28 @@
 namespace lhs\craftpageexporter\models;
 
 
+use Exception;
+
 class StyleAsset extends Asset
 {
-    /** @var Asset Inline asset containing this asset file content */
-    public $inlineAsset = null;
+    /** @var ?Asset Inline asset containing this asset file content */
+    public ?Asset $inlineAsset = null;
 
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
-        // In this case the extracted string (from initiator)
-        // is the URL of this asset
+        // In this case the extracted string (from initiator) is the URL of this asset
         $this->url = $this->fromString;
         parent::init();
     }
 
     /**
      * Retrieve and update content
-     * @throws \Exception
+     * @throws Exception
      */
-    protected function retrieveAndUpdateContent()
+    protected function retrieveAndUpdateContent(): void
     {
         // Do nothing
         // Content is downloaded in the populateChildren method
@@ -32,33 +33,27 @@ class StyleAsset extends Asset
     /**
      * Get content of this asset
      * Proxy to inlineAsset
-     * @return string
      */
-    public function getContent()
+    public function getContent(): ?string
     {
-        if (!$this->inlineAsset) {
-            return null;
-        }
-
-        return $this->inlineAsset->getContent();
+        return $this->inlineAsset?->getContent();
     }
 
     /**
      * @inheritdoc
-     * @throws \Exception
+     * @throws Exception
      */
-    public function populateChildren()
+    public function populateChildren(): void
     {
-        // We don't want to download files outside of the base URL
+        // We don't want to download files outside the base URL
         if (!$this->isInBaseUrl()) {
-            return null;
+            return;
         }
 
         // URL of its children is relative to this asset (not the root asset)
         $baseUrl = dirname($this->getAbsoluteUrl()) . '/';
 
-        // Do not store content in this asset
-        // Use InlineStyleAsset child instead
+        // Do not store content in this asset; use an InlineStyleAsset child instead
         $content = $this->retrieveContent();
 
         // Create child asset containing content extracted
@@ -79,7 +74,7 @@ class StyleAsset extends Asset
     /**
      * Replace paths and inline styles if needed
      */
-    public function updateInitiatorContent()
+    public function updateInitiatorContent(): void
     {
         if (!$this->willBeInArchive || !$this->url) {
             return;
@@ -96,12 +91,11 @@ class StyleAsset extends Asset
         }
     }
 
-    public function setExportUrl($exportUrl)
+    public function setExportUrl(string $exportUrl): void
     {
         parent::setExportUrl($exportUrl);
 
-        // If we change the url of this asset, we have to recalculate
-        // url of its children
+        // If we change the URL of this asset, we have to recalculate URL of its children
         if (!$this->export->inlineStyles) {
             foreach ($this->children as $child) {
                 $child->setBaseUrl(dirname($this->getAbsoluteUrl()) . '/');
@@ -112,7 +106,7 @@ class StyleAsset extends Asset
     /**
      * Replace style tag with style content in the HtmlAsset when this asset is inlined.
      */
-    protected function inlineStyleInHtmlAsset()
+    protected function inlineStyleInHtmlAsset(): void
     {
         $this->setBaseUrl($this->getRootAsset()->getBaseUrl());
 
@@ -131,9 +125,8 @@ class StyleAsset extends Asset
     /**
      * Replace style tag href in HtmlAsset content.
      */
-    protected function replaceStyleTagHref()
+    protected function replaceStyleTagHref(): void
     {
         $this->replaceUrlWithExportUrlInInitiator();
     }
-
 }

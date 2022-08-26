@@ -2,10 +2,10 @@
 
 namespace lhs\craftpageexporter\models;
 
-use craft\elements\Entry;
+use Craft;
 use craft\helpers\UrlHelper;
+use Exception;
 use lhs\craftpageexporter\models\transformers\BaseTransformer;
-use Yii;
 use yii\base\Component;
 
 
@@ -16,65 +16,63 @@ use yii\base\Component;
  */
 class Export extends Component
 {
-
     /**
      * @see Settings::$baseUrl
-     * @var string
+     * @var ?string
      */
-    public $baseUrl = null;
+    public ?string $baseUrl = null;
 
     /**
      * @see Settings::$sourcePathTransformer
-     * @var null|callable
+     * @var ?callable
      */
-    public $sourcePathTransformer = null;
+    public $sourcePathTransformer;
 
     /**
      * @see Settings::$inlineStyles
      * @var bool
      */
-    public $inlineStyles = false;
+    public bool $inlineStyles = false;
 
     /**
      * @see Settings::$inlineScripts
      * @var bool
      */
-    public $inlineScripts = false;
+    public bool $inlineScripts = false;
 
     /**
      * @see Settings::$customSelectors
      * @var array
      */
-    public $customSelectors = [];
+    public array $customSelectors = [];
 
     /**
      * Transformations to apply to assets
      * @var BaseTransformer[]
      */
-    public $transformers = [];
+    public array $transformers = [];
 
     /**
      * Whether throw exception if an asset file is not found
      * @var bool
      */
-    public $failOnFileNotFound = false;
+    public bool $failOnFileNotFound = false;
 
     /**
      * Collection of root assets composing this export
      * @var Asset[]
      */
-    protected $rootAssets = [];
+    protected array $rootAssets = [];
 
 
     /**
      * Init
      */
-    public function init()
+    public function init(): void
     {
         if (!$this->sourcePathTransformer) {
-            /** @var Export $export */
             $export = $this;
-            $this->sourcePathTransformer = function ($asset) use ($export) {
+            $this->sourcePathTransformer = static function ($asset) use ($export) {
                 return $export->defaultSourcePathTransformer($asset);
             };
         }
@@ -84,11 +82,10 @@ class Export extends Component
      * @param string $pageName
      * @param string $pageUrl
      * @param string $content
-     * @param Entry  $entry
      * @return $this
-     * @throws \Exception
+     * @throws Exception
      */
-    public function addPage($pageName, $pageUrl, $content, $entry)
+    public function addPage(string $pageName, string $pageUrl, string $content): static
     {
         $currentPageAsset = new HtmlAsset([
             'name'            => $pageName . '.html',
@@ -109,7 +106,7 @@ class Export extends Component
     /**
      * @param Asset $rootAsset
      */
-    public function addRootAsset($rootAsset)
+    public function addRootAsset(Asset $rootAsset): void
     {
         $this->rootAssets[] = $rootAsset;
     }
@@ -117,7 +114,7 @@ class Export extends Component
     /**
      * @return Asset[]
      */
-    public function getRootAssets()
+    public function getRootAssets(): array
     {
         return $this->rootAssets;
     }
@@ -125,7 +122,7 @@ class Export extends Component
     /**
      * Transform asset tree
      */
-    public function transform()
+    public function transform(): void
     {
         foreach ($this->transformers as $transformer) {
             foreach ($this->rootAssets as $rootAsset) {
@@ -136,10 +133,11 @@ class Export extends Component
 
     /**
      * Debug function
+     *
      * @param bool $simple
-     * @throws \Exception
+     * @throws Exception
      */
-    public function printTree($simple = false)
+    public function printTree(bool $simple = false): void
     {
         foreach ($this->rootAssets as $rootAsset) {
             $rootAsset->printTree($simple);
@@ -150,30 +148,31 @@ class Export extends Component
      * Default function used to transform the url of ``$asset`` to path used for getting the content of $asset
      * This function transform URL to path relative to @``webroot``
      * Can be overriden by ``sourcePathTransformer`` attribute
+     *
      * @param Asset $asset
      * @return string
      */
-    protected function defaultSourcePathTransformer($asset)
+    protected function defaultSourcePathTransformer(Asset $asset): string
     {
         return str_replace(
-            UrlHelper::baseRequestUrl(),
-            Yii::getAlias('@webroot/'),
+            Craft::getAlias('@web'),
+            Craft::getAlias('@webroot/'),
             strtok($asset->initialAbsoluteUrl, '?') // Discard the query string
         );
     }
 
     /**
      * Apply transformer recursively
+     *
      * @param Asset           $asset
      * @param BaseTransformer $transformer
      */
-    protected function applyTransformer(Asset $asset, $transformer)
+    protected function applyTransformer(Asset $asset, BaseTransformer $transformer): void
     {
         $transformer->transform($asset);
         foreach ($asset->children as $child) {
             $this->applyTransformer($child, $transformer);
         }
     }
-
 }
 

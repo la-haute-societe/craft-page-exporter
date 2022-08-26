@@ -7,6 +7,5 @@ use yii\base\Component;
 class BaseExporter extends Component
 {
     /** @var Export */
-    public $export;
-
+    public Export $export;
 }

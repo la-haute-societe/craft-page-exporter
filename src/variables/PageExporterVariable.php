@@ -3,20 +3,22 @@
 namespace lhs\craftpageexporter\variables;
 
 use craft\helpers\Template;
+use Exception;
 use lhs\craftpageexporter\Plugin;
 use nystudio107\pluginvite\variables\ViteVariableInterface;
 use nystudio107\pluginvite\variables\ViteVariableTrait;
+use Twig\Markup;
 
 class PageExporterVariable implements ViteVariableInterface
 {
     use ViteVariableTrait;
+
     /**
-     * Register explicitly an asset from its url
-     * and return the export URL of this asset
+     * Register explicitly an asset from its URL and return the export URL of this asset
      * @param $url
-     * @return string|null
+     * @return ?string|null
      */
-    public function registerAsset($url)
+    public function registerAsset($url): ?string
     {
         if (!$url) {
             return '';
@@ -30,22 +32,19 @@ class PageExporterVariable implements ViteVariableInterface
     }
 
     /**
-     * @return \Twig\Markup
-     * @throws \Exception
+     * @return Markup
+     * @throws Exception
      */
-    public function getRegisteredAssetsSummary()
+    public function getRegisteredAssetsSummary(): Markup
     {
-        $json = json_encode(Plugin::$plugin->assets->getRegisteredAssetsSummary());
+        $json = json_encode(Plugin::$plugin->assets->getRegisteredAssetsSummary(), JSON_THROW_ON_ERROR);
 
         return Template::raw(
             '<page-exporter-registered-assets>' . $json . '</page-exporter-registered-assets>'
         );
     }
 
-    /**
-     * @return bool
-     */
-    public function isInExportContext()
+    public function isInExportContext(): bool
     {
         return Plugin::$plugin->context->isInExportContext();
     }

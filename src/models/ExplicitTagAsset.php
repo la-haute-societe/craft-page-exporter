@@ -6,25 +6,26 @@
 
 namespace lhs\craftpageexporter\models;
 
+use Exception;
+use JsonException;
 
 class ExplicitTagAsset extends Asset
 {
-
     /**
      * Init
-     * @throws \Exception
+     * @throws Exception
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
     }
 
     /**
-     * @return null|void
+     * @throws JsonException
      */
-    public function populateChildren()
+    public function populateChildren(): void
     {
-        $assetsFromJson = json_decode($this->fromString, true);
+        $assetsFromJson = json_decode($this->fromString, true, 512, JSON_THROW_ON_ERROR);
 
         if (!is_array($assetsFromJson)) {
             $assetsFromJson = [];
@@ -46,11 +47,10 @@ class ExplicitTagAsset extends Asset
     /**
      * Remove explicit tag in html
      */
-    public function updateInitiatorContent()
+    public function updateInitiatorContent(): void
     {
         if ($this->initiator instanceof HtmlAsset) {
             $this->initiator->removeDomElement($this->fromDomElement);
         }
     }
-
 }

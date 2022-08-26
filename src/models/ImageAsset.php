@@ -2,39 +2,32 @@
 
 namespace lhs\craftpageexporter\models;
 
+use Exception;
 
 class ImageAsset extends Asset
 {
-
     /** @var string[] All URL found in fromString */
-    protected $urlMatches;
+    protected array $urlMatches;
 
-    /**
-     * Init
-     */
-    public function init()
+    public function init(): void
     {
         $this->urlMatches = $this->computeUrlMatches();
 
         if ($this->isFinalImage()) {
-            // In this case the extracted string (from initiator)
-            // is the URL of this asset
+            // In this case the extracted string (from initiator), is the URL of this asset
             $this->url = $this->fromString;
         }
 
         parent::init();
     }
 
-    /**
-     * @return null|void
-     */
-    public function populateChildren()
+    public function populateChildren(): void
     {
         if ($this->isFinalImage()) {
             return;
         }
 
-        // Multiple image: split into multiple ImageAsset
+        // Multiple images: split into multiple ImageAsset
         foreach ($this->urlMatches as $match) {
             $asset = new ImageAsset([
                 'fromString'    => $match,
@@ -47,10 +40,7 @@ class ImageAsset extends Asset
         }
     }
 
-    /**
-     * @return null|string
-     */
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl(): ?string
     {
         if ($this->isMultipleImages()) {
             return $this->initiator->getAbsoluteUrl();
@@ -60,13 +50,12 @@ class ImageAsset extends Asset
     }
 
     /**
-     * @return null|string
-     * @throws \Exception
+     * @return bool|string|null
+     * @throws Exception
      */
-    public function retrieveContent()
+    public function retrieveContent(): bool|null|string
     {
-        // There is no content for this asset
-        // because it's composed of multiple images
+        // There is no content for this asset because it's composed of multiple images
         if ($this->isMultipleImages()) {
             return null;
         }
@@ -76,11 +65,10 @@ class ImageAsset extends Asset
 
 
     /**
-     * Do not export this asset if it's composed
-     * of multiple images
-     * @return mixed|null
+     * Do not export this asset if it's composed of multiple images
+     * @return ?string
      */
-    public function getExportPath()
+    public function getExportPath(): ?string
     {
         if ($this->isMultipleImages()) {
             return null;
@@ -89,34 +77,30 @@ class ImageAsset extends Asset
         return parent::getExportPath();
     }
 
-
     /**
      * Replace URL
      */
-    public function updateInitiatorContent()
+    public function updateInitiatorContent(): void
     {
         parent::updateInitiatorContent();
         $this->replaceUrlWithExportUrlInInitiator();
     }
 
     /**
-     * @param string     $search
-     * @param string     $replace
+     * @param string $search
+     * @param string $replace
      * @param Asset|null $asset
      */
-    public function replaceInContent($search, $replace, $asset = null)
+    public function replaceInContent(string $search, string $replace, Asset $asset = null): void
     {
         // Replace in initiator content
-        if ($this->initiator) {
-            $this->initiator->replaceInContent($search, $replace, $asset);
-        }
+        $this->initiator?->replaceInContent($search, $replace, $asset);
     }
 
     /**
      * Return all URL found in fromString
-     * @return mixed
      */
-    protected function computeUrlMatches()
+    protected function computeUrlMatches(): array
     {
         preg_match_all('#(\S+\.\S+)#', $this->fromString, $matches);
 
@@ -138,7 +122,7 @@ class ImageAsset extends Asset
      * Return false if only one image is found in fromString
      * @return bool
      */
-    protected function isMultipleImages()
+    protected function isMultipleImages(): bool
     {
         return !$this->isFinalImage();
     }

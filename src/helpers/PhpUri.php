@@ -28,31 +28,31 @@ class PhpUri
      * http(s)://
      * @var string
      */
-    public $scheme;
+    public string $scheme;
 
     /**
      * www.example.com
      * @var string
      */
-    public $authority;
+    public string $authority;
 
     /**
      * /search
      * @var string
      */
-    public $path;
+    public string $path;
 
     /**
      * ?q=foo
      * @var string
      */
-    public $query;
+    public string $query;
 
     /**
      * #bar
      * @var string
      */
-    public $fragment;
+    public string $fragment;
 
     private function __construct($string)
     {
@@ -74,7 +74,7 @@ class PhpUri
         $this->fragment = $m[9][0];
     }
 
-    private function to_str()
+    private function to_str(): string
     {
         $ret = '';
         if (!empty($this->scheme)) {
@@ -98,7 +98,7 @@ class PhpUri
         return $ret;
     }
 
-    private function normalize_path($path)
+    private function normalize_path($path): array|string|null
     {
         if (empty($path)) {
             return '';
@@ -128,7 +128,7 @@ class PhpUri
      *
      * @return phpUri
      */
-    public static function parse($url)
+    public static function parse(string $url): PhpUri
     {
         $uri = new phpUri($url);
 
@@ -152,14 +152,13 @@ class PhpUri
      *
      * @return string
      */
-    public function join($relative)
+    public function join(string $relative): string
     {
         $uri = new phpUri($relative);
         switch (true) {
-            case !empty($uri->scheme):
-                break;
-
             case !empty($uri->authority):
+            case !empty($uri->scheme):
+            case str_starts_with($uri->path, '/'):
                 break;
 
             case empty($uri->path):
@@ -169,12 +168,9 @@ class PhpUri
                 }
                 break;
 
-            case strpos($uri->path, '/') === 0:
-                break;
-
             default:
                 $base_path = $this->path;
-                if (strpos($base_path, '/') === false) {
+                if (!str_contains($base_path, '/')) {
                     $base_path = '';
                 } else {
                     $base_path = preg_replace('/\/[^\/]+$/', '/', $base_path);

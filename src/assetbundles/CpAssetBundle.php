@@ -23,7 +23,7 @@ class CpAssetBundle extends AssetBundle
     /**
      * @inheritdoc
      */
-    public function init()
+    public function init(): void
     {
         $this->depends = [CpAsset::class];
         $this->sourcePath = '@lhs/craftpageexporter/web/assets/dist';

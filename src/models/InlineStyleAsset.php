@@ -5,19 +5,12 @@ namespace lhs\craftpageexporter\models;
 
 class InlineStyleAsset extends Asset
 {
-
-    /**
-     * @return null|void
-     */
-    public function populateChildren()
+    public function populateChildren(): void
     {
         $this->populateImages();
     }
 
-    /**
-     * @return bool|string
-     */
-    public function retrieveContent()
+    public function retrieveContent(): bool|string|null
     {
         return $this->fromString;
     }
@@ -25,7 +18,7 @@ class InlineStyleAsset extends Asset
     /**
      * Look for images in this asset content
      */
-    protected function populateImages()
+    protected function populateImages(): void
     {
         preg_match_all('/url\([\'"]?(.*?)[\'"]?\)/', $this->fromString, $matches);
         foreach ($matches[1] as $match) {
@@ -40,21 +33,16 @@ class InlineStyleAsset extends Asset
         }
     }
 
-    /**
-     * @return null|string
-     */
-    public function getAbsoluteUrl()
+    public function getAbsoluteUrl(): ?string
     {
         return $this->initiator->getAbsoluteUrl();
     }
 
     /**
-     * Do not export this asset
-     * @return mixed|null
+     * Inline assets don't need to be exported
      */
-    public function getExportPath()
+    public function getExportPath(): ?string
     {
         return null;
     }
-
 }

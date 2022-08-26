@@ -10,8 +10,9 @@
 
 namespace lhs\craftpageexporter\services;
 
+use Craft;
 use craft\base\Component;
-use craft\helpers\UrlHelper;
+use Exception;
 use lhs\craftpageexporter\Plugin;
 use lhs\craftpageexporter\models\Asset;
 use lhs\craftpageexporter\models\Export;
@@ -25,17 +26,15 @@ use lhs\craftpageexporter\models\MiscAsset;
 class Assets extends Component
 {
     /** @var Asset[] */
-    protected $_registeredAssets = [];
+    protected array $_registeredAssets = [];
 
     /*
-     * Register explicitly an asset from its url
-     * and return the export URL of this asset
+     * Register explicitly an asset from its URL and return the export URL of this asset
      * @return string|null
      */
-    public function registerAsset($url)
+    public function registerAsset($url): ?string
     {
         $asset = $this->createAsset($url);
-
         $this->_registeredAssets[] = $asset;
 
         return $asset->getExportUrl();
@@ -45,16 +44,16 @@ class Assets extends Component
      * Return assets registered explicitly with the `registerAsset` method
      * @return Asset[]
      */
-    public function getRegisteredAssets()
+    public function getRegisteredAssets(): array
     {
         return $this->_registeredAssets;
     }
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
-    public function getRegisteredAssetsSummary()
+    public function getRegisteredAssetsSummary(): array
     {
         $summary = [];
         foreach ($this->_registeredAssets as $asset) {
@@ -69,12 +68,13 @@ class Assets extends Component
 
     /**
      * Create an asset and apply export transformations
+     *
      * @param string $url
      * @return Asset
      */
-    protected function createAsset($url)
+    protected function createAsset(string $url): Asset
     {
-        $baseUrl = UrlHelper::baseRequestUrl();
+        $baseUrl = Craft::getAlias('@web');
         $export = new Export(Plugin::$plugin->getExportConfig());
 
         $htmlAsset = new HtmlAsset([

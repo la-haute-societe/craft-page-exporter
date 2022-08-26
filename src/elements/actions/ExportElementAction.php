@@ -8,9 +8,9 @@ use craft\helpers\Json;
 
 class ExportElementAction extends ElementAction
 {
-    public $label;
+    public ?string $label = null;
 
-    public function init()
+    public function init(): void
     {
         if ($this->label === null) {
             $this->label = Craft::t('craft-page-exporter', 'Export');
@@ -34,7 +34,7 @@ class ExportElementAction extends ElementAction
     /**
      * @inheritdoc
      */
-    public function getTriggerHtml()
+    public function getTriggerHtml(): ?string
     {
         $type = Json::encode(static::class);
 
@@ -62,5 +62,7 @@ class ExportElementAction extends ElementAction
 EOD;
         $view = Craft::$app->getView();
         $view->registerJs($js);
+
+        return null;
     }
 }

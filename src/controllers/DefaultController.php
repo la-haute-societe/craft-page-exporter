@@ -12,12 +12,17 @@ namespace lhs\craftpageexporter\controllers;
 
 use Craft;
 use craft\web\Controller;
+use Exception;
+use JetBrains\PhpStorm\NoReturn;
 use lhs\craftpageexporter\models\ZipExporter;
 use lhs\craftpageexporter\Plugin;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use yii\base\ExitException;
 use yii\web\BadRequestHttpException;
+use yii\web\ForbiddenHttpException;
+use yii\web\Response;
 
 /**
  * @author    La Haute Société
@@ -26,29 +31,15 @@ use yii\web\BadRequestHttpException;
  */
 class DefaultController extends Controller
 {
-
-    // Protected Properties
-    // =========================================================================
-
-    /**
-     * @var    bool|array Allows anonymous access to this controller's actions.
-     *         The actions must be in 'kebab-case'
-     * @access protected
-     */
-    // protected $allowAnonymous = ['export', 'getExportModalContent'];
-
-
-    // Public Methods
-    // =========================================================================
-
     /**
      * Export entries from IDs and siteId and produce a ZIP archive
-     * @param string  $entryIds
+     *
+     * @param string|null  $entryIds
      * @param $siteId
-     * @throws \yii\base\ExitException
-     * @throws \Exception
+     * @throws ExitException
+     * @throws Exception
      */
-    public function actionExport($entryIds = null, $siteId = null)
+    public function actionExport(string $entryIds = null, $siteId = null): void
     {
         $this->requirePermission('pageExporter.export');
 
@@ -90,28 +81,34 @@ class DefaultController extends Controller
 
     /**
      * Export entries from IDs and siteId and produce a ZIP archive
-     * @param string  $entryIds
-     * @param integer $siteId
-     * @throws \Exception
+     *
+     * @param string[]  $entryIds
+     * @param integer|null $siteId
+     * @throws Exception
      */
-    public function actionAnalyze($entryIds = null, $siteId = null)
+    #[NoReturn] public function actionAnalyze(array $entryIds = null, int $siteId = null): void
     {
         $this->requirePermission('pageExporter.export');
 
-        $export = Plugin::$plugin->export->createExport($entryIds, $siteId);
+        $ids = $entryIds ?? \Craft::$app->getRequest()->getRequiredParam('entryIds');
+        if(!is_array($ids)) {
+            $ids = explode(',', $ids);
+        }
+
+        $export = Plugin::$plugin->export->createExport($ids, $siteId);
         $export->printTree();
         die();
     }
 
     /**
-     * @return \yii\web\Response
+     * @return Response
      * @throws BadRequestHttpException
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError
-     * @throws \yii\web\ForbiddenHttpException
+     * @throws ForbiddenHttpException|\yii\base\Exception
      */
-    public function actionGetExportModalContent()
+    public function actionGetExportModalContent(): Response
     {
         $this->requirePermission('pageExporter.export');
         $this->requirePostRequest();
@@ -123,20 +120,19 @@ class DefaultController extends Controller
 
         // Get modal content
         $view = \Craft::$app->getView();
-        $modalHtml = $view->renderTemplate('craft-page-exporter/export-modal',
+        $modalHtml = $view->renderTemplate(
+            'craft-page-exporter/export-modal',
             [
                 'entryIds' => $entryIds,
                 'siteId'   => $siteId,
                 'settings' => Plugin::$plugin->getSettings(),
-            ]);
+            ]
+        );
 
-        // Set response to return
-        $responseData = [
+        return $this->asJson([
             'success'   => true,
             'modalHtml' => $modalHtml,
             'requestId' => $requestId,
-        ];
-
-        return $this->asJson($responseData);
+        ]);
     }
 }

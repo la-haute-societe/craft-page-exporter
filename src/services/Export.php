@@ -15,9 +15,13 @@ use craft\base\Component;
 use craft\elements\Entry;
 use craft\helpers\UrlHelper;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use lhs\craftpageexporter\models\Settings;
 use lhs\craftpageexporter\Plugin;
+use yii\base\Exception;
+use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\web\ServerErrorHttpException;
 use lhs\craftpageexporter\models\Export as ExportModel;
 
@@ -29,17 +33,17 @@ class Export extends Component
 {
     /**
      * @param array $entryIds
-     * @param int   $siteId
+     * @param int $siteId
      * @param array $config
      * @return ExportModel
      * @throws NotFoundHttpException
      * @throws ServerErrorHttpException
-     * @throws \yii\base\Exception
-     * @throws \yii\base\InvalidConfigException
+     * @throws Exception
+     * @throws InvalidConfigException
+     * @throws \Exception
      */
     public function createExport(array $entryIds, int $siteId, array $config = []): ExportModel
     {
-        /** @var Settings $settings */
         $settings = Plugin::$plugin->getSettings();
 
         // Create export
@@ -61,7 +65,7 @@ class Export extends Component
 
             // Add page
             $pageUrl = $entry->url;
-            $export->addPage($pageName, $pageUrl, $entryContent, $entry);
+            $export->addPage($pageName, $pageUrl, $entryContent);
         }
 
         // Transform according to config
@@ -72,12 +76,10 @@ class Export extends Component
 
     /**
      * @param Entry $entry
-     * @return \yii\web\Response
-     * @throws \yii\base\InvalidConfigException
-     * @throws ServerErrorHttpException
-     * @throws \yii\base\Exception
+     * @return object
+     * @throws GuzzleException
      */
-    protected function getEntryContent($entry)
+    protected function getEntryContent(Entry $entry): object
     {
         $client = Craft::createGuzzleClient();
         $response = $client->get(UrlHelper::urlWithParams($entry->getUrl(), [
@@ -89,8 +91,8 @@ class Export extends Component
     }
 
     /**
-     * @param $entryId
-     * @param $siteId
+     * @param int $entryId
+     * @param int $siteId
      * @return Entry
      * @throws NotFoundHttpException
      */

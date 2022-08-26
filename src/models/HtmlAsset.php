@@ -2,25 +2,25 @@
 
 namespace lhs\craftpageexporter\models;
 
-use DOMElement;
+use DOMNode;
+use Exception;
 use Symfony\Component\DomCrawler\Crawler;
 
 class HtmlAsset extends Asset
 {
-    /** @var string */
-    public $name;
+    public string $name;
+
+    /**
+     * @see Settings::$customSelectors
+     * @var string[]
+     */
+    public array $customSelectors = [];
 
     /**
      * @see Settings::$customSelectors
      * @var array
      */
-    public $customSelectors = [];
-
-    /**
-     * @see Settings::$customSelectors
-     * @var array
-     */
-    protected $selectorTypes = [
+    protected array $selectorTypes = [
         [
             'selectors'  => [
                 '//page-exporter-registered-assets',
@@ -76,13 +76,13 @@ class HtmlAsset extends Asset
     ];
 
     /** @var Crawler $crawler */
-    protected $crawler;
+    protected Crawler $crawler;
 
     /**
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function populateChildren()
+    public function populateChildren(): void
     {
         $this->crawler = new Crawler();
         $this->crawler->addHtmlContent($this->fromString);
@@ -110,56 +110,54 @@ class HtmlAsset extends Asset
 
     /**
      * Override default retrieveContent
-     * @return bool|string
+     * @return bool|string|null
      */
-    public function retrieveContent()
+    public function retrieveContent(): bool|null|string
     {
         return $this->fromString;
     }
 
     /**
      * @param Crawler $crawler
-     * @param         $assetClass
-     * @param         $filter
+     * @param string $assetClass
+     * @param ?string $filter
      */
-    protected function addChildrenFromDomElement($crawler, $assetClass, $filter)
+    protected function addChildrenFromDomElement(Crawler $crawler, string $assetClass, ?string $filter): void
     {
-        $nodeText = $crawler->text();
-
-        /** @var Asset $asset */
-        $asset = new $assetClass([
-            'fromString'     => $nodeText,
+        $this->addChild(new $assetClass([
+            'fromString'     => $crawler->text(),
             'fromDomElement' => $crawler->getNode(0),
             'extractFilter'  => $filter,
             'initiator'      => $this,
             'rootAsset'      => $this,
-        ]);
-        $this->addChild($asset);
+        ]));
     }
 
     /**
      * Replace $domElement with $replace in this asset content
-     * @param DOMElement $domElement
-     * @param DOMElement $replaceElement
-     * @return null|void
+     *
+     * @param DOMNode $domElement
+     * @param DOMNode $replace
+     * @return void
+     * @noinspection PhpComposerExtensionStubsInspection
      */
-    public function replaceDomElement($domElement, $replaceElement)
+    public function replaceDomElement(DOMNode $domElement, DOMNode $replace): void
     {
         // If domElement is an attribute, get the element (parent) instead
         if ($domElement->nodeType === XML_ATTRIBUTE_NODE) {
             $domElement = $domElement->parentNode;
         }
 
-        $domElement->parentNode->replaceChild($replaceElement, $domElement);
+        $domElement->parentNode->replaceChild($replace, $domElement);
         $this->updateContentFromDomCrawler();
     }
 
     /**
      * Remove $domElement
-     * @param DOMElement $domElement
-     * @return null|void
+     * @param DOMNode $domElement
+     * @noinspection PhpComposerExtensionStubsInspection
      */
-    public function removeDomElement($domElement)
+    public function removeDomElement(DOMNode $domElement): void
     {
         // If domElement is an attribute, get the element (parent) instead
         if ($domElement->nodeType === XML_ATTRIBUTE_NODE) {
@@ -172,12 +170,16 @@ class HtmlAsset extends Asset
 
     /**
      * Replace $search by $replace in the DOM
-     * @param string     $search
-     * @param string     $replace
-     * @param Asset|null $asset
+     * @param string $search
+     * @param string $replace
+     * @param ?Asset $asset
      */
-    public function replaceInContent($search, $replace, $asset = null)
+    public function replaceInContent(string $search, string $replace, Asset $asset = null): void
     {
+        if (!$asset) {
+            return;
+        }
+
         $asset->fromDomElement->nodeValue = htmlentities(str_replace($search, $replace, $asset->fromDomElement->nodeValue));
         $this->updateContentFromDomCrawler();
     }
@@ -185,7 +187,7 @@ class HtmlAsset extends Asset
     /**
      * Update content with HTML extracted from DOM tree
      */
-    protected function updateContentFromDomCrawler()
+    protected function updateContentFromDomCrawler(): void
     {
         // Use "saveDocument" instead of "html", otherwise the 'html' tag is not exported
         $html = '';

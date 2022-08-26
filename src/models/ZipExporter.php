@@ -3,8 +3,10 @@
 namespace lhs\craftpageexporter\models;
 
 use Craft;
+use Exception;
+use JetBrains\PhpStorm\NoReturn;
 use lhs\craftpageexporter\Plugin;
-use Yii;
+use yii\base\ExitException;
 use ZipArchive;
 
 /**
@@ -13,19 +15,14 @@ use ZipArchive;
  */
 class ZipExporter extends BaseExporter
 {
-    /** @var ZipArchive */
-    protected $archive;
-
-    /** @var string */
-    protected $tempFilename;
-
-    /** @var string */
-    public $archiveName = 'export';
+    protected ZipArchive $archive;
+    protected string $tempFilename;
+    public string $archiveName = 'export';
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -33,19 +30,19 @@ class ZipExporter extends BaseExporter
         $this->archive = new ZipArchive();
         $this->tempFilename = Craft::$app->path->getTempPath() . '/export-' . date('Y-m-d-H-i-s') . '.zip';
         if ($this->archive->open($this->tempFilename, ZipArchive::CREATE) !== true) {
-            throw new \Exception("Cannot create {$this->tempFilename}\n");
+            throw new Exception("Cannot create {$this->tempFilename}\n");
         }
     }
 
     /**
      * Export
-     * @throws \Exception
+     * @throws Exception
      */
-    public function export()
+    public function export(): void
     {
         foreach ($this->export->getRootAssets() as $rootAsset) {
             if (!($rootAsset instanceof HtmlAsset)) {
-                throw new \Exception('Root asset mut be an HtmlAsset.');
+                throw new Exception('Root asset mut be an HtmlAsset.');
             }
 
             $this->addRootAsset($rootAsset);
@@ -61,18 +58,21 @@ class ZipExporter extends BaseExporter
 
     /**
      * @return void
+     * @throws ExitException
      */
-    public function sendZip()
+    #[NoReturn] public function sendZip(): void
     {
         $this->archive->close();
-        Yii::$app->response->sendFile($this->tempFilename, $this->archiveName . '.zip')->send();
-        Yii::$app->end();
+        Craft::$app->end(
+            0,
+            Craft::$app->getResponse()->sendFile($this->tempFilename, $this->archiveName . '.zip')
+        );
     }
 
     /**
      * @param HtmlAsset $rootAsset
      */
-    protected function addRootAsset(HtmlAsset $rootAsset)
+    protected function addRootAsset(HtmlAsset $rootAsset): void
     {
         $this->addFile($rootAsset->name, $rootAsset->getContent());
 
@@ -84,7 +84,7 @@ class ZipExporter extends BaseExporter
     /**
      * @param Asset $asset
      */
-    protected function addAsset(Asset $asset)
+    protected function addAsset(Asset $asset): void
     {
         if ($asset->willBeInArchive) {
             $name = $asset->getExportPath();
@@ -103,7 +103,7 @@ class ZipExporter extends BaseExporter
      * @param string $name
      * @param string $content
      */
-    protected function addFile($name, $content)
+    protected function addFile(string $name, string $content): void
     {
         $this->archive->addFromString($name, $content);
     }

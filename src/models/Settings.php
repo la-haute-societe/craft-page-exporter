@@ -11,7 +11,6 @@
 namespace lhs\craftpageexporter\models;
 
 use craft\base\Model;
-use craft\helpers\UrlHelper;
 
 /**
  * @author    La Haute Société
@@ -22,58 +21,46 @@ class Settings extends Model
 {
     /**
      * Inline styles inside HTML.
-     * Default: true
-     * @var bool
      */
-    public $inlineStyles = true;
+    public bool $inlineStyles = true;
 
     /**
      * Inline scripts inside HTML.
-     * Default: true
-     * @var bool
      */
-    public $inlineScripts = true;
+    public bool $inlineScripts = true;
 
     /**
      * Format of the asset URL in export.
      * Twig variables available :
-     * Default: null
-     * @var null|string
      */
-    public $exportUrlFormat = '{dirname}/{basename}';
+    public ?string $exportUrlFormat = '{dirname}/{basename}';
 
     /**
      * Format of the asset path in export.
      * Twig variables available :
-     * Default: null
-     * @var null|string
      */
-    public $exportPathFormat = '{dirname}/{basename}';
+    public ?string $exportPathFormat = '{dirname}/{basename}';
 
     /**
-     * Callable function which should return the
-     * HTML content of one entry.
-     * If not defined, HTML content will be extracted
-     * using the CraftCMS rendering method.
-     * Default: null
+     * Callable function which should return the HTML content of one entry.
+     * If not defined, HTML content will be extracted using the Craft CMS
+     * rendering method.
      * @var null|callable
      */
-    public $entryContentExtractor = null;
+    public $entryContentExtractor;
 
     /**
      * Collection of callable functions
-     * Default: null
      * @var null|callable[]
      */
-    public $assetTransformers = null;
+    public ?array $assetTransformers = null;
 
     /**
-     * Whether throw exception if an asset file is not found
-     * In the case a file is not found and this param is false, the file will be empty.
-     * Default: false
-     * @var bool
+     * Whether throw exception if an asset file is not found.
+     * In the case a file is not found and this param is false, the file will be
+     * empty.
      */
-    public $failOnFileNotFound = false;
+    public bool $failOnFileNotFound = false;
 
     /**
      * List of custom selectors in the following format.
@@ -93,21 +80,19 @@ class Settings extends Model
      * ],
      * ```
      *
-     * @var array
      */
-    public $customSelectors = [];
+    public array $customSelectors = [];
 
     /**
-     * Function used to to transform absolute URLs into paths/URLs
-     * in order to retrieve their content
+     * Function used to transform absolute URLs into paths/URLs in order to
+     * retrieve their content.
      * @var null|callable
      */
-    public $sourcePathTransformer = null;
+    public $sourcePathTransformer;
 
     /**
      * Exported archive filename
-     * Default: 'export'
      * @var string
      */
-    public $archiveName = 'export';
+    public string $archiveName = 'export';
 }
