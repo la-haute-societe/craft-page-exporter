@@ -1,14 +1,16 @@
 export default class ExportButtonComponent {
     init() {
-        // Get element we want to insert btn after
-        let btnShare = document.querySelector('.btn.sharebtn, #share-btn');
-        if (btnShare === null) return;
+        console.log('Export button component');
+
+        const actionButtonsContainer = document.getElementById('action-buttons');
+        console.log(actionButtonsContainer);
+        if (actionButtonsContainer === null) return;
 
         // Create btn group
         let btnGroup = this.createBtnGroup();
 
         // Add btn
-        this.insertAfter(btnGroup, btnShare.parentNode);
+        actionButtonsContainer.prepend(btnGroup);
 
         // Add menu
         this.addMenu(btnGroup);
@@ -62,8 +64,7 @@ export default class ExportButtonComponent {
     }
 
     getEntryId() {
-        let entryIdInput = document.getElementsByName('sourceId')[0];
-        return entryIdInput.value;
+        return document.getElementById('main-form').elementId.value;
     }
 
     getSiteId() {
