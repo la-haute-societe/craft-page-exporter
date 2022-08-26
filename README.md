@@ -1,5 +1,3 @@
-![Craft Page Exporter icon](src/icon.svg)
-
 # Craft Page Exporter
 
 This plugin allows you to export entries in ZIP format from the control panel.
@@ -327,7 +325,6 @@ be used in production environments. The license fee for this plugin is $29
 (license + one year of updates) via the Craft Plugin Store, then $5 per year
 for updates (optional).
 
-Icon: Package by Vectorstall from the Noun Project.
-
 Brought to you by
-<a href="https://www.lahautesociete.com" target="_blank"><img src=".readme/logo-lahautesociete.png" height="200" alt=" La Haute Société" /></a>
+<br>
+<a href="https://www.lahautesociete.com" target="_blank"><img src=".readme/logo-lahautesociete.png" height="100" alt=" La Haute Société" /></a>
