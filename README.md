@@ -302,22 +302,6 @@ from the twig template:
 ````
 
 
-## Contributing
-
-### Building assets
-
-All sources are located in `resources` folder in plugin's root folder.
-
-To build assets, run these commands from plugin's root folder :
-
-````bash
-yarn        # Install node dependencies needed for building assets
-
-yarn watch  # Build assets in development mode & watch them for changes
-yarn dev    # Build assets in development mode
-yarn build  # Build assets in production mode
-````
-
 ## Licensing
 
 This plugin is free to try in development environments, but requires payment to
