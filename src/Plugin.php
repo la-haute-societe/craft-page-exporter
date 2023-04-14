@@ -132,8 +132,11 @@ class Plugin extends BasePlugin
             UserPermissions::EVENT_REGISTER_PERMISSIONS,
             static function (RegisterUserPermissionsEvent $event) {
                 $event->permissions['Page exporter'] = [
-                    'pageExporter.export' => [
-                        'label' => 'Export entries',
+                    'heading' => 'Page Exporter',
+                    'permissions' => [
+                        'pageExporter.export' => [
+                            'label' => 'Export entries',
+                        ],
                     ],
                 ];
             }
