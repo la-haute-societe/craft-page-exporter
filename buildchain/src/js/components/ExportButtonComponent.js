@@ -1,10 +1,11 @@
 export default class ExportButtonComponent {
     init() {
-        console.log('Export button component');
-
         const actionButtonsContainer = document.getElementById('action-buttons');
-        console.log(actionButtonsContainer);
-        if (actionButtonsContainer === null) return;
+
+        if (
+            actionButtonsContainer === null
+            || document.getElementById('main-form') === null
+        ) return;
 
         // Create btn group
         let btnGroup = this.createBtnGroup();
