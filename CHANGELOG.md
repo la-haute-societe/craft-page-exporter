@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## Unreleased
+## changed
+- remove the old buildchain (based on vue-cli)
 
 
 ## [1.5.2] - 2023-04-14
