@@ -11,7 +11,7 @@
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
     "sass": "^1.49.7",
-    "vite": "^2.7.0",
+    "vite": "^2.9.17",
     "vite-plugin-restart": "0.0.2"
   },
   "scripts": {
