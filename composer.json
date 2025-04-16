@@ -1,54 +1,59 @@
 {
-  "name":              "la-haute-societe/craft-page-exporter",
-  "description":       "Export Craft CMS entries to a zip archive containing a static HTML files and its assets",
-  "type":              "craft-plugin",
-  "prefer-stable": true,
-  "keywords":          [
-    "craft",
-    "cms",
-    "craftcms",
-    "craft-plugin",
-    "craft-page-exporter"
-  ],
-  "support":           {
-    "docs":   "https://github.com/la-haute-societe/craft-page-exporter",
-    "issues": "https://github.com/la-haute-societe/craft-page-exporter/issues"
-  },
-  "license":           "proprietary",
-  "authors":           [
-    {
-      "name":     "La Haute Société",
-      "homepage": "https://www.lahautesociete.com"
+    "name": "la-haute-societe/craft-page-exporter",
+    "description": "Export Craft CMS entries to a zip archive containing static HTML files and assets.",
+    "type": "craft-plugin",
+    "license": "proprietary",
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "page-exporter"
+    ],
+    "support": {
+        "docs": "https://github.com/la-haute-societe/craft-page-exporter",
+        "issues": "https://github.com/la-haute-societe/craft-page-exporter/issues"
+    },
+    "authors": [
+        {
+            "name": "La Haute Société",
+            "homepage": "https://www.lahautesociete.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "ext-dom": "*",
+        "ext-json": "*",
+        "ext-zip": "*",
+        "craftcms/cms": "^5.0.0",
+        "symfony/dom-crawler": "^6.0",
+        "nystudio107/craft-plugin-vite": "^5.0.0"
+    },
+    "require-dev": {
+        "craftcms/rector": "dev-main"
+    },
+    "autoload": {
+        "psr-4": {
+            "lhs\\craftpageexporter\\": "src/"
+        }
+    },
+    "version": "5.0.0",
+    "extra": {
+        "name": "Page exporter",
+        "handle": "craft-page-exporter",
+        "class": "lhs\\craftpageexporter\\Plugin",
+        "hasCpSection": false,
+        "craft-plugin": {
+            "schemaVersion": "1.0.0",
+            "compatibleCraftVersions": "^5.0.0"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "craftcms/plugin-installer": true,
+            "yiisoft/yii2-composer": true
+        }
     }
-  ],
-  "require":           {
-    "ext-dom": "*",
-    "ext-json": "*",
-    "ext-zip": "*",
-    "craftcms/cms": "^4.0.0",
-    "symfony/dom-crawler": "^3.3.0",
-    "nystudio107/craft-plugin-vite": "^4.0.0",
-    "php": "^8.0.2"
-  },
-  "autoload":          {
-    "psr-4": {
-      "lhs\\craftpageexporter\\": "src/"
-    }
-  },
-  "extra":             {
-    "name":         "Page exporter",
-    "handle":       "craft-page-exporter",
-    "hasCpSection": false,
-    "class": "lhs\\craftpageexporter\\Plugin"
-  },
-  "config": {
-    "allow-plugins": {
-      "craftcms/plugin-installer": true,
-      "yiisoft/yii2-composer": true
-    }
-  },
-  "minimum-stability": "dev",
-  "require-dev": {
-    "craftcms/rector": "dev-main"
-  }
 }
