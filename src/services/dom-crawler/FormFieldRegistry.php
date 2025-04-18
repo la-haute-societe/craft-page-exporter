@@ -18,18 +18,18 @@ use Symfony\Component\DomCrawler\Field\FormField;
  *
  * @internal
  */
-class FormFieldRegistry
+final class FormFieldRegistry
 {
-    private $fields = array();
+    private array $fields = array();
 
-    private $base;
+    private string $base;
 
     /**
      * Adds a field to the registry.
      *
      * @param FormField $field The field
      */
-    public function add(FormField $field)
+    public function add(FormField $field): void
     {
         $segments = $this->getSegments($field->getName());
 
@@ -53,7 +53,7 @@ class FormFieldRegistry
      *
      * @param string $name The fully qualified name of the base field
      */
-    public function remove($name)
+    public function remove(string $name): void
     {
         $segments = $this->getSegments($name);
         $target = &$this->fields;
@@ -76,7 +76,7 @@ class FormFieldRegistry
      *
      * @throws \InvalidArgumentException if the field does not exist
      */
-    public function &get($name)
+    public function &get(string $name): mixed
     {
         $segments = $this->getSegments($name);
         $target = &$this->fields;
@@ -98,7 +98,7 @@ class FormFieldRegistry
      *
      * @return bool Whether the form has the given field
      */
-    public function has($name)
+    public function has(string $name): bool
     {
         try {
             $this->get($name);
@@ -117,7 +117,7 @@ class FormFieldRegistry
      *
      * @throws \InvalidArgumentException if the field does not exist
      */
-    public function set($name, $value)
+    public function set(string $name, mixed $value): void
     {
         $target = &$this->get($name);
         if ((!is_array($value) && $target instanceof Field\FormField) || $target instanceof Field\ChoiceFormField) {
@@ -137,7 +137,7 @@ class FormFieldRegistry
      *
      * @return FormField[] The list of fields as array((string) Fully qualified name => (mixed) value)
      */
-    public function all()
+    public function all(): array
     {
         return $this->walk($this->fields, $this->base);
     }
@@ -153,7 +153,7 @@ class FormFieldRegistry
      *
      * @return static
      */
-    private static function create($base, array $values)
+    private static function create(string $base, array $values): static
     {
         $registry = new static();
         $registry->base = $base;

@@ -86,7 +86,7 @@ class DefaultController extends Controller
      * @param integer|null $siteId
      * @throws Exception
      */
-    #[NoReturn] public function actionAnalyze(array $entryIds = null, int $siteId = null): void
+    public function actionAnalyze(array $entryIds = null, int $siteId = null): void
     {
         $this->requirePermission('pageExporter.export');
 
@@ -97,7 +97,6 @@ class DefaultController extends Controller
 
         $export = Plugin::$plugin->export->createExport($ids, $siteId);
         $export->printTree();
-        die();
     }
 
     /**

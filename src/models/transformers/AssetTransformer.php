@@ -12,7 +12,7 @@ class AssetTransformer extends BaseTransformer
     /**
      * @param Asset $asset
      */
-    public function transform($asset): void
+    public function transform(Asset $asset): void
     {
         if (!is_callable($this->transformer)) {
             return;

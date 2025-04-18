@@ -11,6 +11,8 @@
 
 namespace Symfony\Component\DomCrawler\Field;
 
+use DOMElement;
+
 /**
  * ChoiceFormField represents a choice form field.
  *
@@ -159,13 +161,13 @@ class ChoiceFormField extends FormField
     /**
      * Adds a choice to the current ones.
      *
-     * @param \DOMElement $node
+     * @param DOMElement $node
      *
      * @throws \LogicException When choice provided is not multiple nor radio
      *
      * @internal
      */
-    public function addChoice(\DOMElement $node)
+    public function addChoice(DOMElement $node)
     {
         if (!$this->multiple && 'radio' !== $this->type) {
             throw new \LogicException(sprintf('Unable to add a choice for "%s" as it is not multiple or is not a radio button.',
@@ -205,7 +207,7 @@ class ChoiceFormField extends FormField
      *
      * @throws \LogicException When node type is incorrect
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         if ('input' !== $this->node->nodeName && 'select' !== $this->node->nodeName) {
             throw new \LogicException(sprintf('A ChoiceFormField can only be created from an input or select tag (%s given).',
@@ -242,7 +244,7 @@ class ChoiceFormField extends FormField
                 $optionValue = $this->buildOptionValue($option);
                 $this->options[] = $optionValue;
 
-                if ($option->hasAttribute('selected')) {
+                if ($option instanceof DOMElement && $option->hasAttribute('selected')) {
                     $found = true;
                     if ($this->multiple) {
                         $this->value[] = $optionValue['value'];
@@ -262,11 +264,11 @@ class ChoiceFormField extends FormField
     /**
      * Returns option value with associated disabled flag.
      *
-     * @param \DOMElement $node
+     * @param DOMElement $node
      *
      * @return array
      */
-    private function buildOptionValue(\DOMElement $node)
+    private function buildOptionValue(DOMElement $node): array
     {
         $option = array();
 
@@ -282,11 +284,11 @@ class ChoiceFormField extends FormField
      * Checks whether given value is in the existing options.
      *
      * @param string $optionValue
-     * @param array  $options
+     * @param array $options
      *
      * @return bool
      */
-    public function containsOption($optionValue, $options)
+    public function containsOption(string $optionValue, array $options): bool
     {
         if ($this->validationDisabled) {
             return true;
@@ -306,7 +308,7 @@ class ChoiceFormField extends FormField
      *
      * @return array
      */
-    public function availableOptionValues()
+    public function availableOptionValues(): array
     {
         $values = array();
 
@@ -320,9 +322,9 @@ class ChoiceFormField extends FormField
     /**
      * Disables the internal validation of the field.
      *
-     * @return self
+     * @return static
      */
-    public function disableValidation()
+    public function disableValidation(): static
     {
         $this->validationDisabled = true;
 

@@ -32,7 +32,8 @@
         "nystudio107/craft-plugin-vite": "^5.0.0"
     },
     "require-dev": {
-        "craftcms/rector": "dev-main"
+        "craftcms/rector": "dev-main",
+        "phpstan/phpstan": "^1.12"
     },
     "autoload": {
         "psr-4": {

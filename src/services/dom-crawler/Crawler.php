@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\DomCrawler;
 
+use DOMDocument;
+use DOMElement;
+use DOMNode;
+use InvalidArgumentException;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 
 /**
@@ -18,7 +22,7 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Crawler implements \Countable, \IteratorAggregate
+final class Crawler implements \Countable, \IteratorAggregate
 {
     /**
      * @var string The current URI
@@ -46,9 +50,9 @@ class Crawler implements \Countable, \IteratorAggregate
     private $document;
 
     /**
-     * @var \DOMElement[]
+     * @var DOMElement[]
      */
-    private $nodes = array();
+    private array $nodes = array();
 
     /**
      * Whether the Crawler contains HTML or XML content (used when converting CSS to XPath).
@@ -105,7 +109,7 @@ class Crawler implements \Countable, \IteratorAggregate
      * This method uses the appropriate specialized add*() method based
      * on the type of the argument.
      *
-     * @param \DOMNodeList|\DOMNode|array|string|null $node A node
+     * @param \DOMNodeList|DOMNode|array|string|null $node A node
      *
      * @throws \InvalidArgumentException When node is not the expected type.
      */
@@ -113,7 +117,7 @@ class Crawler implements \Countable, \IteratorAggregate
     {
         if ($node instanceof \DOMNodeList) {
             $this->addNodeList($node);
-        } elseif ($node instanceof \DOMNode) {
+        } elseif ($node instanceof DOMNode) {
             $this->addNode($node);
         } elseif (is_array($node)) {
             $this->addNodes($node);
@@ -290,7 +294,7 @@ class Crawler implements \Countable, \IteratorAggregate
     public function addNodeList(\DOMNodeList $nodes)
     {
         foreach ($nodes as $node) {
-            if ($node instanceof \DOMNode) {
+            if ($node instanceof DOMNode) {
                 $this->addNode($node);
             }
         }
@@ -299,7 +303,7 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * Adds an array of \DOMNode instances to the list of nodes.
      *
-     * @param \DOMNode[] $nodes An array of \DOMNode instances
+     * @param DOMNode[] $nodes An array of \DOMNode instances
      */
     public function addNodes(array $nodes)
     {
@@ -311,16 +315,16 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * Adds a \DOMNode instance to the list of nodes.
      *
-     * @param \DOMNode $node A \DOMNode instance
+     * @param DOMNode $node A \DOMNode instance
      */
-    public function addNode(\DOMNode $node)
+    public function addNode(DOMNode $node): void
     {
-        if ($node instanceof \DOMDocument) {
+        if ($node instanceof DOMDocument) {
             $node = $node->documentElement;
         }
 
         if (null !== $this->document && $this->document !== $node->ownerDocument) {
-            throw new \InvalidArgumentException('Attaching DOM nodes from multiple documents in the same crawler is forbidden.');
+            throw new InvalidArgumentException('Attaching DOM nodes from multiple documents in the same crawler is forbidden.');
         }
 
         if (null === $this->document) {
@@ -778,7 +782,7 @@ class Crawler implements \Countable, \IteratorAggregate
 
         $node = $this->getNode(0);
 
-        if (!$node instanceof \DOMElement) {
+        if (!$node instanceof DOMElement) {
             throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".',
                 get_class($node)));
         }
@@ -797,7 +801,7 @@ class Crawler implements \Countable, \IteratorAggregate
     {
         $links = array();
         foreach ($this->nodes as $node) {
-            if (!$node instanceof \DOMElement) {
+            if (!$node instanceof DOMElement) {
                 throw new \InvalidArgumentException(sprintf('The current node list should contain only DOMElement instances, "%s" found.',
                     get_class($node)));
             }
@@ -823,7 +827,7 @@ class Crawler implements \Countable, \IteratorAggregate
 
         $node = $this->getNode(0);
 
-        if (!$node instanceof \DOMElement) {
+        if (!$node instanceof DOMElement) {
             throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".',
                 get_class($node)));
         }
@@ -840,7 +844,7 @@ class Crawler implements \Countable, \IteratorAggregate
     {
         $images = array();
         foreach ($this as $node) {
-            if (!$node instanceof \DOMElement) {
+            if (!$node instanceof DOMElement) {
                 throw new \InvalidArgumentException(sprintf('The current node list should contain only DOMElement instances, "%s" found.',
                     get_class($node)));
             }
@@ -870,7 +874,7 @@ class Crawler implements \Countable, \IteratorAggregate
 
         $node = $this->getNode(0);
 
-        if (!$node instanceof \DOMElement) {
+        if (!$node instanceof DOMElement) {
             throw new \InvalidArgumentException(sprintf('The selected node should be instance of DOMElement, got "%s".',
                 get_class($node)));
         }
@@ -1071,19 +1075,20 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * @param int $position
      *
-     * @return \DOMElement|null
+     * @return DOMElement|null
      */
-    public function getNode($position)
+    public function getNode(int $position): DOMElement|null
     {
         if (isset($this->nodes[$position])) {
             return $this->nodes[$position];
         }
+        return null;
     }
 
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->nodes);
     }
@@ -1091,13 +1096,13 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->nodes);
     }
 
     /**
-     * @param \DOMElement $node
+     * @param DOMElement $node
      * @param string      $siblingDir
      *
      * @return array
@@ -1123,7 +1128,7 @@ class Crawler implements \Countable, \IteratorAggregate
      *
      * @throws \InvalidArgumentException
      */
-    private function createDOMXPath(\DOMDocument $document, array $prefixes = array())
+    private function createDOMXPath(\DOMDocument $document, array $prefixes = array()): \DOMXPath
     {
         $domxpath = new \DOMXPath($document);
 
@@ -1139,13 +1144,13 @@ class Crawler implements \Countable, \IteratorAggregate
 
     /**
      * @param \DOMXPath $domxpath
-     * @param string    $prefix
+     * @param string $prefix
      *
      * @return string
      *
      * @throws \InvalidArgumentException
      */
-    private function discoverNamespace(\DOMXPath $domxpath, $prefix)
+    private function discoverNamespace(\DOMXPath $domxpath, string $prefix): ?string
     {
         if (isset($this->namespaces[$prefix])) {
             return $this->namespaces[$prefix];
@@ -1158,6 +1163,8 @@ class Crawler implements \Countable, \IteratorAggregate
         if ($node = $namespaces->item(0)) {
             return $node->nodeValue;
         }
+
+        return null;
     }
 
     /**
@@ -1165,7 +1172,7 @@ class Crawler implements \Countable, \IteratorAggregate
      *
      * @return array
      */
-    private function findNamespacePrefixes($xpath)
+    private function findNamespacePrefixes(string $xpath): array
     {
         if (preg_match_all('/(?P<prefix>[a-z_][a-z_0-9\-\.]*+):[^"\/:]/i', $xpath, $matches)) {
             return array_unique($matches['prefix']);
@@ -1177,11 +1184,11 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * Creates a crawler for some subnodes.
      *
-     * @param \DOMElement|\DOMElement[]|\DOMNodeList|null $nodes
+     * @param \DOMNodeList|DOMElement|DOMElement[]|null $nodes
      *
      * @return static
      */
-    private function createSubCrawler($nodes)
+    private function createSubCrawler(\DOMNodeList|array|DOMElement|null $nodes): static
     {
         $crawler = new static($nodes, $this->uri, $this->baseHref);
         $crawler->isHtml = $this->isHtml;

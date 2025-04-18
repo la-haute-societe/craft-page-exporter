@@ -60,7 +60,7 @@ class ZipExporter extends BaseExporter
      * @return void
      * @throws ExitException
      */
-    #[NoReturn] public function sendZip(): void
+    public function sendZip(): void
     {
         $this->archive->close();
         Craft::$app->end(

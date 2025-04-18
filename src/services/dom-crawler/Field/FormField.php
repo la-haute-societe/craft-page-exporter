@@ -11,6 +11,10 @@
 
 namespace Symfony\Component\DomCrawler\Field;
 
+use DOMDocument;
+use DOMElement;
+use DOMXPath;
+
 /**
  * FormField is the abstract class for all form fields.
  *
@@ -19,40 +23,40 @@ namespace Symfony\Component\DomCrawler\Field;
 abstract class FormField
 {
     /**
-     * @var \DOMElement
+     * @var DOMElement
      */
-    protected $node;
+    protected DOMElement $node;
     /**
      * @var string
      */
-    protected $name;
+    protected string $name;
     /**
-     * @var string
+     * @var string|array
      */
-    protected $value;
+    protected string|array $value;
     /**
-     * @var \DOMDocument
+     * @var DOMDocument
      */
-    protected $document;
+    protected DOMDocument $document;
     /**
-     * @var \DOMXPath
+     * @var DOMXPath
      */
-    protected $xpath;
+    protected DOMXPath $xpath;
     /**
      * @var bool
      */
-    protected $disabled;
+    protected bool $disabled;
 
     /**
      * Constructor.
      *
-     * @param \DOMElement $node The node associated with this field
+     * @param DOMElement $node The node associated with this field
      */
-    public function __construct(\DOMElement $node)
+    public function __construct(DOMElement $node)
     {
         $this->node = $node;
         $this->name = $node->getAttribute('name');
-        $this->xpath = new \DOMXPath($node->ownerDocument);
+        $this->xpath = new DOMXPath($node->ownerDocument);
 
         $this->initialize();
     }
@@ -60,11 +64,11 @@ abstract class FormField
     /**
      * Returns the label tag associated to the field or null if none.
      *
-     * @return \DOMElement|null
+     * @return DOMElement|null
      */
     public function getLabel()
     {
-        $xpath = new \DOMXPath($this->node->ownerDocument);
+        $xpath = new DOMXPath($this->node->ownerDocument);
 
         if ($this->node->hasAttribute('id')) {
             $labels = $xpath->query(sprintf('descendant::label[@for="%s"]', $this->node->getAttribute('id')));

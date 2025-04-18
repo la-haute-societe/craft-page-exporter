@@ -16,9 +16,9 @@ class PageExporterVariable implements ViteVariableInterface
     /**
      * Register explicitly an asset from its URL and return the export URL of this asset
      * @param $url
-     * @return ?string|null
+     * @return string|null
      */
-    public function registerAsset($url): ?string
+    public function registerAsset($url): string|null
     {
         if (!$url) {
             return '';
