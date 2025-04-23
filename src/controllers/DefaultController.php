@@ -90,7 +90,7 @@ class DefaultController extends Controller
     {
         $this->requirePermission('pageExporter.export');
 
-        $ids = $entryIds ?? \Craft::$app->getRequest()->getRequiredParam('entryIds');
+        $ids = $entryIds ?? Craft::$app->getRequest()->getRequiredParam('entryIds');
         if(!is_array($ids)) {
             $ids = explode(',', $ids);
         }
@@ -118,7 +118,7 @@ class DefaultController extends Controller
         $siteId = Craft::$app->getRequest()->getRequiredParam('siteId');
 
         // Get modal content
-        $view = \Craft::$app->getView();
+        $view = Craft::$app->getView();
         $modalHtml = $view->renderTemplate(
             'craft-page-exporter/export-modal',
             [

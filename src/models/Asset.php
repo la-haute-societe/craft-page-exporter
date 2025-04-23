@@ -388,7 +388,7 @@ abstract class Asset extends Component
     /**
      * Replace $search by $replace in the content of this asset
      *
-     * @param string     $search
+     * @param string $search
      * @param string $replace
      * @param ?Asset $asset
      */
