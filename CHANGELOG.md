@@ -7,13 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Unreleased
 
+## [3.0.0] - 2025-04-30
 
-# [2.0.1] - 2023-04-14
-## Fixed
+### Changed
+- [BREAKING] Craft 5 compatibility
+- Update dependencies
+
+## [2.0.1] - 2023-04-14
+
+### Fixed
+
 - fix plugin permissions registration that caused an error when visiting the user edit page
 - fix a JS error caused by an attempt to inject the export button on pages other than edit entry pages
 - fix an issue with the buildchain
-## changed
+### changed
 - remove the old buildchain (based on vue-cli)
 
 
@@ -160,3 +167,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.5.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.5.0...1.5.1
 [2.0.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.5.0...2.0.0
 [2.0.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/2.0.0...2.0.1
+[3.0.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/2.0.1...3.0.0
