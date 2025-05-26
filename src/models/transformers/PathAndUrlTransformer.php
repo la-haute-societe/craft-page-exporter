@@ -30,7 +30,7 @@ class PathAndUrlTransformer extends BaseTransformer
      * @throws Throwable
      * @throws Exception
      */
-    public function transform($asset): void
+    public function transform(Asset $asset): void
     {
         if (!$this->needToTransform($asset)) {
             return;

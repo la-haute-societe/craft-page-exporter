@@ -163,8 +163,15 @@ abstract class Asset extends Component
      */
     public function setExportPath(string $exportPath): void
     {
+        $decoded = urldecode($exportPath);
+
+        if (class_exists('\Normalizer')) {
+            $exportPath = \Normalizer::normalize($decoded, \Normalizer::FORM_C);
+        }
+
         $this->exportPath = $exportPath;
     }
+
 
     /**
      * Return URL of this asset in the export
@@ -180,10 +187,23 @@ abstract class Asset extends Component
      */
     public function setExportUrl(string $exportUrl): void
     {
+        $decoded = urldecode($exportUrl);
+
+        if (class_exists('\Normalizer')) {
+            $exportUrl = \Normalizer::normalize($decoded, \Normalizer::FORM_C);
+        }
+
         $this->exportUrl = $exportUrl;
-        $this->updateInitiatorContent();
         $this->url = $this->exportUrl;
+
+        if ($this->fromDomElement instanceof \DOMAttr && $this->fromDomElement->ownerElement) {
+            $attributeName = $this->fromDomElement->nodeName;
+            $this->fromDomElement->ownerElement->setAttribute($attributeName, $exportUrl);
+        }
+
+        $this->updateInitiatorContent();
     }
+
 
     /**
      * Return the path (file or URL) used for getting the content of this asset
@@ -388,7 +408,7 @@ abstract class Asset extends Component
     /**
      * Replace $search by $replace in the content of this asset
      *
-     * @param string     $search
+     * @param string $search
      * @param string $replace
      * @param ?Asset $asset
      */

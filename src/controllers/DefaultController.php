@@ -86,18 +86,17 @@ class DefaultController extends Controller
      * @param integer|null $siteId
      * @throws Exception
      */
-    #[NoReturn] public function actionAnalyze(array $entryIds = null, int $siteId = null): void
+    public function actionAnalyze(array $entryIds = null, int $siteId = null): void
     {
         $this->requirePermission('pageExporter.export');
 
-        $ids = $entryIds ?? \Craft::$app->getRequest()->getRequiredParam('entryIds');
+        $ids = $entryIds ?? Craft::$app->getRequest()->getRequiredParam('entryIds');
         if(!is_array($ids)) {
             $ids = explode(',', $ids);
         }
 
         $export = Plugin::$plugin->export->createExport($ids, $siteId);
         $export->printTree();
-        die();
     }
 
     /**
@@ -119,7 +118,7 @@ class DefaultController extends Controller
         $siteId = Craft::$app->getRequest()->getRequiredParam('siteId');
 
         // Get modal content
-        $view = \Craft::$app->getView();
+        $view = Craft::$app->getView();
         $modalHtml = $view->renderTemplate(
             'craft-page-exporter/export-modal',
             [

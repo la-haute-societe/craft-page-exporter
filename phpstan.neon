@@ -1,0 +1,10 @@
+parameters:
+    level: 2
+    phpVersion: 80200
+    paths:
+        - src
+    ignoreErrors:
+        - '#Access to static property \$app on an unknown class Craft#'
+        - '#Call to static method .* on an unknown class Craft#'
+    excludePaths:
+        - src/services/dom-crawler/Tests

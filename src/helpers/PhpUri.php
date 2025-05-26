@@ -4,7 +4,7 @@
  * Website: https://github.com/monkeysuffrage/phpuri
  *
  * <pre>
- * echo phpUri::parse('https://www.google.com/')->join('foo');
+ * echo PhpUri::parse('https://www.google.com/')->join('foo');
  * //==> https://www.google.com/foo
  * </pre>
  *
@@ -19,7 +19,7 @@ namespace lhs\craftpageexporter\helpers;
 
 
 /**
- * phpUri
+ * PhpUri
  */
 class PhpUri
 {
@@ -126,11 +126,11 @@ class PhpUri
      *
      * @param string $url the url to parse
      *
-     * @return phpUri
+     * @return PhpUri
      */
     public static function parse(string $url): PhpUri
     {
-        $uri = new phpUri($url);
+        $uri = new PhpUri($url);
 
         /**
          * CHANGE:
@@ -154,7 +154,7 @@ class PhpUri
      */
     public function join(string $relative): string
     {
-        $uri = new phpUri($relative);
+        $uri = new PhpUri($relative);
         switch (true) {
             case !empty($uri->authority):
             case !empty($uri->scheme):
