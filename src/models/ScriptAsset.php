@@ -38,8 +38,12 @@ class ScriptAsset extends Asset
     protected function inlineScriptInHtmlAsset(): void
     {
         $document = $this->fromDomElement->ownerDocument;
-        $replaceElement = $document->createElement('script');
-        $content = $this->getContent();
+      $replaceElement = $document->createElement('script');
+      $replaceElement->setAttribute('type', 'module');
+
+      $content = $this->getContent();
+      $textNode = $document->createTextNode($content);
+      $replaceElement->appendChild($textNode);
 
         $replaceElement->nodeValue = htmlspecialchars($content);
         $this->initiator->replaceDomElement($this->fromDomElement, $replaceElement);

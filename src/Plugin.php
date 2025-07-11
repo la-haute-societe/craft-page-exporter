@@ -34,9 +34,14 @@ use lhs\craftpageexporter\services\Context;
 use lhs\craftpageexporter\services\Assets;
 use lhs\craftpageexporter\services\Export;
 use lhs\craftpageexporter\variables\PageExporterVariable;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 use yii\base\Event;
 use nystudio107\pluginvite\services\VitePluginService;
+use yii\base\Exception;
 use yii\base\InvalidConfigException;
+use yii\web\View as ViewAlias;
 
 /**
  * @author   La Haute Société
@@ -142,7 +147,7 @@ class Plugin extends BasePlugin
             }
         );
 
-        Event::on(View::class, View::EVENT_END_BODY, function () {
+        Event::on(View::class, ViewAlias::EVENT_END_BODY, function () {
             if (!$this->context->isInExportContext()) {
                 return;
             }
@@ -179,7 +184,6 @@ class Plugin extends BasePlugin
      */
     public function getExportConfig(array $overrides = []): array
     {
-        /** @var Settings $settings */
         $settings = $this->getSettings();
         $settings = $this->overridesSettings($settings, $overrides);
 
@@ -229,6 +233,7 @@ class Plugin extends BasePlugin
 
     /**
      * @inheritdoc
+     * @throws Exception|LoaderError|RuntimeError|SyntaxError
      */
     protected function settingsHtml(): ?string
     {

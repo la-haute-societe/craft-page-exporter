@@ -41,6 +41,7 @@ class Export extends Component
      * @throws Exception
      * @throws InvalidConfigException
      * @throws \Exception
+     * @throws GuzzleException
      */
     public function createExport(array $entryIds, int $siteId, array $config = []): ExportModel
     {

@@ -4,10 +4,12 @@ namespace lhs\craftpageexporter\models;
 
 use craft\base\Component;
 use craft\helpers\UrlHelper;
+use DOMAttr;
 use DOMElement;
 use DOMNode;
 use Exception;
 use lhs\craftpageexporter\helpers\PhpUri;
+use Normalizer;
 use ReflectionClass;
 
 /**
@@ -58,16 +60,12 @@ abstract class Asset extends Component
 
     /** @var string Export UrL */
     public string $exportUrl;
-
-    /** @var ?HtmlAsset */
-    protected ?HtmlAsset $rootAsset = null;
-
-    /** @var string|null Content of this asset */
-    protected ?string $_content = null;
-
     /** @var bool Whether this asset will be present in the resulting archive */
     public bool $willBeInArchive = false;
-
+    /** @var ?HtmlAsset */
+    protected ?HtmlAsset $rootAsset = null;
+    /** @var string|null Content of this asset */
+    protected ?string $_content = null;
 
     /**
      * Asset init
@@ -120,6 +118,149 @@ abstract class Asset extends Component
     }
 
     /**
+     * Return path of this asset relative to basePath (the root of this export)
+     * Return null if this asset hasn't URL
+     * @return ?string
+     */
+    public function getRelativePath(): ?string
+    {
+
+        if (!$this->isInBaseUrl()) {
+            return null;
+        }
+
+        $absoluteUrl = $this->getAbsoluteUrl();
+
+        if (is_null($absoluteUrl)) {
+            return null;
+        }
+
+        return str_replace($this->basePath, '', $absoluteUrl);
+    }
+
+    /**
+     * Return true if the absolute URL of this asset
+     * is in root asset base URL
+     * @return ?bool
+     */
+    public function isInBaseUrl(): ?bool
+    {
+        $absoluteUrl = $this->getAbsoluteUrl();
+
+        if (is_null($absoluteUrl)) {
+            return null;
+        }
+
+        // If no root asset, we're the root asset, so we're in the base URL
+        if (!$this->getRootAsset()) {
+            return true;
+        }
+
+        return str_starts_with($absoluteUrl, $this->getRootAsset()->getBaseUrl());
+    }
+
+    /**
+     * Return the absolute URL of this asset
+     * Return null if this asset hasn't URL
+     * @return ?string
+     */
+    public function getAbsoluteUrl(): ?string
+    {
+        if (empty($this->url)) {
+            return null;
+        }
+
+        if (UrlHelper::isAbsoluteUrl($this->url)) {
+            return $this->url;
+        }
+
+        $parentUrl = $this->getBaseUrl();
+        return PhpUri::parse($parentUrl)->join($this->url);
+    }
+
+    /**
+     * @return ?string
+     */
+    public function getBaseUrl(): ?string
+    {
+        return $this->baseUrl;
+    }
+
+    /**
+     * Update base URL on current asset and its children
+     *
+     * @param string $baseUrl
+     */
+    public function setBaseUrl(string $baseUrl): void
+    {
+        $this->baseUrl = $baseUrl;
+        foreach ($this->children as $child) {
+            $child->setBaseUrl($baseUrl);
+        }
+    }
+
+    /**
+     * @return ?HtmlAsset
+     */
+    public function getRootAsset(): ?HtmlAsset
+    {
+        return $this->rootAsset;
+    }
+
+    /**
+     * @param ?HtmlAsset $rootAsset
+     */
+    public function setRootAsset(?HtmlAsset $rootAsset): void
+    {
+        $this->rootAsset = $rootAsset;
+    }
+
+    /**
+     * Retrieve and update content
+     * @throws Exception
+     */
+    protected function retrieveAndUpdateContent(): void
+    {
+        $this->_content = $this->retrieveContent();
+    }
+
+    /**
+     * Return content of this file/asset (file_get_contents only if it's in the
+     * base URL
+     * @return bool|string|null
+     * @throws Exception
+     */
+    public function retrieveContent(): bool|string|null
+    {
+        if (!$this->isInBaseUrl()) {
+            return null;
+        }
+        $path = $this->getSourcePath();
+
+
+        if ($this->export->failOnFileNotFound && !file_exists($path)) {
+            throw new Exception('Asset file not found: "' . $path . '"');
+        }
+
+        return @file_get_contents($path);
+    }
+
+    /**
+     * Return the path (file or URL) used for getting the content of this asset
+     * @return ?string
+     * @throws Exception
+     */
+    public function getSourcePath(): ?string
+    {
+        // Use overridden transform method
+        if (!is_callable($this->export->sourcePathTransformer)) {
+            throw new Exception('sourcePathTransformer function of the export is not callable.');
+        }
+
+        return ($this->export->sourcePathTransformer)($this);
+    }
+
+    /**
      * Add a child on this asset
      * @param Asset $child
      */
@@ -147,117 +288,6 @@ abstract class Asset extends Component
      */
     public function populateChildren(): void
     {
-    }
-
-    /**
-     * Return path of this asset in the export
-     * @return ?string
-     */
-    public function getExportPath(): ?string
-    {
-        return $this->exportPath;
-    }
-
-    /**
-     * @param string $exportPath
-     */
-    public function setExportPath(string $exportPath): void
-    {
-        $decoded = urldecode($exportPath);
-
-        if (class_exists('\Normalizer')) {
-            $exportPath = \Normalizer::normalize($decoded, \Normalizer::FORM_C);
-        }
-
-        $this->exportPath = $exportPath;
-    }
-
-
-    /**
-     * Return URL of this asset in the export
-     * @return ?string
-     */
-    public function getExportUrl(): ?string
-    {
-        return $this->exportUrl;
-    }
-
-    /**
-     * @param string $exportUrl
-     */
-    public function setExportUrl(string $exportUrl): void
-    {
-        $decoded = urldecode($exportUrl);
-
-        if (class_exists('\Normalizer')) {
-            $exportUrl = \Normalizer::normalize($decoded, \Normalizer::FORM_C);
-        }
-
-        $this->exportUrl = $exportUrl;
-        $this->url = $this->exportUrl;
-
-        if ($this->fromDomElement instanceof \DOMAttr && $this->fromDomElement->ownerElement) {
-            $attributeName = $this->fromDomElement->nodeName;
-            $this->fromDomElement->ownerElement->setAttribute($attributeName, $exportUrl);
-        }
-
-        $this->updateInitiatorContent();
-    }
-
-
-    /**
-     * Return the path (file or URL) used for getting the content of this asset
-     * @return ?string
-     * @throws Exception
-     */
-    public function getSourcePath(): ?string
-    {
-        // Use overridden transform method
-        if (!is_callable($this->export->sourcePathTransformer)) {
-            throw new Exception('sourcePathTransformer function of the export is not callable.');
-        }
-
-        return ($this->export->sourcePathTransformer)($this);
-    }
-
-    /**
-     * Return the absolute URL of this asset
-     * Return null if this asset hasn't URL
-     * @return ?string
-     */
-    public function getAbsoluteUrl(): ?string
-    {
-        if (empty($this->url)) {
-            return null;
-        }
-
-        if (UrlHelper::isAbsoluteUrl($this->url)) {
-            return $this->url;
-        }
-
-        $parentUrl = $this->getBaseUrl();
-        return PhpUri::parse($parentUrl)->join($this->url);
-    }
-
-    /**
-     * Return path of this asset relative to basePath (the root of this export)
-     * Return null if this asset hasn't URL
-     * @return ?string
-     */
-    public function getRelativePath(): ?string
-    {
-
-        if (!$this->isInBaseUrl()) {
-            return null;
-        }
-
-        $absoluteUrl = $this->getAbsoluteUrl();
-
-        if (is_null($absoluteUrl)) {
-            return null;
-        }
-
-        return str_replace($this->basePath, '', $absoluteUrl);
     }
 
     /**
@@ -326,48 +356,6 @@ abstract class Asset extends Component
     }
 
     /**
-     * Return true if the absolute URL of this asset
-     * is in root asset base URL
-     * @return ?bool
-     */
-    public function isInBaseUrl(): ?bool
-    {
-        $absoluteUrl = $this->getAbsoluteUrl();
-
-        if (is_null($absoluteUrl)) {
-            return null;
-        }
-
-        // If no root asset, we're the root asset, so we're in the base URL
-        if (!$this->getRootAsset()) {
-            return true;
-        }
-
-        return str_starts_with($absoluteUrl, $this->getRootAsset()->getBaseUrl());
-    }
-
-    /**
-     * Return content of this file/asset (file_get_contents only if it's in the
-     * base URL
-     * @return bool|string|null
-     * @throws Exception
-     */
-    public function retrieveContent(): bool|string|null
-    {
-        if (!$this->isInBaseUrl()) {
-            return null;
-        }
-        $path = $this->getSourcePath();
-
-
-        if ($this->export->failOnFileNotFound && !file_exists($path)) {
-            throw new Exception('Asset file not found: "' . $path . '"');
-        }
-
-        return @file_get_contents($path);
-    }
-
-    /**
      * Replace URL of this asset in the content this asset come from
      * And call the same method on its children
      */
@@ -383,6 +371,10 @@ abstract class Asset extends Component
      */
     public function replaceUrlWithExportUrlInInitiator(): void
     {
+        if (!($this instanceof StyleAsset) && !($this instanceof ScriptAsset)) {
+            return;
+        }
+
         $exportUrl = $this->getExportUrl();
 
         // No replacement needed
@@ -394,15 +386,34 @@ abstract class Asset extends Component
     }
 
     /**
-     * Replace DomElement with $replace
-     * Used only in HtmlAsset
-     *
-     * @param DOMNode $domElement
-     * @param DOMNode $replace
-     * @return void
+     * Return URL of this asset in the export
+     * @return ?string
      */
-    public function replaceDomElement(DOMNode $domElement, DOMNode $replace): void
+    public function getExportUrl(): ?string
     {
+        return $this->exportUrl;
+    }
+
+    /**
+     * @param string $exportUrl
+     */
+    public function setExportUrl(string $exportUrl): void
+    {
+        $decoded = urldecode($exportUrl);
+
+        if (class_exists('\Normalizer')) {
+            $exportUrl = Normalizer::normalize($decoded, Normalizer::FORM_C);
+        }
+
+        $this->exportUrl = $exportUrl;
+        $this->url = $this->exportUrl;
+
+        if ($this->fromDomElement instanceof DOMAttr && $this->fromDomElement->ownerElement) {
+            $attributeName = $this->fromDomElement->nodeName;
+            $this->fromDomElement->ownerElement->setAttribute($attributeName, $exportUrl);
+        }
+
+        $this->updateInitiatorContent();
     }
 
     /**
@@ -419,90 +430,24 @@ abstract class Asset extends Component
     }
 
     /**
+     * Replace DomElement with $replace
+     * Used only in HtmlAsset
+     *
+     * @param DOMNode $domElement
+     * @param DOMNode $replace
+     * @return void
+     */
+    public function replaceDomElement(DOMNode $domElement, DOMNode $replace): void
+    {
+    }
+
+    /**
      * Return true if this asset has asset child
      * @return bool
      */
     public function hasChild(): bool
     {
         return count($this->children) > 0;
-    }
-
-    /**
-     * Set content of this asset
-     *
-     * @param string $content
-     */
-    public function setContent(string $content): void
-    {
-        $this->_content = $content;
-    }
-
-    /**
-     * Return content of this asset
-     *
-     * @return ?string
-     */
-    public function getContent(): ?string
-    {
-        return $this->_content;
-    }
-
-    /**
-     * Retrieve and update content
-     * @throws Exception
-     */
-    protected function retrieveAndUpdateContent(): void
-    {
-        $this->_content = $this->retrieveContent();
-    }
-
-    /**
-     * @return ?HtmlAsset
-     */
-    public function getRootAsset(): ?HtmlAsset
-    {
-        return $this->rootAsset;
-    }
-
-    /**
-     * @param ?HtmlAsset $rootAsset
-     */
-    public function setRootAsset(?HtmlAsset $rootAsset): void
-    {
-        $this->rootAsset = $rootAsset;
-    }
-
-    /**
-     * @return ?string
-     */
-    public function getBaseUrl(): ?string
-    {
-        return $this->baseUrl;
-    }
-
-    /**
-     * Update base URL on current asset and its children
-     *
-     * @param string $baseUrl
-     */
-    public function setBaseUrl(string $baseUrl): void
-    {
-        $this->baseUrl = $baseUrl;
-        foreach ($this->children as $child) {
-            $child->setBaseUrl($baseUrl);
-        }
-    }
-
-    /**
-     * Set fromDomElement recursively
-     * @param ?DOMElement $domElement
-     */
-    protected function setRecursiveFromDomElement(?DOMElement $domElement): void
-    {
-        $this->fromDomElement = $domElement;
-        foreach ($this->children as $child) {
-            $child->setRecursiveFromDomElement($domElement);
-        }
     }
 
     /**
@@ -556,6 +501,61 @@ abstract class Asset extends Component
             }
             echo '</ul>';
             echo '</div>';
+        }
+    }
+
+    /**
+     * Return path of this asset in the export
+     * @return ?string
+     */
+    public function getExportPath(): ?string
+    {
+        return $this->exportPath;
+    }
+
+    /**
+     * @param string $exportPath
+     */
+    public function setExportPath(string $exportPath): void
+    {
+        $decoded = urldecode($exportPath);
+
+        if (class_exists('\Normalizer')) {
+            $exportPath = Normalizer::normalize($decoded, Normalizer::FORM_C);
+        }
+
+        $this->exportPath = $exportPath;
+    }
+
+    /**
+     * Return content of this asset
+     *
+     * @return ?string
+     */
+    public function getContent(): ?string
+    {
+        return $this->_content;
+    }
+
+    /**
+     * Set content of this asset
+     *
+     * @param string $content
+     */
+    public function setContent(string $content): void
+    {
+        $this->_content = $content;
+    }
+
+    /**
+     * Set fromDomElement recursively
+     * @param ?DOMElement $domElement
+     */
+    protected function setRecursiveFromDomElement(?DOMElement $domElement): void
+    {
+        $this->fromDomElement = $domElement;
+        foreach ($this->children as $child) {
+            $child->setRecursiveFromDomElement($domElement);
         }
     }
 }

@@ -96,9 +96,11 @@ class HtmlAsset extends Asset
             $selectors = $selectorType['selectors'];
 
             foreach ($selectors as $selector) {
-                $this->crawler->evaluate($selector)->each(function (Crawler $crawler) use ($assetClass, $selector) {
-                    $this->addChildrenFromDomElement($crawler, $assetClass, $selector);
-                });
+                $this->crawler
+                    ->filterXPath($selector)
+                    ->each(function (Crawler $node) use ($assetClass, $selector) {
+                        $this->addChildrenFromDomElement($node, $assetClass, $selector);
+                    });
             }
         }
 
@@ -124,13 +126,22 @@ class HtmlAsset extends Asset
      */
     protected function addChildrenFromDomElement(Crawler $crawler, string $assetClass, ?string $filter): void
     {
-        $this->addChild(new $assetClass([
-            'fromString'     => $crawler->text(),
-            'fromDomElement' => $crawler->getNode(0),
-            'extractFilter'  => $filter,
-            'initiator'      => $this,
-            'rootAsset'      => $this,
-        ]));
+        $node = $crawler->getNode(0);
+
+        // Les propriétés communes
+        $props = [
+            'fromString' => $crawler->text(),
+            'fromDomElement' => $node,
+            'extractFilter' => $filter,
+            'initiator' => $this,
+            'rootAsset' => $this,
+        ];
+
+        if ($node instanceof \DOMAttr) {
+            $props['url'] = $node->nodeValue;
+        }
+
+        $this->addChild(new $assetClass($props));
     }
 
     /**
@@ -176,11 +187,14 @@ class HtmlAsset extends Asset
      */
     public function replaceInContent(string $search, string $replace, Asset $asset = null): void
     {
-        if (!$asset) {
+        if (!$asset || !$asset->fromDomElement instanceof \DOMAttr) {
             return;
         }
 
-        $asset->fromDomElement->nodeValue = htmlentities(str_replace($search, $replace, $asset->fromDomElement->nodeValue));
+        $attr = $asset->fromDomElement;
+        $element = $attr->ownerElement;
+        $element->setAttribute($attr->name, $replace);
+
         $this->updateContentFromDomCrawler();
     }
 
