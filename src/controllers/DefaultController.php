@@ -13,7 +13,7 @@ namespace lhs\craftpageexporter\controllers;
 use Craft;
 use craft\web\Controller;
 use Exception;
-use JetBrains\PhpStorm\NoReturn;
+use GuzzleHttp\Exception\GuzzleException;
 use lhs\craftpageexporter\models\ZipExporter;
 use lhs\craftpageexporter\Plugin;
 use Twig\Error\LoaderError;
@@ -34,10 +34,11 @@ class DefaultController extends Controller
     /**
      * Export entries from IDs and siteId and produce a ZIP archive
      *
-     * @param string|null  $entryIds
+     * @param string|null $entryIds
      * @param $siteId
      * @throws ExitException
      * @throws Exception
+     * @throws GuzzleException
      */
     public function actionExport(string $entryIds = null, $siteId = null): void
     {
@@ -68,7 +69,6 @@ class DefaultController extends Controller
         }
 
         $export = Plugin::$plugin->export->createExport($ids, (int)$siteId, $exportModelParams);
-
         // Export to zip
         $exporter = new ZipExporter([
             'export' => $export,
