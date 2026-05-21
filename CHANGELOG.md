@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 # Unreleased
 
+## [3.0.1] - 2025-05-21
+### Fixed
+- Fix asset exporter for inline styles
+
 
 ## [3.0.0] - 2025-05-26
 ### Changed
@@ -32,8 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Use the Craft Guzzle client (thanks [@markdrzy][], fixes [#36][] & [#37][])
 ### Fixed
-- Bug that prevented installing the plugin using the 
-  `craft plugin/install craft-page-exporter` command (fixes [#33][] & [#34], 
+- Bug that prevented installing the plugin using the
+  `craft plugin/install craft-page-exporter` command (fixes [#33][] & [#34],
   thanks [@BillBushee][])
 
 
@@ -166,3 +170,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.0.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/1.5.0...2.0.0
 [2.0.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/2.0.0...2.0.1
 [3.0.0]: https://github.com/la-haute-societe/craft-page-exporter/compare/2.0.1...3.0.0
+[3.0.1]: https://github.com/la-haute-societe/craft-page-exporter/compare/3.0.0...3.0.1
