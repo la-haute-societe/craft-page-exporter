@@ -196,7 +196,7 @@ abstract class Asset extends Component
         $this->exportUrl = $exportUrl;
         $this->url = $this->exportUrl;
 
-        if ($this->fromDomElement instanceof \DOMAttr && $this->fromDomElement->ownerElement) {
+        if ($this->fromDomElement instanceof \DOMAttr && $this->fromDomElement->ownerElement && !in_array($this->fromDomElement->nodeName, ['style', 'class'], true)) {
             $attributeName = $this->fromDomElement->nodeName;
             $this->fromDomElement->ownerElement->setAttribute($attributeName, $exportUrl);
         }
